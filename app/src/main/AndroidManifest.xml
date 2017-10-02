@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".tests.PinOnMap" />
         <activity android:name=".tests.mapFeatureCollection"></activity>
+        <activity android:name=".tests.mapPlusRecycler"></activity>
     </application>
 
 </manifest>

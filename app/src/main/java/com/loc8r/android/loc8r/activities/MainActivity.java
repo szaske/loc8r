@@ -8,6 +8,7 @@ import android.widget.Button;
 import com.loc8r.android.loc8r.R;
 import com.loc8r.android.loc8r.tests.PinOnMap;
 import com.loc8r.android.loc8r.tests.mapFeatureCollection;
+import com.loc8r.android.loc8r.tests.mapPlusRecycler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,8 +20,6 @@ public class MainActivity extends AppCompatActivity {
     //
     @BindView(R.id.pinOnMapButton) Button mPinOnMapButton;
     @BindView(R.id.mapCollectionButton) Button mMapCollectionButton;
-
-
 
     // OnClick Listeners
     //
@@ -34,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
     public void testMapCollection(){
         Intent mapCollection = new Intent(this, mapFeatureCollection.class);
         startActivity(mapCollection);
+    }
+
+    @OnClick(R.id.withRecyclerButton)
+    public void testWithRecycler(){
+        Intent withRecycler = new Intent(this, mapPlusRecycler.class);
+        startActivity(withRecycler);
     }
 
     @Override
