@@ -6,15 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import com.loc8r.android.loc8r.tests.PinOnMap;
-import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.loc8r.android.loc8r.tests.mapFeatureCollection;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     // My variables
     //
     @BindView(R.id.pinOnMapButton) Button mPinOnMapButton;
+    @BindView(R.id.mapCollectionButton) Button mMapCollectionButton;
+
 
 
     // OnClick Listeners
@@ -35,6 +29,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(pinTest);
     }
 
+    @OnClick(R.id.mapCollectionButton)
+    public void testMapCollection(){
+        Intent mapCollection = new Intent(this, mapFeatureCollection.class);
+        startActivity(mapCollection);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

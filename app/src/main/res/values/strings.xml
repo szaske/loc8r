@@ -5,6 +5,7 @@
     <!--Marker strings for DrawMarkerActivity activity-->
     <string name="draw_marker_options_title">Hello World!</string>
     <string name="draw_marker_options_snippet">Welcome to my marker.</string>
+    <string name="JSON_file_failure">Failed to load JSON file</string>
 
 
 </resources>

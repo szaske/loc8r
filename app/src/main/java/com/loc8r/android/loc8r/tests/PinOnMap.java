@@ -19,15 +19,21 @@ public class PinOnMap extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         // An example location
         myHouse = new LatLng(47.658365, -122.328074);
-
-        super.onCreate(savedInstanceState);
 
         //This is my Mapbox API access token, and needs to be called before setContentView
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
 
         setContentView(R.layout.test_activity_pin_on_map);
+
+        dropPinOnMap(savedInstanceState);
+
+    } // end of onCreate
+
+    public void dropPinOnMap(Bundle savedInstanceState){
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(new OnMapReadyCallback() {
@@ -46,7 +52,7 @@ public class PinOnMap extends AppCompatActivity {
                 mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position),7000);
             }
         });
-    } // end of onCreate
+    }
 
     @Override
     public void onStart() {
