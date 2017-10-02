@@ -11,7 +11,9 @@ import android.widget.Toast;
 import com.loc8r.android.loc8r.R;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -28,6 +30,10 @@ public class mapFeatureCollection extends AppCompatActivity {
 
     private FeatureCollection featureCollection;
     private MapView mapView;
+    LatLngBounds.Builder latLngBoundsBuilder;
+
+    // We might want to save a copy of Map
+    private MapboxMap mapboxMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +72,7 @@ public class mapFeatureCollection extends AppCompatActivity {
             public void onMapReady(final MapboxMap mapboxMap) {
 
                 // Setting the returned mapboxMap object (directly above) equal to the "globally declared" one
-               // MapActivity.this.mapboxMap = mapboxMap;
+                mapFeatureCollection.this.mapboxMap = mapboxMap;
 
                 // Initialize the custom class that handles marker icon creation and map styling based on the selected theme
 //                customThemeManager = new CustomThemeManager(chosenTheme, MapActivity.this, mapView, mapboxMap);
@@ -78,6 +84,9 @@ public class mapFeatureCollection extends AppCompatActivity {
 
                 // Set bounds for the map camera so that the user can't pan the map outside of the NYC area
 //                mapboxMap.setLatLngBoundsForCameraTarget(LOCKED_MAP_CAMERA_BOUNDS);
+
+                // Create a variable to track camera view
+                latLngBoundsBuilder = new LatLngBounds.Builder();
 
                 // Create a list of features from the feature collection
                 List<Feature> featureList = featureCollection.getFeatures();
@@ -99,6 +108,9 @@ public class mapFeatureCollection extends AppCompatActivity {
                     LatLng singleLocationLatLng = new LatLng(singleLocationPosition.getLatitude(),
                             singleLocationPosition.getLongitude());
 
+                    //Add location to camera view
+                    latLngBoundsBuilder.include(singleLocationLatLng);
+
                     // Add the location to the Arraylist of locations for later use in the recyclerview
 //                    listOfIndividualLocations.add(new IndividualLocation(
 //                            singleLocationName,
@@ -107,6 +119,9 @@ public class mapFeatureCollection extends AppCompatActivity {
 //                            singleLocationPhoneNum,
 //                            singleLocationLatLng
 //                    ));
+
+
+
 
                     // Add the location's marker to the map
                     mapboxMap.addMarker(new MarkerOptions()
@@ -118,6 +133,11 @@ public class mapFeatureCollection extends AppCompatActivity {
 //                    getInformationFromDirectionsApi(singleLocationLatLng.getLatitude(),
 //                            singleLocationLatLng.getLongitude(), false, x);
                 }
+
+                // moveCamera alters the camera
+                // CameraUpdateFactory creates a camera update
+                // newLatLngBounds creates a new bounded view
+                mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBoundsBuilder.build(),100));
 
                 // Add the fake device location marker to the map. In a real use case scenario, the Mapbox location layer plugin
                 // can be used to easily display the device's location

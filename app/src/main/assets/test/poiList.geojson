@@ -56,22 +56,6 @@
           47.654781
         ]
       }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Location 5",
-        "hours": "9:30am - 6pm",
-        "phone": "(555) 555-4345",
-        "description": "Location #5 description"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -73.984496,
-          40.696141
-        ]
-      }
     }
   ]
 }
