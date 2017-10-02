@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">loc8r</string>
+    <string name="mapbox_access_token">pk.eyJ1Ijoic3phc2tlIiwiYSI6ImNqMGxpNmhkMDAwMDgyeXFxdGc1Z3AxZmkifQ.03hssNNdqFo5KnamavUJuQ</string>
+
+    <!--Marker strings for DrawMarkerActivity activity-->
+    <string name="draw_marker_options_title">Hello World!</string>
+    <string name="draw_marker_options_snippet">Welcome to my marker.</string>
+
+
+</resources>
