@@ -62,102 +62,11 @@ public class poiRecyclerViewAdapter extends
         POI locationCard = listOfPOIs.get(position);
 
         card.nameTextView.setText(locationCard.getName());
-        card.addressTextView.setText(locationCard.getAddress());
-        card.phoneNumTextView.setText(locationCard.getPhoneNum());
-        card.hoursTextView.setText(locationCard.getHours());
-        card.distanceNumberTextView.setText(locationCard.getDistance());
-
-        switch (selectedTheme) {
-            case R.style.AppTheme_Blue:
-                emojiForCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.ice_cream_icon, null);
-                backgroundCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.blue_circle, null);
-                setColors(R.color.colorPrimary_blue, R.color.white, R.color.white, R.color.cardHourAndPhoneTextColor_blue,
-                        R.color.cardHourAndPhoneHeaderTextColor_blue, R.color.cardHourAndPhoneTextColor_blue,
-                        R.color.cardHourAndPhoneHeaderTextColor_blue, R.color.white, R.color.white);
-                setAlphas(card, .41f, .48f, 100f, .48f,
-                        100f,
-                        .41f);
-                break;
-            case R.style.AppTheme_Purple:
-                emojiForCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.cheese_burger_icon, null);
-                backgroundCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.purple_circle, null);
-                setColors(R.color.colorPrimaryDark_purple, R.color.white, R.color.white, R.color.cardHourAndPhoneTextColor_purple,
-                        R.color.cardHourAndPhoneTextColor_purple, R.color.cardHourAndPhoneTextColor_purple,
-                        R.color.cardHourAndPhoneTextColor_purple, R.color.white, R.color.white);
-                setAlphas(card, .41f, .36f, .94f, .36f,
-                        .94f,
-                        .41f);
-                break;
-            case R.style.AppTheme_Green:
-                emojiForCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.money_bag_icon, null);
-                card.emojiImageView.setPadding(8, 0, 0, 0);
-                backgroundCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.green_circle, null);
-                setColors(R.color.colorPrimaryDark_green, R.color.white, R.color.white, R.color.cardHourAndPhoneTextColor_green,
-                        R.color.black, R.color.cardHourAndPhoneTextColor_green,
-                        R.color.black, R.color.white, R.color.white);
-                setAlphas(card, 100f, .48f, 100f, .48f,
-                        100f,
-                        100f);
-                break;
-            case R.style.AppTheme_Neutral:
-                emojiForCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.house_icon, null);
-                backgroundCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.white_circle, null);
-                setColors(R.color.colorPrimaryDark_neutral, R.color.black, R.color.black, R.color.black,
-                        R.color.black, R.color.black,
-                        R.color.black, R.color.black, R.color.black);
-                setAlphas(card, .37f, .37f, 100f, .37f,
-                        100f,
-                        .37f);
-                break;
-            case R.style.AppTheme_Gray:
-                emojiForCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.bicycle_icon, null);
-                backgroundCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.gray_circle, null);
-                setColors(R.color.colorPrimaryDark_gray, R.color.white, R.color.white, R.color.cardHourAndPhoneTextColor_gray,
-                        R.color.cardHourAndPhoneTextColor_gray, R.color.cardHourAndPhoneTextColor_gray,
-                        R.color.cardHourAndPhoneTextColor_gray, R.color.white, R.color.white);
-                setAlphas(card, .41f, .48f, 100f, .41f,
-                        100f,
-                        .41f);
-                break;
-        }
-
-        card.emojiImageView.setImageDrawable(emojiForCircle);
-        card.constraintUpperColorSection.setBackgroundColor(upperCardSectionColor);
-        card.backgroundCircleImageView.setImageDrawable(backgroundCircle);
-        card.nameTextView.setTextColor(poiNameColor);
-        card.phoneNumTextView.setTextColor(locationPhoneNumColor);
-        card.hoursTextView.setTextColor(locationHoursColor);
-        card.hoursHeaderTextView.setTextColor(locationHoursHeaderColor);
-        card.distanceNumberTextView.setTextColor(locationDistanceNumColor);
-        card.milesAbbreviationTextView.setTextColor(milesAbbreviationColor);
-        card.addressTextView.setTextColor(locationAddressColor);
-        card.phoneHeaderTextView.setTextColor(locationPhoneHeaderColor);
+        // card.emojiImageView.setImageDrawable(emojiForCircle);
+        // card.constraintUpperColorSection.setBackgroundColor(upperCardSectionColor);
+        // card.backgroundCircleImageView.setImageDrawable(backgroundCircle);
+        // card.nameTextView.setTextColor(poiNameColor);
     }
-
-    private void setColors(int colorForUpperCard, int colorForName, int colorForAddress,
-                           int colorForHours, int colorForHoursHeader, int colorForPhoneNum,
-                           int colorForPhoneHeader, int colorForDistanceNum, int colorForMilesAbbreviation) {
-        upperCardSectionColor = ResourcesCompat.getColor(context.getResources(), colorForUpperCard, null);
-        poiNameColor = ResourcesCompat.getColor(context.getResources(), colorForName, null);
-        locationAddressColor = ResourcesCompat.getColor(context.getResources(), colorForAddress, null);
-        locationHoursColor = ResourcesCompat.getColor(context.getResources(), colorForHours, null);
-        locationHoursHeaderColor = ResourcesCompat.getColor(context.getResources(), colorForHoursHeader, null);
-        locationPhoneNumColor = ResourcesCompat.getColor(context.getResources(), colorForPhoneNum, null);
-        locationPhoneHeaderColor = ResourcesCompat.getColor(context.getResources(), colorForPhoneHeader, null);
-        locationDistanceNumColor = ResourcesCompat.getColor(context.getResources(), colorForDistanceNum, null);
-        milesAbbreviationColor = ResourcesCompat.getColor(context.getResources(), colorForMilesAbbreviation, null);
-    }
-
-    private void setAlphas(ViewHolder card, float addressAlpha, float hoursHeaderAlpha, float hoursNumAlpha,
-                           float phoneHeaderAlpha, float phoneNumAlpha, float milesAbbreviationAlpha) {
-        card.addressTextView.setAlpha(addressAlpha);
-        card.hoursHeaderTextView.setAlpha(hoursHeaderAlpha);
-        card.hoursTextView.setAlpha(hoursNumAlpha);
-        card.phoneHeaderTextView.setAlpha(phoneHeaderAlpha);
-        card.phoneNumTextView.setAlpha(phoneNumAlpha);
-        card.milesAbbreviationTextView.setAlpha(milesAbbreviationAlpha);
-    }
-
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView nameTextView;

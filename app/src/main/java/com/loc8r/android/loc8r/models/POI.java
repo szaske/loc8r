@@ -1,6 +1,6 @@
 package com.loc8r.android.loc8r.models;
 
-import com.google.gson.internal.bind.ArrayTypeAdapter;
+
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.ArrayList;

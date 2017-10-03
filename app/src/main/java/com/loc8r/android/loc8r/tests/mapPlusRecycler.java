@@ -31,11 +31,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class mapPlusRecycler extends AppCompatActivity {
+public class mapPlusRecycler extends AppCompatActivity implements poiRecyclerViewAdapter.ClickListener{
 
     private FeatureCollection featureCollection;
     private MapView mapView;
-    LatLngBounds.Builder latLngBoundsBuilder;
+    private LatLngBounds.Builder latLngBoundsBuilder;
     private ArrayList<POI> tourTest;
 
     // We might want to save a copy of Map
@@ -56,7 +56,7 @@ public class mapPlusRecycler extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // Inflate the layout with the the MapView. Always inflate this after the Mapbox access token is configured.
-        setContentView(R.layout.test_activity_map_feature_collection);
+        setContentView(R.layout.test_activity_map_plus_recycler);
 
         // Create a GeoJSON feature collection from the GeoJSON file in the assets folder.
         try {
@@ -67,13 +67,13 @@ public class mapPlusRecycler extends AppCompatActivity {
         }
 
         // Initialize a list of IndividualLocation objects for future use with recyclerview
-//        listOfIndividualLocations = new ArrayList<>();
+        tourTest = new ArrayList<>();
 
         // Initialize the theme that was selected in the previous activity. The blue theme is set as the backup default.
 //        chosenTheme = getIntent().getIntExtra(SELECTED_THEME, R.style.AppTheme_Blue);
 
         // Set up the Mapbox map
-        mapView = (MapView) findViewById(R.id.mapView);
+        mapView = (MapView) findViewById(R.id.mapViewTwo);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -130,13 +130,10 @@ public class mapPlusRecycler extends AppCompatActivity {
                             .position(poiLatLng)
                             .title(poiName));
 
-                    setupRecyclerView();
+
                 }
 
-                // moveCamera alters the camera
-                // CameraUpdateFactory creates a camera update
-                // newLatLngBounds creates a new bounded view
-                mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBoundsBuilder.build(),100));
+
 
                 // Add the fake device location marker to the map. In a real use case scenario, the Mapbox location layer plugin
                 // can be used to easily display the device's location
@@ -144,8 +141,13 @@ public class mapPlusRecycler extends AppCompatActivity {
 
                 //setUpMarkerClickListener();
 
-                //setUpRecyclerViewOfLocationCards(chosenTheme);
-            }
+                setupRecyclerView();
+
+                // moveCamera alters the camera
+                // CameraUpdateFactory creates a camera update
+                // newLatLngBounds creates a new bounded view
+                mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBoundsBuilder.build(),100));
+            } //end of OnMapReady
         });
     }
 
@@ -179,9 +181,51 @@ public class mapPlusRecycler extends AppCompatActivity {
         poiRecyclerView = (RecyclerView) findViewById(R.id.map_layout_rv);
         poiRecyclerView.setHasFixedSize(true);
         poiRecyclerView.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(this));
-        styleRvAdapter = new poiRecyclerViewAdapter(tourTest, getApplicationContext());
+        styleRvAdapter = new poiRecyclerViewAdapter(tourTest, getApplicationContext(),this);
         poiRecyclerView.setAdapter(styleRvAdapter);
         SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(poiRecyclerView);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        // Put click management code here
+    }
+
+    // Add the mapView's lifecycle to the activity's lifecycle methods
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
     }
 }

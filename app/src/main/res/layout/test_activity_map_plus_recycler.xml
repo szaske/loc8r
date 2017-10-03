@@ -10,7 +10,7 @@ android:layout_height="match_parent"
 tools:context="com.loc8r.android.loc8r.tests.mapFeatureCollection">
 
 <com.mapbox.mapboxsdk.maps.MapView
-    android:id="@+id/mapView"
+    android:id="@+id/mapViewTwo"
     mapbox_styleUrl="@string/mapbox_style_light"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
