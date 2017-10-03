@@ -2,13 +2,18 @@ package com.loc8r.android.loc8r.tests;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.loc8r.android.loc8r.R;
+import com.loc8r.android.loc8r.adapters.poiRecyclerViewAdapter;
 import com.loc8r.android.loc8r.models.POI;
+import com.loc8r.android.loc8r.utils.LinearLayoutManagerWithSmoothScroller;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -35,6 +40,8 @@ public class mapPlusRecycler extends AppCompatActivity {
 
     // We might want to save a copy of Map
     private MapboxMap mapboxMap;
+    private RecyclerView poiRecyclerView;
+    private poiRecyclerViewAdapter styleRvAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,15 +174,14 @@ public class mapPlusRecycler extends AppCompatActivity {
         }
     }
 
-    private void setUpRecyclerViewOfLocationCards(int chosenTheme) {
+    private void setupRecyclerView() {
         // Initialize the recyclerview of location cards and a custom class for automatic card scrolling
-        locationsRecyclerView = findViewById(R.id.map_layout_rv);
-        locationsRecyclerView.setHasFixedSize(true);
-        locationsRecyclerView.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(this));
-        styleRvAdapter = new LocationRecyclerViewAdapter(listOfIndividualLocations,
-                getApplicationContext(), this, chosenTheme);
-        locationsRecyclerView.setAdapter(styleRvAdapter);
+        poiRecyclerView = (RecyclerView) findViewById(R.id.map_layout_rv);
+        poiRecyclerView.setHasFixedSize(true);
+        poiRecyclerView.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(this));
+        styleRvAdapter = new poiRecyclerViewAdapter(tourTest, getApplicationContext());
+        poiRecyclerView.setAdapter(styleRvAdapter);
         SnapHelper snapHelper = new LinearSnapHelper();
-        snapHelper.attachToRecyclerView(locationsRecyclerView);
+        snapHelper.attachToRecyclerView(poiRecyclerView);
     }
 }

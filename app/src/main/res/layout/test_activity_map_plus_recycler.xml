@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+<FrameLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/map_activity_framelayout"
+android:layout_width="match_parent"
+tools:ignore="MissingPrefix"
+android:layout_height="match_parent"
+tools:context="com.loc8r.android.loc8r.tests.mapFeatureCollection">
+
+<com.mapbox.mapboxsdk.maps.MapView
+    android:id="@+id/mapView"
+    mapbox_styleUrl="@string/mapbox_style_light"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.loc8r.android.loc8r.tests.mapFeatureCollection">
+    android:layout_marginBottom="0dp"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    android:layout_marginTop="0dp"
+    mapbox:mapbox_cameraTargetLat="40.713469"
+    mapbox:mapbox_cameraTargetLng="-74.006735"
+    mapbox:mapbox_cameraTilt="48"
+    mapbox:mapbox_cameraZoom="12"
+    mapbox:mapbox_cameraZoomMin="10"
+    mapbox:mapbox_uiAttribution="false"/>
 
-    <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        mapbox:mapbox_cameraTargetLat="47.608116"
-        mapbox:mapbox_cameraTargetLng="-122.300363"
-        mapbox:mapbox_cameraZoom="8"
-        mapbox:mapbox_styleUrl="mapbox://styles/mapbox/light-v9" >
+<android.support.v7.widget.RecyclerView
+    android:id="@+id/map_layout_rv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:layout_marginBottom="30dp"/>
 
-    </com.mapbox.mapboxsdk.maps.MapView>
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp" />
-
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>
