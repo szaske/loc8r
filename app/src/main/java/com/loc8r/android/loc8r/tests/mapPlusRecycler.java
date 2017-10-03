@@ -121,7 +121,8 @@ public class mapPlusRecycler extends AppCompatActivity implements poiRecyclerVie
                     // Add the location to the Arraylist of locations for later use in the recyclerview
                     tourTest.add(new POI(
                             poiName,
-                            poiLatLng,
+                            poiPosition.getLatitude(),
+                            poiPosition.getLongitude(),
                             poiDescription
                     ));
 

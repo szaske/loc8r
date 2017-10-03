@@ -7,6 +7,7 @@ import android.widget.Button;
 
 import com.loc8r.android.loc8r.R;
 import com.loc8r.android.loc8r.tests.PinOnMap;
+import com.loc8r.android.loc8r.tests.mapDataFromFirebase;
 import com.loc8r.android.loc8r.tests.mapFeatureCollection;
 import com.loc8r.android.loc8r.tests.mapPlusRecycler;
 
@@ -20,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     //
     @BindView(R.id.pinOnMapButton) Button mPinOnMapButton;
     @BindView(R.id.mapCollectionButton) Button mMapCollectionButton;
+    @BindView(R.id.dataFromFirebaseButton) Button mDataFromFirebaseButton;
+
 
     // OnClick Listeners
     //
@@ -39,6 +42,12 @@ public class MainActivity extends AppCompatActivity {
     public void testWithRecycler(){
         Intent withRecycler = new Intent(this, mapPlusRecycler.class);
         startActivity(withRecycler);
+    }
+
+    @OnClick(R.id.dataFromFirebaseButton)
+    public void fbData(){
+        Intent FirebaseData = new Intent(this, mapDataFromFirebase.class);
+        startActivity(FirebaseData);
     }
 
     @Override

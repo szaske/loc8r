@@ -38,4 +38,14 @@
         android:text="Collection with Recycler"
         app:layout_constraintLeft_toLeftOf="@+id/mapCollectionButton"
         app:layout_constraintTop_toBottomOf="@+id/mapCollectionButton" />
+
+    <Button
+        android:id="@+id/dataFromFirebaseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="8dp"
+        android:text="Data from Firebase"
+        app:layout_constraintLeft_toLeftOf="@+id/withRecyclerButton"
+        app:layout_constraintTop_toBottomOf="@+id/withRecyclerButton" />
 </android.support.constraint.ConstraintLayout>

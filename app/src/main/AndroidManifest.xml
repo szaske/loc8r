@@ -23,6 +23,7 @@
         <activity android:name=".tests.PinOnMap" />
         <activity android:name=".tests.mapFeatureCollection"></activity>
         <activity android:name=".tests.mapPlusRecycler"></activity>
+        <activity android:name=".tests.mapDataFromFirebase"></activity>
     </application>
 
 </manifest>
