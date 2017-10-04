@@ -7,6 +7,7 @@ android {
         applicationId "com.loc8r.seattle"
         minSdkVersion 21
         targetSdkVersion 26
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -40,6 +41,8 @@ dependencies {
     })
     compile 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.1.4@aar'
     compile 'com.mapbox.mapboxsdk:mapbox-android-services:2.2.5'
+    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.1.0'
+
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support:cardview-v7:26.1.0'
     compile 'com.android.support:recyclerview-v7:26.1.0'
