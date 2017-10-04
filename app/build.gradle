@@ -7,6 +7,7 @@ android {
         applicationId "com.loc8r.seattle"
         minSdkVersion 21
         targetSdkVersion 26
+        //Added to resolve Gradle compile error 'app:transformClassesWithDexForDebug'
         multiDexEnabled true
         versionCode 1
         versionName "1.0"

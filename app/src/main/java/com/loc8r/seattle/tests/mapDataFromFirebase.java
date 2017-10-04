@@ -100,7 +100,7 @@ public class mapDataFromFirebase extends AppCompatActivity implements poiRequest
     }
 
 
-    // Add the mapView's lifecycle to the activity's lifecycle methods
+    //the mapView's lifecycle to the activity's lifecycle methods
     @Override
     public void onResume() {
         super.onResume();
@@ -220,8 +220,10 @@ public class mapDataFromFirebase extends AppCompatActivity implements poiRequest
         locationEngine.requestLocationUpdates();
     }
 
+    //
     @Override
     public void onLocationChanged(Location location) {
+        Toast.makeText(this, "location changed", Toast.LENGTH_LONG).show();
         if (location != null) {
             setCameraPosition(location);
             locationEngine.removeLocationEngineListener(this);
