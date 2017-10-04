@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
     defaultConfig {
-        applicationId "com.loc8r.android.loc8r"
+        applicationId "com.loc8r.seattle"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
@@ -36,3 +36,5 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
 
 }
+
+apply plugin: 'com.google.gms.google-services'

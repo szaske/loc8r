@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.loc8r.android.loc8r.tests.PinOnMap">
+    tools:context="com.loc8r.seattle.tests.PinOnMap">
 
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"

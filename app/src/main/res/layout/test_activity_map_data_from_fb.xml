@@ -5,7 +5,7 @@
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.loc8r.android.loc8r.tests.mapFeatureCollection">
+    tools:context="com.loc8r.seattle.tests.mapFeatureCollection">
 
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"

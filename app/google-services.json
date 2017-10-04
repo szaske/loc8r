@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "415883341181",
+    "firebase_url": "https://loc8r-stz.firebaseio.com",
+    "project_id": "loc8r-stz",
+    "storage_bucket": "loc8r-stz.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:415883341181:android:e109ebc9a76b5035",
+        "android_client_info": {
+          "package_name": "com.loc8r.seattle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "415883341181-13ckcsv9imbmh7k40jdh0gv3nlt56mr5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.loc8r.seattle",
+            "certificate_hash": "254e73d1725021fca8ce2969180b49745ca2a2af"
+          }
+        },
+        {
+          "client_id": "415883341181-lgavl4ivkrv0oteca0j81778l2l2h21t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD13fx21X2_FUe8yfNdScLDbt-NEXtSE24"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "415883341181-lgavl4ivkrv0oteca0j81778l2l2h21t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

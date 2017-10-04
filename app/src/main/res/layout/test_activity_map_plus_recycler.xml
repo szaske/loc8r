@@ -7,7 +7,7 @@ android:id="@+id/map_activity_framelayout"
 android:layout_width="match_parent"
 tools:ignore="MissingPrefix"
 android:layout_height="match_parent"
-tools:context="com.loc8r.android.loc8r.tests.mapFeatureCollection">
+tools:context="com.loc8r.seattle.tests.mapFeatureCollection">
 
 <com.mapbox.mapboxsdk.maps.MapView
     android:id="@+id/mapViewTwo"
