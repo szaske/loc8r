@@ -5,6 +5,10 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,6 +54,10 @@ public class poiRequester {
     private static final String TAG= "DataFromFB";
     private FirebaseDatabase database;
     private DatabaseReference mFBDataReference = null;
+    private DatabaseReference mFBLocationReference = null;
+    private ArrayList<POI> poiFullList = new ArrayList<>();
+    private ArrayList<POI> poiResults = new ArrayList<>();
+    private GeoFire geofire;
 
     public boolean isLoadingData() {
         return mLoadingData;
@@ -69,6 +77,11 @@ public class poiRequester {
         database= FirebaseDatabase.getInstance();
         mFBDataReference=database.getReference("pois");
 
+        // Create a different reference to store location data
+        mFBLocationReference= database.getReference("locs");
+
+        final GeoFire geofire = new GeoFire(mFBLocationReference);
+
         // Create a FB event listener
         mFBDataReference.addValueEventListener(new ValueEventListener(){
 
@@ -82,13 +95,47 @@ public class poiRequester {
                 long value=dataSnapshot.getChildrenCount();
                 Log.d(TAG,"no of children: "+value);
 
-                ArrayList<POI> poiList = new ArrayList<POI>();
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
-                    poiList.add(child.getValue(POI.class));
+                    POI poiChild = child.getValue(POI.class);
+                    poiFullList.add(poiChild);
+
+                    //Write locations in Geofires proprietary format
+                    geofire.setLocation(poiChild.getId(), new GeoLocation(poiChild.getLatitude(), poiChild.getLongitude()));
+
                 }
 
+                // Query from around Epicodus
+                GeoQuery geoQuery = geofire.queryAtLocation(new GeoLocation(47.607273, -122.336075), 0.6);
+
+                geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+                    @Override
+                    public void onKeyEntered(String key, GeoLocation location) {
+                        System.out.println(String.format("Key %s entered the search area at [%f,%f]", key, location.latitude, location.longitude));
+                    }
+
+                    @Override
+                    public void onKeyExited(String key) {
+                        System.out.println(String.format("Key %s is no longer in the search area", key));
+                    }
+
+                    @Override
+                    public void onKeyMoved(String key, GeoLocation location) {
+                        System.out.println(String.format("Key %s moved within the search area to [%f,%f]", key, location.latitude, location.longitude));
+                    }
+
+                    @Override
+                    public void onGeoQueryReady() {
+                        System.out.println("All initial data has been loaded and events have been fired!");
+                    }
+
+                    @Override
+                    public void onGeoQueryError(DatabaseError error) {
+                        System.err.println("There was an error with this query: " + error);
+                    }
+                });
+
                 //This is where the new Awws are passed back to the Activity
-                mResponseListener.receivedNewPOIs(poiList);
+                mResponseListener.receivedNewPOIs(poiFullList);
             }
 
             @Override
@@ -99,55 +146,5 @@ public class poiRequester {
         });
 
 
-
-        String urlRequest = Constants.FIREBASE_JSON_URL;
-        Request request = new Request.Builder().url(urlRequest).build();
-        mLoadingData = true;
-
-//        mClient.newCall(request).enqueue(new Callback() {
-//
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                mLoadingData = false;
-//                e.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                // An Array of POIs
-//                ArrayList<POI> POIs = new ArrayList<>();
-//                try {
-//
-//                    String jsonData = response.body().string();
-//                    if(response.isSuccessful()){
-//                        JSONObject tmpJSON = new JSONObject(jsonData);
-//                        JSONArray poisArrayJSON = tmpJSON.getJSONArray("pois");
-//                        for(int i = 0; i < poisArrayJSON.length(); i++){
-//
-//                            JSONObject thisPOI = poisArrayJSON.getJSONObject(i);
-//
-//                                // Using JSON access, I had to put in this check
-//                                if(thisPOI != null){
-//                                    String name = thisPOI.getString("name");
-//                                    // String description = thisPOI.getString("description");
-//                                    Double lat = thisPOI.getDouble("latitude");
-//                                    Double lng = thisPOI.getDouble("longitude");
-//                                    String desc = thisPOI.getString("description");
-//
-//                                    POIs.add(new POI(name, lat, lng, desc ));
-//                                }
-//                        }
-//                    }
-//
-//                    //This is where the new Awws are passed back to the Activity
-//                    mResponseListener.receivedNewPOIs(POIs);
-//                    mLoadingData = false;
-//
-//                } catch (JSONException e) {
-//                    mLoadingData = false;
-//                    e.printStackTrace();
-//                }
-//            }
-//        });  // End of enqueue
     } // End of GetPOIs
 }
