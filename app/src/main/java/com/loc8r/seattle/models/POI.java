@@ -2,17 +2,22 @@ package com.loc8r.seattle.models;
 
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
  * A POJO Class for a POI (Point Of Interest)
  */
 
 public class POI {
+    private String id;
+    private String img_url;
     private String name;
     private Double latitude;
     private Double longitude;
     private String description;
     private ArrayList<String> tags;
+
+    public POI(){}
 
     public POI(String name, Double latitude, Double longitude, String description) {
         this.name = name;
@@ -20,6 +25,10 @@ public class POI {
         this.longitude = longitude;
         this.description = description;
     }
+
+    public String getId() { return id; }
+
+    public String getImg_url() { return img_url; }
 
     public String getName() { return name; }
 

@@ -2,9 +2,16 @@ package com.loc8r.seattle.tests;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.loc8r.android.loc8r.R;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.poiRequester;
@@ -21,6 +28,7 @@ import com.mapbox.services.commons.geojson.FeatureCollection;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class mapDataFromFirebase extends AppCompatActivity implements poiRequesterResponse {
 
@@ -33,6 +41,8 @@ public class mapDataFromFirebase extends AppCompatActivity implements poiRequest
 
     // We might want to save a copy of Map
     private MapboxMap mapboxMap;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,21 +65,6 @@ public class mapDataFromFirebase extends AppCompatActivity implements poiRequest
         //This is the object that fetches POI data
         mPOIsRequester = new poiRequester(this);
 
-
-//        // Create a GeoJSON feature collection from the GeoJSON file in the assets folder.
-//        try {
-//            getFeatureCollectionFromJson();
-//        } catch (Exception exception) {
-//            Log.e("MapActivity", "onCreate: " + exception);
-//            Toast.makeText(this, R.string.JSON_file_failure, Toast.LENGTH_LONG).show();
-//        }
-
-        // Initialize a list of IndividualLocation objects for future use with recyclerview
-//        listOfIndividualLocations = new ArrayList<>();
-
-        // Initialize the theme that was selected in the previous activity. The blue theme is set as the backup default.
-//        chosenTheme = getIntent().getIntExtra(SELECTED_THEME, R.style.AppTheme_Blue);
-
         // Set up the Mapbox map
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
@@ -82,29 +77,8 @@ public class mapDataFromFirebase extends AppCompatActivity implements poiRequest
                 // Setting the returned mapboxMap object (directly above) equal to the "globally declared" one
                 mapDataFromFirebase.this.mapboxMap = mapboxMap;
 
-                // Initialize the custom class that handles marker icon creation and map styling based on the selected theme
-//                customThemeManager = new CustomThemeManager(chosenTheme, MapActivity.this, mapView, mapboxMap);
-//                customThemeManager.initializeTheme();
-
-                // Adjust the opacity of the Mapbox logo in the lower left hand corner of the map
-//                ImageView logo = mapView.findViewById(R.id.logoView);
-//                logo.setImageAlpha(MAPBOX_LOGO_OPACITY);
-
-                // Set bounds for the map camera so that the user can't pan the map outside of the NYC area
-//                mapboxMap.setLatLngBoundsForCameraTarget(LOCKED_MAP_CAMERA_BOUNDS);
-
-
-
-                // Add the fake device location marker to the map. In a real use case scenario, the Mapbox location layer plugin
-                // can be used to easily display the device's location
-                //addMockDeviceLocationMarkerToMap();
-
-                //setUpMarkerClickListener();
-
-                //setUpRecyclerViewOfLocationCards(chosenTheme);
-
                 // Better get some content
-                    requestMorePOIs();
+                   requestMorePOIs();
             }
         });
     }
@@ -161,6 +135,11 @@ public class mapDataFromFirebase extends AppCompatActivity implements poiRequest
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+                // Delete the list and markers
+                mPOIs.clear();
+                mapboxMap.clear();
+
                 mPOIs.addAll(newPOIs); // This adds a new item to the list
                 //mAdapter.notifyItemInserted(mAwwsList.size());  //This tells the adapter to reset and redraw
 
