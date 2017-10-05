@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.loc8r.android.loc8r.R;
+import com.loc8r.seattle.R;
 import com.loc8r.seattle.tests.PinOnMap;
 import com.loc8r.seattle.tests.mapDataFromFirebase;
 import com.loc8r.seattle.tests.mapFeatureCollection;
@@ -48,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
     public void fbData(){
         Intent FirebaseData = new Intent(this, mapDataFromFirebase.class);
         startActivity(FirebaseData);
+    }
+
+    @OnClick(R.id.exploreButton)
+    public void exploreSea(){
+        Intent exploreSea = new Intent(this, ExploreSeattle.class);
+        startActivity(exploreSea);
     }
 
     @Override

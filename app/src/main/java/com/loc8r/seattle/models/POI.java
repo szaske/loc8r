@@ -1,13 +1,15 @@
 package com.loc8r.seattle.models;
 
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
  * A POJO Class for a POI (Point Of Interest)
  */
-
+@Parcel
 public class POI {
     private String id;
     private String img_url;

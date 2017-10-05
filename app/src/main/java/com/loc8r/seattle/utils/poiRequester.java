@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.loc8r.seattle.models.POI;
 
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -58,6 +60,8 @@ public class poiRequester {
     private ArrayList<POI> poiFullList = new ArrayList<>();
     private ArrayList<POI> poiResults = new ArrayList<>();
     private GeoFire geofire;
+    private static final int POIS_PER_PAGE = 5;
+    private String LastKeySent;
 
     public boolean isLoadingData() {
         return mLoadingData;
@@ -80,10 +84,21 @@ public class poiRequester {
         // Create a different reference to store location data
         mFBLocationReference= database.getReference("locs");
 
+        // DatabaseReference jokesRef = FirebaseDatabase.getInstance().getReference().child("hindi-jokes");
+
+
+        // ENDED CODING HERE
+        //
+        //
+        //
+
+        Query jokesQuery = mFBDataReference.orderByKey().endAt(LastKeySent).limitToFirst(POIS_PER_PAGE);
+
+
         final GeoFire geofire = new GeoFire(mFBLocationReference);
 
         // Create a FB event listener
-        mFBDataReference.addValueEventListener(new ValueEventListener(){
+        jokesQuery.addValueEventListener(new ValueEventListener(){
 
             /**
              * This method is called once with the initial value and again whenever data at this location is updated

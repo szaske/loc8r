@@ -10,7 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.loc8r.android.loc8r.R;
+import com.loc8r.seattle.R;
 import com.loc8r.seattle.adapters.poiRecyclerViewAdapter;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.LinearLayoutManagerWithSmoothScroller;

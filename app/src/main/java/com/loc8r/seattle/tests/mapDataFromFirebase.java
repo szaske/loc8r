@@ -14,7 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
-import com.loc8r.android.loc8r.R;
+import com.loc8r.seattle.R;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.poiRequester;
 import com.loc8r.seattle.utils.poiRequester.poiRequesterResponse;

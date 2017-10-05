@@ -3,7 +3,7 @@ package com.loc8r.seattle.tests;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.loc8r.android.loc8r.R;
+import com.loc8r.seattle.R;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;

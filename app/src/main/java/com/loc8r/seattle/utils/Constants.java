@@ -7,4 +7,5 @@ package com.loc8r.seattle.utils;
 public class Constants {
     public static final String FIREBASE_CHILD_POIS = "pois";
     public static final String FIREBASE_JSON_URL = "https://day-one-blog.firebaseio.com/.json";
+    public static final String INTENT_POI_KEY = "POI";
 }

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.loc8r.android.loc8r.R;
+import com.loc8r.seattle.R;
 import com.loc8r.seattle.models.POI;
 
 import java.util.List;

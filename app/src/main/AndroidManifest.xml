@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.loc8r.android.loc8r">
+    package="com.loc8r.seattle">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -13,17 +13,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.loc8r.seattle.activities.MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.loc8r.seattle.tests.PinOnMap" />
-        <activity android:name="com.loc8r.seattle.tests.mapFeatureCollection"></activity>
-        <activity android:name="com.loc8r.seattle.tests.mapPlusRecycler"></activity>
-        <activity android:name="com.loc8r.seattle.tests.mapDataFromFirebase"></activity>
+        <activity android:name=".tests.PinOnMap" />
+        <activity android:name=".tests.mapFeatureCollection" />
+        <activity android:name=".tests.mapPlusRecycler" />
+        <activity android:name=".tests.mapDataFromFirebase" />
+        <activity android:name=".activities.ExploreSeattle" />
+        <activity android:name=".activities.POIDetailActivity"></activity>
     </application>
 
 </manifest>
