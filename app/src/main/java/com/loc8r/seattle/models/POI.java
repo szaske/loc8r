@@ -30,6 +30,8 @@ public class POI {
 
     public String getId() { return id; }
 
+    public void setId(String id) { this.id = id; }
+
     public String getImg_url() { return img_url; }
 
     public String getName() { return name; }

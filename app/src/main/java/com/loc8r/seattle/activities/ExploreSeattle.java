@@ -79,7 +79,9 @@ public class ExploreSeattle extends AppCompatActivity implements poiRequesterRes
                 int totalItemCount = mRecyclerView.getLayoutManager().getItemCount();
 
                 Log.d("Scrolled", "TotalItemCount:" + totalItemCount + "LastVisItemPos:" + getLastVisibleItemPosition()  );
-                if (!mPOIRequester.isLoadingData() && getLastVisibleItemPosition() > totalItemCount - 6) {
+
+                //If we're not already loading data
+                if (!mPOIRequester.isLoadingData() && !mPOIRequester.isAllDataLoaded() && getLastVisibleItemPosition() >= (totalItemCount -1)) {
                     requestMorePOIs();
                 }
             }
