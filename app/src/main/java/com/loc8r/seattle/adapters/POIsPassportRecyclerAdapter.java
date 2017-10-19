@@ -87,7 +87,7 @@ public class POIsPassportRecyclerAdapter extends RecyclerView.Adapter<POIsPasspo
             mPOITitleTextView.setText(mPOI.getName());
             Picasso
                     .with(mPOIImageView.getContext())
-                    .load(R.mipmap.viewholder_placeholder)
+                    .load(mPOI.getImg_url())
                     .into(mPOIImageView);
         }
     }  //end of viewHolder class

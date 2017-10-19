@@ -11,13 +11,13 @@ import java.util.StringTokenizer;
  */
 @Parcel
 public class POI {
-    private String id;
-    private String img_url;
-    private String name;
-    private Double latitude;
-    private Double longitude;
-    private String description;
-    private ArrayList<String> tags;
+    String id;
+    String img_url;
+    String name;
+    Double latitude;
+    Double longitude;
+    String description;
+    ArrayList<String> tags;
 
     public POI(){}
 

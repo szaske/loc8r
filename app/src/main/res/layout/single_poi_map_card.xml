@@ -166,7 +166,6 @@
             android:layout_marginLeft="0dp"
             android:layout_marginStart="0dp"
             android:layout_marginTop="0dp"
-            android:textColor="@color/black"
             android:textSize="@dimen/secondary_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/hours_header_tv"

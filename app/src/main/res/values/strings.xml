@@ -1,11 +1,21 @@
 <resources>
     <string name="app_name">loc8r</string>
     <string name="mapbox_access_token">pk.eyJ1Ijoic3phc2tlIiwiYSI6ImNqMGxpNmhkMDAwMDgyeXFxdGc1Z3AxZmkifQ.03hssNNdqFo5KnamavUJuQ</string>
+    <string name="facebook_app_id">342940636168116</string>
+    <string name="fb_login_protocol_scheme">fb342940636168116</string>
 
     <!--Marker strings for DrawMarkerActivity activity-->
     <string name="draw_marker_options_title">Hello World!</string>
     <string name="draw_marker_options_snippet">Welcome to my marker.</string>
     <string name="JSON_file_failure">Failed to load JSON file</string>
 
+    <!--LoggedIn activity strings-->
+    <string name="location_permission_dialog_title">Permission Needed</string>
+    <string name="location_permission_dialog_msg">In order for the application to work, the location permission must be granted.</string>
+    <string name="ok">OK</string>
+    <string name="exit">Exit</string>
+    <string name="location_permission_settings">Permissions</string>
+    <string name="location_enabled_dialog_title">Location Needed</string>
+    <string name="location_enabled_dialog_msg">In order for the application to work, the device location must be enabled.</string>
 
 </resources>

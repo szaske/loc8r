@@ -13,11 +13,18 @@ import com.loc8r.seattle.adapters.POIsPassportRecyclerAdapter;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.poiRequester;
 import com.loc8r.seattle.utils.poiRequester.poiRequesterResponse;
+// import com.mapzen.android.lost.api.LocationServices;
+
+//If Facebook is needed
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class ExploreSeattle extends AppCompatActivity implements poiRequesterResponse {
+
+    private static final String TAG = "STZ" + ExploreSeattle.class.getSimpleName();
 
     // My variables
     private RecyclerView mRecyclerView; // To connect to my view object
@@ -26,7 +33,6 @@ public class ExploreSeattle extends AppCompatActivity implements poiRequesterRes
     private poiRequester mPOIRequester; //helper class
     private POIsPassportRecyclerAdapter mAdapter; //The 'data source' for the recyclerview
     private GridLayoutManager mGridLayoutManager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +43,9 @@ public class ExploreSeattle extends AppCompatActivity implements poiRequesterRes
         mRecyclerView = (RecyclerView) findViewById(R.id.poiRecyclerView);
 
         // Adjust grid according to orientation
-        if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mGridLayoutManager = new GridLayoutManager(this, 1);
-        }
-        else{
+        } else {
             mGridLayoutManager = new GridLayoutManager(this, 1);
         }
 
@@ -82,14 +87,16 @@ public class ExploreSeattle extends AppCompatActivity implements poiRequesterRes
 
                 //If we're not already loading data
                 if (!mPOIRequester.isLoadingData() && !mPOIRequester.isAllDataLoaded() && getLastVisibleItemPosition() >= (totalItemCount -1)) {
-                    requestMorePOIs();
+                   requestMorePOIs();
                 }
             }
         });
     }
 
+    /**
+     *  Make a call to fill the array with more pois
+     */
     private void requestMorePOIs() {
-
         try {
             mPOIRequester.getPOIs();
         } catch (IOException e) {
@@ -97,6 +104,11 @@ public class ExploreSeattle extends AppCompatActivity implements poiRequesterRes
         }
     }
 
+    /**
+     *  The callback function from poiRequester when it returns more paged pois
+     *
+     * @param Pois the new array of paged pois to be added to the full list
+     */
     @Override
     public void receivedNewPOIs(final ArrayList<POI> Pois) {
         runOnUiThread(new Runnable() {

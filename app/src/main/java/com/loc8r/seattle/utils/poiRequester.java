@@ -47,10 +47,6 @@ public class poiRequester {
     private poiRequesterResponse mResponseListener;
     private Context mContext;
     private OkHttpClient mClient;
-    private static final String BASE_URL = "http://www.reddit.com/r/aww/hot.json?";
-    private static final String COUNT_PARAMETER = "count=";
-    private static final String COUNT_VALUE = "25";
-    private static final String AFTER_PARAMETER = "&after=";
     private boolean mLoadingData;
     private boolean mAllDataLoaded;
 
@@ -61,7 +57,7 @@ public class poiRequester {
     private DatabaseReference mFBDataReference = null;
     private DatabaseReference mFBLocationReference = null;
     private ArrayList<POI> poiFullList = new ArrayList<>();
-
+    private ArrayList<POI> poiTestResults = new ArrayList<>();
     private GeoFire geofire;
     private static final int POIS_PER_PAGE = 5;
     private String LastKeySent;
@@ -122,11 +118,6 @@ public class poiRequester {
             public void onDataChange(DataSnapshot dataSnapshot){
                 ArrayList<POI> poiResults = new ArrayList<>();
 
-                //Check to see if we're on the last paged
-                if(dataSnapshot.getChildrenCount()<POIS_PER_PAGE){
-                    mAllDataLoaded = true;
-                }
-
                 long value=dataSnapshot.getChildrenCount();
                 Log.d(TAG,"no of children: "+value);
 
@@ -144,10 +135,17 @@ public class poiRequester {
                 LastKeySent = poiResults.get(poiResults.size()-1).getId();
                 Log.d("Last Item sent: ", LastKeySent);
 
-                // Removes the last item to resolve an
-                // ugly design, that Firebase doesn't have a StartAfter method
-                // Might want to try FireStore since it has this method
-                poiResults.remove(poiResults.size()-1);
+                //Check to see if we're on the last paged
+                if(dataSnapshot.getChildrenCount()<POIS_PER_PAGE){
+                    mAllDataLoaded = true;
+                } else {
+                    // Removes the last item from the array to resolve an
+                    // ugly design, that Firebase doesn't have a StartAfter method
+                    // Might want to try FireStore since it has a StartAfter method.
+                    // I placed this in the if because we don't want to remove the
+                    // very last list item, when on the last page
+                    poiResults.remove(poiResults.size()-1);
+                }
 
                 // Query from around Epicodus
 //                GeoQuery geoQuery = geofire.queryAtLocation(new GeoLocation(47.607273, -122.336075), 0.6);
@@ -194,4 +192,8 @@ public class poiRequester {
 
 
     } // End of GetPOIs
+
+    public double getDistanceToUser(Double userLat, Double userLong, Double poiLat, Double poiLong) {
+        return Math.sqrt((userLat-poiLat)*(userLat-poiLat) + (userLong-poiLong)*(userLong-poiLong));
+    }
 }
