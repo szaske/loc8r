@@ -27,7 +27,7 @@ import com.loc8r.seattle.interfaces.LocationListener;
 
 public class LoggedInActivity extends FontsActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
     private static final int LOCATION_REQUEST_CODE = 420;
-    private static final String LOG_TAG = LoggedInActivity.class.getSimpleName();
+    private static final String TAG = LoggedInActivity.class.getSimpleName();
 
     private GoogleApiClient mGoogleApiClient;
     private AlertDialog mLocationEnabledDialog;
@@ -35,24 +35,24 @@ public class LoggedInActivity extends FontsActivity implements GoogleApiClient.C
     @Override
     public void onConnected(@Nullable Bundle bundle)
     {
-        Log.d(LOG_TAG, "onConnected() called with: " + "bundle = [" + bundle + "]");
+        Log.d(TAG, "onConnected() called with: " + "bundle = [" + bundle + "]");
     }
 
     @Override
     public void onConnectionSuspended(int i)
     {
-        Log.d(LOG_TAG, "onConnectionSuspended() called with: " + "i = [" + i + "]");
+        Log.d(TAG, "onConnectionSuspended() called with: " + "i = [" + i + "]");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
     {
-        Log.e(LOG_TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
+        Log.e(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
     }
 
     protected void onLocationPermissionGranted()
     {
-        Log.d(LOG_TAG, "onLocationPermissionGranted: ");
+        Log.d(TAG, "onLocationPermissionGranted: ");
     }
 
     private void initGoogleLocationServices()
@@ -65,6 +65,7 @@ public class LoggedInActivity extends FontsActivity implements GoogleApiClient.C
                     .addApi(LocationServices.API)
                     .build();
         }
+        Log.d(TAG, "initGoogleLocationServices: ");
     }
 
     @Override
@@ -143,6 +144,7 @@ public class LoggedInActivity extends FontsActivity implements GoogleApiClient.C
                                 LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
                                 listener.onLocationReceived(lastLocation);
                             }
+                            Log.d(TAG, "onLocationResult: You're location is" + String.valueOf(locationResult));
                         }
                     }, getMainLooper());
         }
@@ -173,7 +175,7 @@ public class LoggedInActivity extends FontsActivity implements GoogleApiClient.C
 
     private void showLocationPermissionDialog()
     {
-        Log.d(LOG_TAG, "showLocationPermissionDialog: ");
+        Log.d(TAG, "showLocationPermissionDialog: ");
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
         builder.setTitle(R.string.location_permission_dialog_title)
                 .setMessage(R.string.location_permission_dialog_msg)
@@ -215,7 +217,7 @@ public class LoggedInActivity extends FontsActivity implements GoogleApiClient.C
             return;
         }
 
-        Log.d(LOG_TAG, "showLocationEnabledDialog: ");
+        Log.d(TAG, "showLocationEnabledDialog: ");
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
         builder.setTitle(R.string.location_enabled_dialog_title)
                 .setMessage(R.string.location_enabled_dialog_msg)

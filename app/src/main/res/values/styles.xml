@@ -1,11 +1,14 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
+        <!--Added to stop toolbar crash-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
     </style>
 
     <style name="Theme.SeattlePassport" parent="AppTheme">
@@ -21,10 +24,52 @@
         <item name="colorControlHighlight">@color/accent_material_dark</item>
     </style>
 
+    <style name="DialogTransparentBackgroundTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
     <style name="DialogTheme" parent="Base.Theme.AppCompat.Light.Dialog.Alert">
         <item name="titleTextColor">@color/primaryColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
         <item name="colorControlNormal">@color/secondaryColor</item>
     </style>
 
+    <style name="SignInEditText" parent="Widget.AppCompat.EditText">
+        <item name="backgroundTint">@color/primaryTextColor</item>
+        <item name="android:textColorHint">@color/primaryTextColor</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:textSize">@dimen/sign_int_edit_text_size</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="fontPath">@string/font_light</item>
+    </style>
+
+    <style name="BaseButton">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:textSize">@dimen/sign_int_edit_text_size</item>
+    </style>
+
+    <style name="OrangeButton" parent="BaseButton">
+        <item name="fontPath">@string/font_bold</item>
+        <item name="android:background">@drawable/orange_button</item>
+        <item name="android:layout_marginLeft">-10dp</item>
+        <item name="android:layout_marginRight">-10dp</item>
+    </style>
+
+    <style name="FacebookButton" parent="OrangeButton">
+        <item name="android:drawableLeft">@drawable/ic_facebook_logo</item>
+        <item name="android:text">@string/connect_with_facebook</item>
+        <item name="android:background">@drawable/facebook_button</item>
+    </style>
+
+    <style name="TransparentButton" parent="BaseButton">
+        <item name="android:textColor">@color/transparent_btn_color_selector</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="ToolbarTitle">
+        <item name="android:textSize">19sp</item>
+        <item name="titleTextColor">@color/primaryTextColor</item>
+        <item name="fontPath">@string/font_medium</item>
+    </style>
 </resources>

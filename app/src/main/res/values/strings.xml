@@ -4,6 +4,12 @@
     <string name="facebook_app_id">342940636168116</string>
     <string name="fb_login_protocol_scheme">fb342940636168116</string>
 
+    <!--Font strings-->
+    <string name="font_comfortaa_light" translatable="false">fonts/Comfortaa-Light.ttf</string>
+    <string name="font_light" translatable="false">fonts/Roboto-Light.ttf</string>
+    <string name="font_bold" translatable="false">fonts/Roboto-Bold.ttf</string>
+    <string name="font_medium" translatable="false">fonts/Roboto-Medium.ttf</string>
+
     <!--Marker strings for DrawMarkerActivity activity-->
     <string name="draw_marker_options_title">Hello World!</string>
     <string name="draw_marker_options_snippet">Welcome to my marker.</string>
@@ -17,5 +23,32 @@
     <string name="location_permission_settings">Permissions</string>
     <string name="location_enabled_dialog_title">Location Needed</string>
     <string name="location_enabled_dialog_msg">In order for the application to work, the device location must be enabled.</string>
+
+    <!--Sign in Layout Strings-->
+    <string name="or">or</string>
+    <string name="log_in">log in</string>
+    <string name="create_new_account">create new account</string>
+    <string name="skip">skip</string>
+    <string name="password_hint">PASSWORD</string>
+    <string name="email_hint">EMAIL</string>
+    <string name="connect_with_facebook">connect with Facebook</string>
+    <string name="i_have_an_account_already">I have an Account already</string>
+
+    <!--Option Menu Strings-->
+    <string name="map">Map</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter</string>
+    <string name="log_out">Log out</string>
+    <string name="log_out_message">Are you sure you want to log out of Seattle Passport?</string>
+    <string name="cancel">Cancel</string>
+
+    <!--MainActivity strings -->
+    <string name="welcome_back_message">Welcome back </string>
+
+    <!--Recyclerview strings-->
+    <string name="unknown">N.A</string>
+    <string name="location_error">Unable to get device location. Please try again later.</string>
+    <string name="unable_to_get_results">Unable to get results. Please check your internet connection and try again later.</string>
+    <string name="distance_miles">%1$s Miles</string>
 
 </resources>

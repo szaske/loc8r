@@ -1,6 +1,11 @@
 package com.loc8r.seattle.models;
 
 
+import android.os.Parcelable;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
@@ -11,13 +16,14 @@ import java.util.StringTokenizer;
  */
 @Parcel
 public class POI {
-    String id;
+    ObjectId id;
     String img_url;
     String name;
     Double latitude;
     Double longitude;
     String description;
     ArrayList<String> tags;
+    double distance;
 
     public POI(){}
 
@@ -28,9 +34,45 @@ public class POI {
         this.description = description;
     }
 
-    public String getId() { return id; }
+    /*
+    * Helper class to keep all the field names in one place
+    * */
+    public class Field
+    {
+        public static final String ID = "_id";
+        public static final String NAME = "name";
+        static final String DESC = "description";
+        static final String LAT = "latitude";
+        static final String LONG = "longitude";
+        static final String IMAGE_URL = "img_url";
+    }
 
-    public void setId(String id) { this.id = id; }
+    /**
+    * Parse the POI object from the MongoDB document
+    **/
+    public static POI fromDocument(Document document)
+    {
+        POI poi = new POI();
+        try
+        {
+            poi.id = document.getObjectId(Field.ID);
+            poi.name = document.getString(Field.NAME);
+            poi.description = document.getString(Field.DESC);
+            poi.latitude = document.getDouble(Field.LAT);
+            poi.longitude = document.getDouble(Field.LONG);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return poi;
+    }
+
+
+
+    public ObjectId getId() { return id; }
+
+    public void setId(ObjectId id) { this.id = id; }
 
     public String getImg_url() { return img_url; }
 
@@ -45,4 +87,6 @@ public class POI {
     }
 
     public ArrayList<String> getTags() { return tags; }
+
+    public double getDistance() { return distance; }
 }

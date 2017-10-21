@@ -20,32 +20,40 @@
             android:value="@string/facebook_app_id"/>
 
         <activity android:name=".activities.MainActivity">
+
+        </activity>
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="Seattle Passport"/>
+        <activity android:name=".activities.POIDetailActivity"/>
+
+
+        <activity android:name=".activities.FontsActivity">
+        </activity>
+        <activity android:name=".activities.LoggedInActivity">
+        </activity>
+        <activity android:name=".activities.SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="Seattle Passport"/>
-        <activity android:name=".tests.PinOnMap"/>
-        <activity android:name=".tests.mapFeatureCollection"/>
-        <activity android:name=".tests.mapPlusRecycler"/>
-        <activity android:name=".tests.mapDataFromFirebase"/>
-        <activity android:name=".activities.ExploreSeattle"/>
-        <activity android:name=".activities.POIDetailActivity"/>
+        <activity android:name=".activities.SignUpActivity">
+        </activity>
 
-        <!-- <service -->
-        <!-- android:name=".services.LocationBaseService" -->
-        <!-- android:enabled="true" -->
-        <!-- android:exported="true"> -->
-        <!-- </service> -->
-        <activity android:name=".activities.FontsActivity">
-        </activity>
-        <activity android:name=".activities.LoggedInActivity">
-        </activity>
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key"/>
     </application>
 
 </manifest>
