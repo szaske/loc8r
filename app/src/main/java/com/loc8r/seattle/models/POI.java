@@ -3,6 +3,8 @@ package com.loc8r.seattle.models;
 
 import android.os.Parcelable;
 
+import com.google.android.gms.nearby.messages.Distance;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -44,7 +46,8 @@ public class POI {
         static final String DESC = "description";
         static final String LAT = "latitude";
         static final String LONG = "longitude";
-        static final String IMAGE_URL = "img_url";
+        static final String IMG_URL = "img_url";
+        static final String DIST = "dist";
     }
 
     /**
@@ -58,8 +61,20 @@ public class POI {
             poi.id = document.getObjectId(Field.ID);
             poi.name = document.getString(Field.NAME);
             poi.description = document.getString(Field.DESC);
+            // How to get longitude from MongoDG Document
+            // object.get("location").get("coordinates").get(0)
             poi.latitude = document.getDouble(Field.LAT);
             poi.longitude = document.getDouble(Field.LONG);
+            poi.img_url = document.getString(Field.IMG_URL);
+
+            // Being extra careful here.  Distance will only exist
+            // if we parsed the POI object after a geoNear command,
+            // where the distance was calculated
+            Number distance = (Number) document.get(Field.DIST);
+            if (distance != null)
+            {
+                poi.distance = distance.doubleValue();
+            }
         }
         catch (Exception e)
         {

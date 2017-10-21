@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ import com.loc8r.seattle.utils.ProgressDialog;
 import com.loc8r.seattle.interfaces.LocationListener;
 
 import com.paginate.Paginate;
+import com.squareup.picasso.Picasso;
 
 
 import java.util.ArrayList;
@@ -42,7 +44,9 @@ import java.util.Locale;
 
 import butterknife.ButterKnife;
 
+import static android.R.attr.data;
 import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
+import static com.loc8r.seattle.R.id.poiImageView;
 
 public class MainActivity extends LoggedInActivity {
 
@@ -435,21 +439,19 @@ public class MainActivity extends LoggedInActivity {
             Bind the POI to the UI
             * */
 
+            // TODO Detemrine why we're checking for instance of ViewHolder
             if (holder instanceof ViewHolder)
             {
-                ViewHolder vh = (ViewHolder) holder;
+                // ViewHolder vh = (ViewHolder) holder;
                 POI data = pois.get(position);
-                vh.mName.setText(data.getName());
+                ((ViewHolder) holder).bindPoi(data);
+
+                // moved
+                // vh.mName.setText(data.getName());
+
                 //setAddress(vh, data.getAddress());
                 // vh.mPhone.setText(data.getPhone());
-                if (mLastLocation != null)
-                {
-                    vh.mDistance.setText(formatDistance(data.getDistance()));
-                }
-                else
-                {
-                    vh.mDistance.setText(R.string.unknown);
-                }
+
             }
         }
 
@@ -566,14 +568,39 @@ public class MainActivity extends LoggedInActivity {
 
         class ViewHolder extends RecyclerView.ViewHolder
         {
+            // a list of references to the lifecycle of the object to allow the
+            // ViewHolder to hang on to your ImageView and TextView, so it
+            // doesn’t have to repeatedly query the same information.
+            // This is why we're using a recyclerview
+            POI mPoi;
             TextView mName;
             TextView mDistance;
+            ImageView mPoiImg;
 
             ViewHolder(View itemView)
             {
                 super(itemView);
                 mName = itemView.findViewById(R.id.poiNameTextView);
                 mDistance = itemView.findViewById(R.id.poiDistanceTextView);
+                mPoiImg = itemView.findViewById(R.id.poiImageView);
+            }
+
+            public void bindPoi(POI poi){
+                //So now the viewholder has a copy of each POI
+                mPoi = poi;
+                Picasso
+                        .with(mPoiImg.getContext())
+                        .load(poi.getImg_url())
+                        .into(mPoiImg);
+                mName.setText(poi.getName());
+                if (mLastLocation != null)
+                {
+                    mDistance.setText(formatDistance(poi.getDistance()));
+                } else
+                {
+                    mDistance.setText(R.string.unknown);
+                }
+
             }
         }
 
