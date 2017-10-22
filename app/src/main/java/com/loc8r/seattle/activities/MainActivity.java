@@ -37,6 +37,8 @@ import com.loc8r.seattle.interfaces.LocationListener;
 import com.paginate.Paginate;
 import com.squareup.picasso.Picasso;
 
+import org.parceler.Parcel;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +68,7 @@ public class MainActivity extends LoggedInActivity {
     private boolean mIsLoading;
     private POI mFarthestPOI;
     private boolean mIsFinished;
+    private static final int PAGE_SIZE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,7 +251,6 @@ public class MainActivity extends LoggedInActivity {
             Toast.makeText(this, R.string.location_error, Toast.LENGTH_SHORT).show();
             return;
         }
-
 
         mIsLoading = true;
         mAdapter.setLoading(true);
@@ -550,11 +552,27 @@ public class MainActivity extends LoggedInActivity {
             public void onClick(View v)
             {
                 int itemPosition = mRecyclerView.getChildLayoutPosition(v);
-                POI data = pois.get(itemPosition);
+                POI dataToSend = pois.get(itemPosition);
 
                 //get the POI and show it in the map activity
 //                Intent intent = POIDetailActivity.newIntent(MainActivity.this, data);
 //                startActivityForResult(intent, REQUEST_CODE);
+
+                // somewhere inside an Activity
+
+//                Intent intent = new Intent(this,myActivity2.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putString(“myValue“, myValue);
+//                intent.putExtras(bundle);
+//                navigation.this.startActivity(intent);
+
+
+                Intent i = new Intent(MainActivity.this, POIDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("poi", Parcels.wrap(dataToSend));
+                i.putExtras(bundle);
+                startActivity(i); // dataToSend is now passed to the new Activity
+                finish(); // TODO: Why is finish needed??
             }
         }
 

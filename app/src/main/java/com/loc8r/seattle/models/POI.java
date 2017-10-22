@@ -1,6 +1,7 @@
 package com.loc8r.seattle.models;
 
 
+import android.location.Location;
 import android.os.Parcelable;
 
 import com.google.android.gms.nearby.messages.Distance;
@@ -21,6 +22,7 @@ public class POI {
     ObjectId id;
     String img_url;
     String name;
+    Location location;
     Double latitude;
     Double longitude;
     String description;
@@ -29,11 +31,11 @@ public class POI {
 
     public POI(){}
 
-    public POI(String name, Double latitude, Double longitude, String description) {
+    public POI(String name, Location location, String description, String img_url) {
         this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.location = location;
         this.description = description;
+        this.img_url = img_url;
     }
 
     /*
@@ -44,8 +46,8 @@ public class POI {
         public static final String ID = "_id";
         public static final String NAME = "name";
         static final String DESC = "description";
-        static final String LAT = "latitude";
-        static final String LONG = "longitude";
+        static final String LOC = "location";
+        static final String COORD = "coordinates";
         static final String IMG_URL = "img_url";
         static final String DIST = "dist";
     }
@@ -61,11 +63,18 @@ public class POI {
             poi.id = document.getObjectId(Field.ID);
             poi.name = document.getString(Field.NAME);
             poi.description = document.getString(Field.DESC);
-            // How to get longitude from MongoDG Document
-            // object.get("location").get("coordinates").get(0)
-            poi.latitude = document.getDouble(Field.LAT);
-            poi.longitude = document.getDouble(Field.LONG);
             poi.img_url = document.getString(Field.IMG_URL);
+
+            /*
+            * note: in MongoDB the longitude is at position 0, and the latitude is in position 1
+            * */
+            Document location = (Document) document.get(Field.LOC);
+            ArrayList coords = (ArrayList) location.get(Field.COORD);
+
+            Location tempLocation = new Location("");
+            tempLocation.setLongitude((Double) coords.get(0));
+            tempLocation.setLatitude((Double) coords.get(1));
+            poi.location = tempLocation;
 
             // Being extra careful here.  Distance will only exist
             // if we parsed the POI object after a geoNear command,
@@ -93,9 +102,9 @@ public class POI {
 
     public String getName() { return name; }
 
-    public Double getLatitude() { return latitude; }
+    public Double getLatitude() { return location.getLatitude(); }
 
-    public Double getLongitude() { return longitude; }
+    public Double getLongitude() { return location.getLongitude(); }
 
     public String getDescription() {
         return description;
