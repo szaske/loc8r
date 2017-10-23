@@ -5,6 +5,9 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +19,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,6 +44,8 @@ import com.squareup.picasso.Picasso;
 import org.parceler.Parcel;
 import org.parceler.Parcels;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -287,12 +293,12 @@ public class MainActivity extends LoggedInActivity {
                         if (!pois.isEmpty())
                         {
                             /*
-                            * update the farthest restaurant so we can use it for the next page
+                            * the farthest restaurant so we can use it for the next page
                             * */
                             mFarthestPOI = pois.get(pois.size() - 1);
                         }
 
-                        //clear previous results
+                        //clear previous results update
                         if (clearList)
                         {
                             mAdapter.clear();
@@ -572,7 +578,7 @@ public class MainActivity extends LoggedInActivity {
                 bundle.putParcelable("poi", Parcels.wrap(dataToSend));
                 i.putExtras(bundle);
                 startActivity(i); // dataToSend is now passed to the new Activity
-                finish(); // TODO: Why is finish needed??
+                // finish(); // TODO: Why is finish needed??
             }
         }
 

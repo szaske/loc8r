@@ -51,4 +51,7 @@
     <string name="unable_to_get_results">Unable to get results. Please check your internet connection and try again later.</string>
     <string name="distance_miles">%1$s Miles</string>
 
+    <!--POI Detail Activity Strings-->
+    <string name="get_stamp_button">Get Stamp</string>
+
 </resources>

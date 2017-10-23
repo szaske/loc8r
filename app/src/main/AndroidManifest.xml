@@ -19,14 +19,16 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
-        <activity android:name=".activities.MainActivity">
-
-        </activity>
+        <activity android:name=".activities.MainActivity"></activity>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="Seattle Passport"/>
-        <activity android:name=".activities.POIDetailActivity"/>
+        <activity android:name=".activities.POIDetailActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.loc8r.seattle.activities.MainActivity" />
+        </activity>
 
 
         <activity android:name=".activities.FontsActivity">

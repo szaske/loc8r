@@ -18,6 +18,8 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -25,7 +27,7 @@ import com.google.android.gms.location.LocationServices;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
 
-public class LoggedInActivity extends FontsActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
+public class LoggedInActivity extends FontsActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final int LOCATION_REQUEST_CODE = 420;
     private static final String TAG = LoggedInActivity.class.getSimpleName();
 
@@ -33,32 +35,26 @@ public class LoggedInActivity extends FontsActivity implements GoogleApiClient.C
     private AlertDialog mLocationEnabledDialog;
 
     @Override
-    public void onConnected(@Nullable Bundle bundle)
-    {
+    public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected() called with: " + "bundle = [" + bundle + "]");
     }
 
     @Override
-    public void onConnectionSuspended(int i)
-    {
+    public void onConnectionSuspended(int i) {
         Log.d(TAG, "onConnectionSuspended() called with: " + "i = [" + i + "]");
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
-    {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.e(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
     }
 
-    protected void onLocationPermissionGranted()
-    {
+    protected void onLocationPermissionGranted() {
         Log.d(TAG, "onLocationPermissionGranted: ");
     }
 
-    private void initGoogleLocationServices()
-    {
-        if (mGoogleApiClient == null)
-        {
+    private void initGoogleLocationServices() {
+        if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
@@ -69,37 +65,64 @@ public class LoggedInActivity extends FontsActivity implements GoogleApiClient.C
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState)
-    {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initGoogleLocationServices();
     }
 
     @Override
-    protected void onStart()
-    {
-        if (mGoogleApiClient != null)
-        {
+    protected void onStart() {
+        if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
         super.onStart();
     }
 
     @Override
-    protected void onStop()
-    {
-        if (mGoogleApiClient != null)
-        {
+    protected void onStop() {
+        if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
         }
         super.onStop();
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         checkLocationPermission();
+    }
+
+    protected void getContinousLocationUpdates(@NonNull final LocationListener listener) {
+
+        long INTERVAL = 1000 * 10;
+        long FASTEST_INTERVAL = 1000 * 5;
+        // Location mCurrentLocation = null;
+
+
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        PendingResult<Status> pendingResult = LocationServices
+                .FusedLocationApi
+                .requestLocationUpdates(mGoogleApiClient, mLocationRequest, new com.google.android.gms.location.LocationListener() {
+
+                    @Override public void onLocationChanged(Location location) {
+                        listener.onLocationReceived(location); // Send the location to the Activity
+                    }
+                });
+        Log.d(TAG, "STZ Location update started ..............: ");
     }
 
     protected void getLastLocation(@NonNull LocationListener listener)
@@ -120,7 +143,7 @@ public class LoggedInActivity extends FontsActivity implements GoogleApiClient.C
         }
     }
 
-    private void startLocationUpdates(@NonNull final LocationListener listener)
+    protected void startLocationUpdates(@NonNull final LocationListener listener)
     {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
         {
@@ -141,7 +164,7 @@ public class LoggedInActivity extends FontsActivity implements GoogleApiClient.C
                             Location lastLocation = locationResult.getLastLocation();
                             if (lastLocation != null)
                             {
-                                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+                                // LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
                                 listener.onLocationReceived(lastLocation);
                             }
                             Log.d(TAG, "onLocationResult: You're location is" + String.valueOf(locationResult));
