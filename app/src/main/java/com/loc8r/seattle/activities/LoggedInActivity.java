@@ -33,6 +33,7 @@ public class LoggedInActivity extends FontsActivity implements GoogleApiClient.C
 
     private GoogleApiClient mGoogleApiClient;
     private AlertDialog mLocationEnabledDialog;
+    private com.google.android.gms.location.LocationListener mPoiLocationListener;
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -114,15 +115,22 @@ public class LoggedInActivity extends FontsActivity implements GoogleApiClient.C
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+
+        mPoiLocationListener = new com.google.android.gms.location.LocationListener() {
+            @Override public void onLocationChanged(Location location) {
+                listener.onLocationReceived(location); // Send the location to the Activity
+            }
+        };
+
+
         PendingResult<Status> pendingResult = LocationServices
                 .FusedLocationApi
-                .requestLocationUpdates(mGoogleApiClient, mLocationRequest, new com.google.android.gms.location.LocationListener() {
-
-                    @Override public void onLocationChanged(Location location) {
-                        listener.onLocationReceived(location); // Send the location to the Activity
-                    }
-                });
+                .requestLocationUpdates(mGoogleApiClient, mLocationRequest, mPoiLocationListener);
         Log.d(TAG, "STZ Location update started ..............: ");
+    }
+
+    protected void cancelContinousLocationUpdates(){
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mPoiLocationListener);
     }
 
     protected void getLastLocation(@NonNull LocationListener listener)

@@ -26,6 +26,7 @@ import com.mongodb.stitch.android.services.mongodb.MongoClient;
 
 import com.loc8r.seattle.interfaces.QueryListener;
 import com.loc8r.seattle.models.POI;
+import com.loc8r.seattle.models.Stamp;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -34,6 +35,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static android.R.attr.category;
+import static android.R.attr.name;
 
 
 /**
@@ -67,6 +71,7 @@ public class MongoDBManager {
     private class DBCollections {
         private static final String POIS = "pois";
         private static final String REVIEWS_RATINGS = "reviewsRatings";
+        private static final String STAMPS = "stamps";
     }
 
 
@@ -449,7 +454,7 @@ public class MongoDBManager {
             }
         });
     }
-} // end of Manager class
+
 
 //    @SuppressWarnings("unchecked")
 //    public void updateRatings(final POI poi, final QueryListener<Void> listener)
@@ -639,7 +644,7 @@ public class MongoDBManager {
      * @param poi
      * @param listener
      */
-    public void addStamp(@NonNull final String comment, final int rate, @NonNull final POI poi, final QueryListener<Review> listener)
+    public void addStamp(@NonNull final POI poi, final QueryListener<Stamp> listener)
     {
 
         /**
@@ -650,20 +655,13 @@ public class MongoDBManager {
         final Date date = new Date();
 
         Document query = new Document(Stamp.Field.ID, id)
-                .append(Stamp.Field.NAME, comment)
-                .append(Stamp.Field.RESTAURANT_ID, poi.getId())
-                .append(Stamp.Field.OWNER_ID, getUserId())
+                .append(Stamp.Field.STAMP_ID, poi.getStampId())
+                .append(Stamp.Field.CAT, poi.getCategory())
                 .append(Stamp.Field.DATE, date)
-                .append(Stamp.Field.NAME_OF_REVIEWER, mUserName);
+                .append(Stamp.Field.OWNER_ID, getUserId())
+                .append(Stamp.Field.POI_ID, poi.getId().toString());
 
-
-        //for this app we only allow ratings that are > 0
-        if (rate > 0)
-        {
-            query.append(Stamp.Field.RATE, rate);
-        }
-
-        getDatabase().getCollection(DBCollections.REVIEWS_RATINGS).insertOne(query).continueWith(new Continuation<Void, Object>()
+        getDatabase().getCollection(DBCollections.STAMPS).insertOne(query).continueWith(new Continuation<Void, Object>()
         {
             @Override
             public Object then(@NonNull Task<Void> task) throws Exception
@@ -678,17 +676,16 @@ public class MongoDBManager {
                 }
                 else
                 {
-                    //construct the newly added review
+                    //construct the newly added stamp
                     if (listener != null)
                     {
-                        Review review = new Review();
-                        review.setId(id);
-                        review.setComment(comment);
-                        review.setName(mUserName);
-                        review.setRate(rate);
-                        review.setDate(date);
-                        review.setEditable(true);
-                        listener.onSuccess(review);
+                        Stamp stamp = new Stamp();
+                        stamp.setId(id);
+                        stamp.setDate(date);
+                        stamp.setCategory(poi.getCategory());
+                        stamp.setOwnerId(getUserId());
+                        stamp.setPoiId(poi.getId().toString());
+                        listener.onSuccess(stamp);
                     }
                 }
 
@@ -697,6 +694,8 @@ public class MongoDBManager {
         });
 
     }
+
+} // end of Manager class
 //
 //    public void editReview(@NonNull final String newComment, final int rate, @NonNull final Review previousReview, final QueryListener<Review> listener)
 //    {

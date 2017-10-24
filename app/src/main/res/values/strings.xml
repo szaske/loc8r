@@ -53,5 +53,6 @@
 
     <!--POI Detail Activity Strings-->
     <string name="get_stamp_button">Get Stamp</string>
+    <string name="stamp_error">Error getting Stamp</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.loc8r.seattle.activities;
 
+import android.app.Dialog;
 import android.location.Location;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,10 +9,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
+import com.loc8r.seattle.interfaces.QueryListener;
 import com.loc8r.seattle.models.POI;
+import com.loc8r.seattle.models.Stamp;
+import com.loc8r.seattle.mongodb.MongoDBManager;
+import com.loc8r.seattle.utils.ProgressDialog;
 import com.paginate.Paginate;
 import com.squareup.picasso.Picasso;
 
@@ -44,6 +50,7 @@ public class POIDetailActivity extends LoggedInActivity {
     public void onGetStampClick() {
         Log.i(TAG, ": Get Stamp Button was clicked");
         // TODO submit data to server...
+        addStamp();
     }
 
     @Override
@@ -92,6 +99,40 @@ public class POIDetailActivity extends LoggedInActivity {
             }
         });
     }
+
+    private void addStamp()
+    {
+        final Dialog progressDialog = ProgressDialog.getDialog(this, true);
+        progressDialog.show();
+
+        // Create a listener
+        QueryListener<Stamp> queryListener = new QueryListener<Stamp>()
+        {
+            @Override
+            public void onSuccess(Stamp result)
+            {
+                progressDialog.dismiss();
+                // Do something after we get the stamp
+                cancelContinousLocationUpdates();
+                Log.e(TAG, "onSuccess: We got ourselves a STAMP here!");
+            }
+
+            @Override
+            public void onError(Exception e)
+            {
+                progressDialog.dismiss();
+                Log.e(TAG, "onError: ", e);
+                Toast.makeText(getApplicationContext(), R.string.stamp_error, Toast.LENGTH_LONG).show();
+            }
+        };
+
+        //TODO: Add check so user can only create one STAMP per POI
+        if (true)
+        {
+            MongoDBManager.getInstance(getApplicationContext()).addStamp(detailedPoi, queryListener);
+        }
+    }
+
 
     /**
      * Calculate distance between two points in latitude and longitude

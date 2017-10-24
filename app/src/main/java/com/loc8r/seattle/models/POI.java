@@ -25,17 +25,19 @@ public class POI {
     Location location;
     String category;
     String description;
+    String stampId;
     String stampText;
     double distance;
 
     public POI(){}
 
-    public POI(String name, Location location, String description, String img_url, String category, String stampText) {
+    public POI(String name, Location location, String description, String img_url, String category, String stampId, String stampText) {
         this.name = name;
         this.location = location;
         this.description = description;
         this.img_url = img_url;
         this.category = category;
+        this.stampId = stampId;
         this.stampText = stampText;
     }
 
@@ -52,6 +54,7 @@ public class POI {
         static final String IMG_URL = "img_url";
         static final String DIST = "dist";
         static final String CAT = "category";
+        static final String STAMP_ID = "stampId";
         static final String STAMP_TEXT = "stampText";
     }
 
@@ -69,6 +72,7 @@ public class POI {
             poi.img_url = document.getString(Field.IMG_URL);
             poi.category = document.getString(Field.CAT);
             poi.stampText = document.getString(Field.STAMP_TEXT);
+            poi.stampId = document.getString(Field.STAMP_ID);
 
             Document location = (Document) document.get(Field.LOC);
             ArrayList coords = (ArrayList) location.get(Field.COORD);
@@ -100,6 +104,7 @@ public class POI {
     public void setId(ObjectId id) { this.id = id; }
     public String getImg_url() { return img_url; }
     public String getName() { return name; }
+    public String getStampId() { return stampId; }
     public String getStampText() { return stampText; }
     public String getCategory() { return category; }
     public Double getLatitude() { return location.getLatitude(); }

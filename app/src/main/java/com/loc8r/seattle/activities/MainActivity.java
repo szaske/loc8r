@@ -34,9 +34,11 @@ import android.widget.Toast;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.QueryListener;
 import com.loc8r.seattle.models.POI;
+import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.mongodb.MongoDBManager;
 import com.loc8r.seattle.utils.ProgressDialog;
 import com.loc8r.seattle.interfaces.LocationListener;
+import com.loc8r.seattle.interfaces.QueryListener;
 
 import com.paginate.Paginate;
 import com.squareup.picasso.Picasso;
@@ -273,55 +275,54 @@ public class MainActivity extends LoggedInActivity {
         Get a list of pois, sorted by the geo location (closest pois go first), filters and query regex (if not null)
         */
         MongoDBManager.getInstance(getApplicationContext()).geoNear(mKeyword, mLastLocation.getLatitude()
-                , mLastLocation.getLongitude(), mFarthestPOI, PAGE_SIZE, new QueryListener<List<POI>>()
+            , mLastLocation.getLongitude(), mFarthestPOI, PAGE_SIZE, new QueryListener<List<POI>>() {
+                @Override
+                public void onSuccess(List<POI> pois)
                 {
-                    @Override
-                    public void onSuccess(List<POI> pois)
+                    mAdapter.setLoading(false);
+                    mIsLoading = false;
+
+                    //if the list of results is smaller than the page size, the pagination finished
+                    mIsFinished = pois.size() < PAGE_SIZE;
+
+                    if (dialog != null)
                     {
-                        mAdapter.setLoading(false);
-                        mIsLoading = false;
-
-                        //if the list of results is smaller than the page size, the pagination finished
-                        mIsFinished = pois.size() < PAGE_SIZE;
-
-                        if (dialog != null)
-                        {
-                            dialog.dismiss();
-                            mIsProgressDialogShowing = false;
-                        }
-
-                        if (!pois.isEmpty())
-                        {
-                            /*
-                            * the farthest restaurant so we can use it for the next page
-                            * */
-                            mFarthestPOI = pois.get(pois.size() - 1);
-                        }
-
-                        //clear previous results update
-                        if (clearList)
-                        {
-                            mAdapter.clear();
-                        }
-
-                        mAdapter.addData(pois);
-                        mAdapter.notifyDataSetChanged();
+                        dialog.dismiss();
+                        mIsProgressDialogShowing = false;
                     }
 
-                    @Override
-                    public void onError(Exception e)
+                    if (!pois.isEmpty())
                     {
-                        mAdapter.setLoading(false);
-                        mIsLoading = false;
-                        mIsFinished = true;
-                        mAdapter.notifyDataSetChanged();
-                        Toast.makeText(MainActivity.this, R.string.unable_to_get_results, Toast.LENGTH_SHORT).show();
-                        if (dialog != null)
-                        {
-                            dialog.dismiss();
-                        }
+                        /*
+                        * the farthest restaurant so we can use it for the next page
+                        * */
+                        mFarthestPOI = pois.get(pois.size() - 1);
                     }
-                });
+
+                    //clear previous results update
+                    if (clearList)
+                    {
+                        mAdapter.clear();
+                    }
+
+                    mAdapter.addData(pois);
+                    mAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onError(Exception e)
+                {
+                    mAdapter.setLoading(false);
+                    mIsLoading = false;
+                    mIsFinished = true;
+                    mAdapter.notifyDataSetChanged();
+                    Toast.makeText(MainActivity.this, R.string.unable_to_get_results, Toast.LENGTH_SHORT).show();
+                    if (dialog != null)
+                    {
+                        dialog.dismiss();
+                    }
+                }
+        });
     }
 
     @Override
