@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.Task;
 //import com.mongodb.platespace.model.Attributes;
 //import com.mongodb.platespace.model.Poi;
 //import com.mongodb.platespace.model.Review;
+import com.loc8r.seattle.models.Stamp;
 import com.mongodb.stitch.android.PipelineStage;
 import com.mongodb.stitch.android.StitchClient;
 import com.mongodb.stitch.android.auth.Auth;
@@ -629,68 +630,73 @@ public class MongoDBManager {
 ////        });
 //    }
 
-//    public void addReview(@NonNull final String comment, final int rate, @NonNull final POI poi, final QueryListener<Review> listener)
-//    {
-//        /*
-//        * Add a new review for a specific poi
-//        *
-//        * */
-//
-//        /*
-//        We init the object id so that we already have it when the query finishes.
-//        If we didn't initialize it here, it would have been initialize automatically
-//         */
-////        final ObjectId id = new ObjectId();
-////        final Date date = new Date();
-////
-////        Document query = new Document(Review.Field.ID, id)
-////                .append(Review.Field.COMMENT, comment)
-////                .append(Review.Field.RESTAURANT_ID, poi.getId())
-////                .append(Review.Field.OWNER_ID, getUserId())
-////                .append(Review.Field.DATE, date)
-////                .append(Review.Field.NAME_OF_REVIEWER, mUserName);
-////
-////
-////        //for this app we only allow ratings that are > 0
-////        if (rate > 0)
-////        {
-////            query.append(Review.Field.RATE, rate);
-////        }
-////
-////        getDatabase().getCollection(DBCollections.REVIEWS_RATINGS).insertOne(query).continueWith(new Continuation<Void, Object>()
-////        {
-////            @Override
-////            public Object then(@NonNull Task<Void> task) throws Exception
-////            {
-////                if (!task.isSuccessful())
-////                {
-////                    Log.e(TAG, "Failed to execute query");
-////                    if (listener != null)
-////                    {
-////                        listener.onError(task.getException());
-////                    }
-////                }
-////                else
-////                {
-////                    //construct the newly added review
-////                    if (listener != null)
-////                    {
-////                        Review review = new Review();
-////                        review.setId(id);
-////                        review.setComment(comment);
-////                        review.setName(mUserName);
-////                        review.setRate(rate);
-////                        review.setDate(date);
-////                        review.setEditable(true);
-////                        listener.onSuccess(review);
-////                    }
-////                }
-////
-////                return null;
-////            }
-////        });
-//
-//    }
+
+    /**
+     *  Add a stamp for a specific poi
+     *
+     * @param comment
+     * @param rate
+     * @param poi
+     * @param listener
+     */
+    public void addStamp(@NonNull final String comment, final int rate, @NonNull final POI poi, final QueryListener<Review> listener)
+    {
+
+        /**
+        *   We init the object id so that we already have it when the query finishes.
+        *   If we didn't initialize it here, it would have been initialize automatically
+        **/
+        final ObjectId id = new ObjectId();
+        final Date date = new Date();
+
+        Document query = new Document(Stamp.Field.ID, id)
+                .append(Stamp.Field.NAME, comment)
+                .append(Stamp.Field.RESTAURANT_ID, poi.getId())
+                .append(Stamp.Field.OWNER_ID, getUserId())
+                .append(Stamp.Field.DATE, date)
+                .append(Stamp.Field.NAME_OF_REVIEWER, mUserName);
+
+
+        //for this app we only allow ratings that are > 0
+        if (rate > 0)
+        {
+            query.append(Stamp.Field.RATE, rate);
+        }
+
+        getDatabase().getCollection(DBCollections.REVIEWS_RATINGS).insertOne(query).continueWith(new Continuation<Void, Object>()
+        {
+            @Override
+            public Object then(@NonNull Task<Void> task) throws Exception
+            {
+                if (!task.isSuccessful())
+                {
+                    Log.e(TAG, "Failed to execute query");
+                    if (listener != null)
+                    {
+                        listener.onError(task.getException());
+                    }
+                }
+                else
+                {
+                    //construct the newly added review
+                    if (listener != null)
+                    {
+                        Review review = new Review();
+                        review.setId(id);
+                        review.setComment(comment);
+                        review.setName(mUserName);
+                        review.setRate(rate);
+                        review.setDate(date);
+                        review.setEditable(true);
+                        listener.onSuccess(review);
+                    }
+                }
+
+                return null;
+            }
+        });
+
+    }
 //
 //    public void editReview(@NonNull final String newComment, final int rate, @NonNull final Review previousReview, final QueryListener<Review> listener)
 //    {

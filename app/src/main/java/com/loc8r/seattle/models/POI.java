@@ -23,24 +23,25 @@ public class POI {
     String img_url;
     String name;
     Location location;
-    Double latitude;
-    Double longitude;
+    String category;
     String description;
-    ArrayList<String> tags;
+    String stampText;
     double distance;
 
     public POI(){}
 
-    public POI(String name, Location location, String description, String img_url) {
+    public POI(String name, Location location, String description, String img_url, String category, String stampText) {
         this.name = name;
         this.location = location;
         this.description = description;
         this.img_url = img_url;
+        this.category = category;
+        this.stampText = stampText;
     }
 
-    /*
+    /**
     * Helper class to keep all the field names in one place
-    * */
+    **/
     public class Field
     {
         public static final String ID = "_id";
@@ -50,6 +51,8 @@ public class POI {
         static final String COORD = "coordinates";
         static final String IMG_URL = "img_url";
         static final String DIST = "dist";
+        static final String CAT = "category";
+        static final String STAMP_TEXT = "stampText";
     }
 
     /**
@@ -64,14 +67,15 @@ public class POI {
             poi.name = document.getString(Field.NAME);
             poi.description = document.getString(Field.DESC);
             poi.img_url = document.getString(Field.IMG_URL);
+            poi.category = document.getString(Field.CAT);
+            poi.stampText = document.getString(Field.STAMP_TEXT);
 
-            /*
-            * note: in MongoDB the longitude is at position 0, and the latitude is in position 1
-            * */
             Document location = (Document) document.get(Field.LOC);
             ArrayList coords = (ArrayList) location.get(Field.COORD);
-
             Location tempLocation = new Location("");
+            /**
+            * note: in MongoDB the longitude is at position 0, and the latitude is in position 1
+            **/
             tempLocation.setLongitude((Double) coords.get(0));
             tempLocation.setLatitude((Double) coords.get(1));
             poi.location = tempLocation;
@@ -92,25 +96,16 @@ public class POI {
         return poi;
     }
 
-
-
     public ObjectId getId() { return id; }
-
     public void setId(ObjectId id) { this.id = id; }
-
     public String getImg_url() { return img_url; }
-
     public String getName() { return name; }
-
+    public String getStampText() { return stampText; }
+    public String getCategory() { return category; }
     public Double getLatitude() { return location.getLatitude(); }
-
     public Double getLongitude() { return location.getLongitude(); }
-
     public String getDescription() {
         return description;
     }
-
-    public ArrayList<String> getTags() { return tags; }
-
     public double getDistance() { return distance; }
 }
