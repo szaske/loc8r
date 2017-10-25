@@ -130,6 +130,7 @@ public class LoggedInActivity extends FontsActivity implements GoogleApiClient.C
     }
 
     protected void cancelContinousLocationUpdates(){
+        Log.d(TAG, "STZ Location updates canceled");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mPoiLocationListener);
     }
 

@@ -28,16 +28,20 @@ import com.loc8r.seattle.interfaces.QueryListener;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
 
+import org.bson.BsonElement;
+import org.bson.BsonString;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static android.R.attr.category;
 import static android.R.attr.name;
+import static android.R.id.list;
 
 
 /**
@@ -307,11 +311,11 @@ public class MongoDBManager {
                         final QueryListener<List<POI>> listener)
     {
 
-        /*
+        /**
         * Get a list of poi, sorted by descending distance from a current location.
         *
         * The list has a limit, attributed, and possibly a keyword
-        * */
+        **/
 
         Document query = new Document();
 
@@ -519,128 +523,102 @@ public class MongoDBManager {
 //        });
 //    }
 
-//    public void getPOIReviews(final POI poi, final QueryListener<List<Review>> listener)
-//    {
-//        /*
-//        * Get the reviews of a poi, except for the review of the user that is logged in.
-//        * */
-//
-////        Document matchQuery = new Document()
-////                .append(Review.Field.RESTAURANT_ID, poi.getId())
-////                .append(Review.Field.OWNER_ID, new Document("$ne", getUserId()));
-////
-////        List<Document> pipeline = new ArrayList<>();
-////        pipeline.add(new Document("$match", matchQuery));
-////        pipeline.add(new Document("$sort", new Document(Review.Field.DATE, -1)));
-////
-////
-////        Document args = new Document();
-////        args.put("database", Statics.DB_NAME);
-////        args.put("collection", DBCollections.REVIEWS_RATINGS);
-////        args.put("pipeline", pipeline);
-////
-////
-////        mStitchClient.executePipeline(new PipelineStage("aggregate", Statics.SERVICE_NAME, args)).continueWith(new Continuation<List<Object>, Object>()
-////        {
-////            @Override
-////            public Object then(@NonNull Task<List<Object>> task) throws Exception
-////            {
-////                if (!task.isSuccessful())
-////                {
-////                    Log.e(TAG, "Failed to execute query");
-////                    if (listener != null)
-////                    {
-////                        listener.onError(task.getException());
-////                    }
-////                }
-////                else
-////                {
-////
-////                    List<Review> list = new ArrayList<>();
-////                    List<Object> result = task.getResult();
-////                    if (result == null || result.isEmpty())
-////                    {
-////                        Log.d(TAG, "No results found");
-////                    }
-////                    else
-////                    {
-////                        for (Object object : result)
-////                        {
-////                            //parse the Review model object from the result
-////                            list.add(Review.fromDocument((Document) object));
-////                        }
-////                    }
-////
-////                    if (listener != null)
-////                    {
-////                        listener.onSuccess(list);
-////                    }
-////                }
-////
-////                return null;
-////            }
-////        });
-//    }
-//
-//    public void getOwnerPOIReview(final POI poi, final QueryListener<Review> listener)
-//    {
-//
-//        /*
-//        * Get the poi review of the user that is currently logged in to the app
-//        * */
-//
-////        Document query = new Document()
-////                .append(Review.Field.RESTAURANT_ID, poi.getId())
-////                .append(Review.Field.OWNER_ID, getUserId());
-////
-////
-////        getDatabase().getCollection(DBCollections.REVIEWS_RATINGS).find(query).continueWith(new Continuation<List<Document>, Object>()
-////        {
-////            @Override
-////            public Object then(@NonNull final Task<List<Document>> task) throws Exception
-////            {
-////                if (!task.isSuccessful())
-////                {
-////                    Log.e(TAG, "Failed to execute query");
-////                    if (listener != null)
-////                    {
-////                        listener.onError(task.getException());
-////                    }
-////                }
-////                else
-////                {
-////                    Review review = null;
-////                    List<Document> result = task.getResult();
-////                    if (result == null || result.isEmpty())
-////                    {
-////                        Log.d(TAG, "No results found");
-////                    }
-////                    else
-////                    {
-////                        //there should only be 1 review per user
-////                        review = Review.fromDocument(result.get(0));
-////
-////                        //since it's the review of the logged in user, we mark the review editable
-////                        review.setEditable(true);
-////                    }
-////
-////                    if (listener != null)
-////                    {
-////                        listener.onSuccess(review);
-////                    }
-////                }
-////
-////                return null;
-////            }
-////        });
-//    }
+    public void getCatsPipe(final QueryListener<List<String>> listener) {
+        /*
+        * Get the reviews of a poi, except for the review of the user that is logged in.
+        * */
+
+        //no
+        List<Document> pipeline = new ArrayList<>();
+        pipeline.add(new Document("$group", new Document("_id","$category")));
+
+
+        Document args = new Document();
+        args.put("database", Statics.DB_NAME);
+        args.put("collection", DBCollections.POIS);
+        args.put("pipeline", pipeline);
+
+        Log.i(TAG, "getCatsPipe: " + pipeline.toString());
+
+        Log.i(TAG, "getCatsArgs: " + args.toString());
+
+        mStitchClient.executePipeline(new PipelineStage("aggregate", Statics.SERVICE_NAME, args)).continueWith(new Continuation<List<Object>, Object>() {
+            @Override
+            public Object then(@NonNull Task<List<Object>> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    Log.e(TAG, "Failed to execute query");
+                    if (listener != null) {
+                        listener.onError(task.getException());
+                    }
+                } else {
+                    List<String> cats = new ArrayList<>();
+                    List<Object> result = task.getResult();
+                    if (result == null || result.isEmpty()) {
+                        Log.d(TAG, "No results found");
+                    } else {
+                        for (Object object : result) {
+                            //Extract the categories into array
+                            Document tempDoc = (Document) object;
+                            cats.add(tempDoc.getString("_id"));
+                        }
+                    }
+
+                    if (listener != null) {
+                        listener.onSuccess(cats);
+                    }
+                }
+                return null;
+            }
+        });
+    }
+
+    public void getCategories(final QueryListener<ArrayList<String>> listener)
+    {
+        Document query = new Document()
+                .append("distinct", "pois")
+                .append("key", "category");
+
+
+        getDatabase().getCollection(DBCollections.POIS).find(query).continueWith(new Continuation<List<Document>, Object>()
+        {
+            @Override
+            public Object then(@NonNull final Task<List<Document>> task) throws Exception
+            {
+                // convert to array
+                ArrayList cats = new ArrayList();
+                cats.add("tested");
+
+                if (!task.isSuccessful())
+                {
+                    Log.e(TAG, "Failed to execute category list query");
+                }
+                else
+                {
+                    List<Document> result = task.getResult();
+                    if (result == null || result.isEmpty())
+                    {
+                        Log.d(TAG, "No results found");
+                    }
+                    else
+                    {
+                        Log.i(TAG, "then: we got catagories");
+                    }
+
+                    if (listener != null)
+                    {
+                        listener.onSuccess(cats);
+                    }
+                }
+
+                return null;
+            }
+        });
+    }
 
 
     /**
      *  Add a stamp for a specific poi
      *
-     * @param comment
-     * @param rate
      * @param poi
      * @param listener
      */
@@ -696,51 +674,3 @@ public class MongoDBManager {
     }
 
 } // end of Manager class
-//
-//    public void editReview(@NonNull final String newComment, final int rate, @NonNull final Review previousReview, final QueryListener<Review> listener)
-//    {
-//
-//        /*
-//        * Edit an existing review
-//        * */
-//
-//        //we get the existing review by its id
-////        Document query = new Document(Review.Field.ID, previousReview.getId());
-////
-////        Document setDocument = new Document(Review.Field.COMMENT, newComment);
-////        if (rate > 0)
-////        {
-////            //only allow ratings that are bigger than 0
-////            setDocument.append(Review.Field.RATE, rate);
-////        }
-////
-////        getDatabase().getCollection(DBCollections.REVIEWS_RATINGS).updateOne(query, new Document("$set", setDocument)).continueWith(new Continuation<Void, Object>()
-////        {
-////            @Override
-////            public Object then(@NonNull Task<Void> task) throws Exception
-////            {
-////                if (!task.isSuccessful())
-////                {
-////                    Log.e(TAG, "Failed to execute query");
-////                    if (listener != null)
-////                    {
-////                        listener.onError(task.getException());
-////                    }
-////                }
-////                else
-////                {
-////                    //edit the previous review
-////                    previousReview.setComment(newComment);
-////                    previousReview.setRate(rate);
-////                    previousReview.setEditable(true);
-////                    if (listener != null)
-////                    {
-////                        listener.onSuccess(previousReview);
-////                    }
-////                }
-////
-////                return null;
-////            }
-////        });
-//    }
-//}
