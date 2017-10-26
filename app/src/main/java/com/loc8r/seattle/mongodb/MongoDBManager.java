@@ -53,11 +53,13 @@ public class MongoDBManager {
     private static final String TAG = MongoDBManager.class.getSimpleName();
 
     private static MongoDBManager ourInstance;
-
     private StitchClient mStitchClient;
     private MongoClient mMongoDBClient;
+    public  ArrayList<POI> POIs = new ArrayList<>();
+    public  ArrayList<Stamp> Stamps = new ArrayList<>();
 
     public String mUserName;
+
 
     /*
     * Helper class to keep all the statics
@@ -93,12 +95,14 @@ public class MongoDBManager {
         mStitchClient = new StitchClient(context, Statics.APP_ID);
         mMongoDBClient = new MongoClient(mStitchClient, Statics.SERVICE_NAME);
 
-
         //try to get the user name if we are connected to Facebook
         Profile facebookProfile = Profile.getCurrentProfile();
         if (facebookProfile != null) {
             mUserName = facebookProfile.getName();
         }
+
+        //Get all POIs
+
     }
 
     /*
@@ -459,88 +463,94 @@ public class MongoDBManager {
         });
     }
 
+    public void getPOIs(final QueryListener<List<POI>> listener) {
 
-//    @SuppressWarnings("unchecked")
-//    public void updateRatings(final POI poi, final QueryListener<Void> listener)
-//    {
-//
-//        /*
-//        This named pipeline defined in the service goes over every
-//        rating that is attached to a certain poi, collects the average rating and updates it
-//        in the specific poi
-//        */
-//
-//        List<Document> items = new ArrayList<>();
-//        items.add(new Document("result", "%%vars.updateRatings"));
-//
-//
-//        Document pipelineMap = new Document()
-//                .append("name", "updateRatings") //our named pipeline
-//                .append("args", new Document("poiId", poi.getId())); //the arguments for our named pipeline
-//
-//
-//        PipelineStage literalStage = new PipelineStage("literal",
-//                new Document("items", items),
-//                new Document("updateRatings", new Document("%pipeline", pipelineMap)));
-//
-//        mStitchClient.executePipeline(literalStage).continueWith(new Continuation<List<Object>, Object>()
-//        {
-//            @Override
-//            public Object then(@NonNull Task<List<Object>> task) throws Exception
-//            {
-//                if (task.isSuccessful())
-//                {
-//                    /*
-//                    * In our named pipeline, we return 'false' or 'true' to know if the query was a success
-//                    * */
-//
-//                    Log.d(TAG, "then: isSuccessful");
-//                    Map<String, Object> result = (Map<String, Object>) task.getResult().get(0);
-//                    boolean boolResult = (boolean) result.get("result");
-//
-//                    if (listener != null)
-//                    {
-//                        if (boolResult)
-//                        {
-//                            listener.onSuccess(null);
-//                        }
-//                        else
-//                        {
-//                            listener.onError(new Exception("Update failed"));
-//                        }
-//                    }
-//                }
-//                else
-//                {
-//                    Log.e(TAG, "then: ", task.getException());
-//                    if (listener != null)
-//                    {
-//                        listener.onError(task.getException());
-//                    }
-//                }
-//                return null;
-//            }
-//        });
-//    }
+        Document args = new Document();
+        args.put("database", Statics.DB_NAME);
+        args.put("collection", DBCollections.POIS);
 
-    public void getCatsPipe(final QueryListener<List<String>> listener) {
-        /*
-        * Get the reviews of a poi, except for the review of the user that is logged in.
-        * */
+        mStitchClient.executePipeline(new PipelineStage("find", Statics.SERVICE_NAME, args)).continueWith(new Continuation<List<Object>, Object>() {
+            @Override
+            public Object then(@NonNull Task<List<Object>> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    Log.e(TAG, "Failed to get POIs");
+                    if (listener != null) {
+                        listener.onError(task.getException());
+                    }
+                } else {
+                    ArrayList<POI> pois = new ArrayList<>();
+                    List<Object> result = task.getResult();
+                    if (result == null || result.isEmpty()) {
+                        Log.d(TAG, "No POIs found");
+                    } else {
+                        for (Object object : result) {
+                            //parse the POI model object from the result
+                            POIs.add(POI.fromDocument((Document) object));
+                        }
+                    }
+                    //on to step #2
+                    getStamps();
+                    if (listener != null)
+                    {
+                        listener.onSuccess(POIs);
+                    }
+                }
+                return null;
+            }
+        });
+    }
 
-        //no
+    // Gets a list of all Stamps from the DB
+    // And sets the stamped property on those POIs
+    // the user has already visited
+
+    public void getStamps() {
+
+        Document args = new Document();
+        args.put("database", Statics.DB_NAME);
+        args.put("collection", DBCollections.STAMPS);
+
+        mStitchClient.executePipeline(new PipelineStage("find", Statics.SERVICE_NAME, args)).continueWith(new Continuation<List<Object>, Object>() {
+            @Override
+            public Object then(@NonNull Task<List<Object>> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    Log.e(TAG, "Failed to get Stamps");
+                } else {
+                    ArrayList<Stamp> stamps = new ArrayList<>();
+                    List<Object> result = task.getResult();
+                    if (result == null || result.isEmpty()) {
+                        Log.d(TAG, "No Stamps found");
+                    } else {
+                        for (Object object : result) {
+                            // Check Stamps against the full list of POIs
+                            ObjectId stampId = ((Document) object).getObjectId("_id");
+                            StampPOI(stampId);
+                        }
+                    }
+                }
+                return null;
+            }
+        });
+    }
+
+    // This method stamps a
+    private void StampPOI(ObjectId stampId){
+        for(POI poi: POIs){
+            if(poi.getId()==stampId){
+                poi.setStamped(true);
+                Log.i(TAG, "StampPOI: Set POI id " + poi.getId().toString() + "to stamped");
+            }
+        }
+    }
+
+    public void getCategories(final QueryListener<List<String>> listener) {
         List<Document> pipeline = new ArrayList<>();
         pipeline.add(new Document("$group", new Document("_id","$category")));
-
 
         Document args = new Document();
         args.put("database", Statics.DB_NAME);
         args.put("collection", DBCollections.POIS);
         args.put("pipeline", pipeline);
-
-        Log.i(TAG, "getCatsPipe: " + pipeline.toString());
-
-        Log.i(TAG, "getCatsArgs: " + args.toString());
 
         mStitchClient.executePipeline(new PipelineStage("aggregate", Statics.SERVICE_NAME, args)).continueWith(new Continuation<List<Object>, Object>() {
             @Override
@@ -571,50 +581,6 @@ public class MongoDBManager {
             }
         });
     }
-
-    public void getCategories(final QueryListener<ArrayList<String>> listener)
-    {
-        Document query = new Document()
-                .append("distinct", "pois")
-                .append("key", "category");
-
-
-        getDatabase().getCollection(DBCollections.POIS).find(query).continueWith(new Continuation<List<Document>, Object>()
-        {
-            @Override
-            public Object then(@NonNull final Task<List<Document>> task) throws Exception
-            {
-                // convert to array
-                ArrayList cats = new ArrayList();
-                cats.add("tested");
-
-                if (!task.isSuccessful())
-                {
-                    Log.e(TAG, "Failed to execute category list query");
-                }
-                else
-                {
-                    List<Document> result = task.getResult();
-                    if (result == null || result.isEmpty())
-                    {
-                        Log.d(TAG, "No results found");
-                    }
-                    else
-                    {
-                        Log.i(TAG, "then: we got catagories");
-                    }
-
-                    if (listener != null)
-                    {
-                        listener.onSuccess(cats);
-                    }
-                }
-
-                return null;
-            }
-        });
-    }
-
 
     /**
      *  Add a stamp for a specific poi

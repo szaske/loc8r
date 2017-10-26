@@ -28,6 +28,7 @@ public class POI {
     String stampId;
     String stampText;
     double distance;
+    boolean isStamped;
 
     public POI(){}
 
@@ -39,6 +40,7 @@ public class POI {
         this.category = category;
         this.stampId = stampId;
         this.stampText = stampText;
+        this.isStamped = false; // Set to not stamped by default
     }
 
     /**
@@ -113,4 +115,6 @@ public class POI {
         return description;
     }
     public double getDistance() { return distance; }
+    public boolean isStamped() { return isStamped; }
+    public void setStamped(boolean stamped) { isStamped = stamped; }
 }

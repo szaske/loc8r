@@ -70,8 +70,7 @@ public class POIDetailActivity extends LoggedInActivity {
         mDescriptionTV.setText(detailedPoi.getDescription());
         mLocationTV.setText(detailedPoi.getLongitude().toString()+","+detailedPoi.getLatitude().toString());
 
-        //Get list of categories
-        getListOfCategories();
+
     }
 
     @Override
@@ -138,31 +137,6 @@ public class POIDetailActivity extends LoggedInActivity {
         }
     }
 
-    private void getListOfCategories()
-    {
-        final Dialog progressDialog = ProgressDialog.getDialog(this, true);
-        progressDialog.show();
-
-        // Create a listener
-        QueryListener<List<String>> catQueryListener = new QueryListener<List<String>>()
-        {
-            @Override
-            public void onSuccess(List<String> result)
-            {
-                progressDialog.dismiss();
-                Log.e(TAG, "onSuccess: We got ourselves some categories peeps.........." + result.toString());
-            }
-
-            @Override
-            public void onError(Exception e)
-            {
-                progressDialog.dismiss();
-                Log.e(TAG, "onError: ", e);
-            }
-        };
-
-        MongoDBManager.getInstance(getApplicationContext()).getCatsPipe(catQueryListener);
-    }
 
     /**
      * Calculate distance between two points in latitude and longitude

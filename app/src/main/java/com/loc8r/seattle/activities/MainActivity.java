@@ -5,9 +5,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,7 +16,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,29 +30,18 @@ import android.widget.Toast;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.QueryListener;
 import com.loc8r.seattle.models.POI;
-import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.mongodb.MongoDBManager;
 import com.loc8r.seattle.utils.ProgressDialog;
 import com.loc8r.seattle.interfaces.LocationListener;
-import com.loc8r.seattle.interfaces.QueryListener;
 
 import com.paginate.Paginate;
 import com.squareup.picasso.Picasso;
 
-import org.parceler.Parcel;
 import org.parceler.Parcels;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import butterknife.ButterKnife;
-
-import static android.R.attr.data;
-import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
-import static com.loc8r.seattle.R.id.poiImageView;
 
 public class MainActivity extends LoggedInActivity {
 
@@ -91,6 +76,9 @@ public class MainActivity extends LoggedInActivity {
         // Test name access in Main
         // TODO Put in check for Anonymous users
         Toast.makeText(getApplicationContext(), getString(R.string.welcome_back_message) + MongoDBManager.getInstance(getApplicationContext()).mUserName, Toast.LENGTH_SHORT).show();
+
+        //Get list of categories
+        getListOfCategories();
     }
 
     @Override
@@ -362,6 +350,59 @@ public class MainActivity extends LoggedInActivity {
 
     }
 
+    private void getListOfCategories()
+    {
+        final Dialog progressDialog = ProgressDialog.getDialog(this, true);
+        progressDialog.show();
+
+        // Create a listener
+        QueryListener<List<String>> catQueryListener = new QueryListener<List<String>>()
+        {
+            @Override
+            public void onSuccess(List<String> result)
+            {
+                progressDialog.dismiss();
+                Log.e(TAG, "onSuccess: We got ourselves some categories peeps.........." + result.toString());
+            }
+
+            @Override
+            public void onError(Exception e)
+            {
+                progressDialog.dismiss();
+                Log.e(TAG, "onError: ", e);
+            }
+        };
+
+        // Call DB singleton to get categories
+        MongoDBManager.getInstance(getApplicationContext()).getCategories(catQueryListener);
+    }
+
+    private void getAllPOIs()
+    {
+        final Dialog progressDialog = ProgressDialog.getDialog(this, true);
+        progressDialog.show();
+
+        // Create a listener
+        QueryListener<List<POI>> poisQueryListener = new QueryListener<List<POI>>()
+        {
+            @Override
+            public void onSuccess(List<POI> result)
+            {
+                progressDialog.dismiss();
+                Log.e(TAG, "onSuccess: We got ourselves some POI peeps..." + result.toString());
+            }
+
+            @Override
+            public void onError(Exception e)
+            {
+                progressDialog.dismiss();
+                Log.e(TAG, "onError: ", e);
+            }
+        };
+
+        // Call DB singleton to get categories
+        MongoDBManager.getInstance(getApplicationContext()).getCategories(poisQueryListener);
+    }
 
     private void initRecyclerView()
     {
