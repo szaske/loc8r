@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
+import com.facebook.all.All;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -489,11 +490,11 @@ public class MongoDBManager {
                         }
                     }
                     //on to step #2
-                    getStamps();
-                    if (listener != null)
-                    {
-                        listener.onSuccess(POIs);
-                    }
+                    getStamps(listener);
+//                    if (listener != null)
+//                    {
+//                        listener.onSuccess(POIs);
+//                    }
                 }
                 return null;
             }
@@ -504,7 +505,7 @@ public class MongoDBManager {
     // And sets the stamped property on those POIs
     // the user has already visited
 
-    public void getStamps() {
+    public void getStamps(final QueryListener<List<POI>> listener ) {
 
         Document args = new Document();
         args.put("database", Statics.DB_NAME);
@@ -523,9 +524,13 @@ public class MongoDBManager {
                     } else {
                         for (Object object : result) {
                             // Check Stamps against the full list of POIs
-                            ObjectId stampId = ((Document) object).getObjectId("_id");
-                            StampPOI(stampId);
+                            String stampedPoiId = ((Document) object).getString("poiId");
+                            StampPOI(stampedPoiId);
                         }
+                    }
+                    if (listener != null)
+                    {
+                        listener.onSuccess(POIs);
                     }
                 }
                 return null;
@@ -534,9 +539,10 @@ public class MongoDBManager {
     }
 
     // This method stamps a
-    private void StampPOI(ObjectId stampId){
+    private void StampPOI(String stampedPoiId){
         for(POI poi: POIs){
-            if(poi.getId()==stampId){
+            Log.d(TAG, "StampPOI: Comparing StampID: " + stampedPoiId + " to local POIiD:" + poi.getId().toString());
+            if(poi.getId().toString().equals(stampedPoiId) ){
                 poi.setStamped(true);
                 Log.i(TAG, "StampPOI: Set POI id " + poi.getId().toString() + "to stamped");
             }
@@ -637,6 +643,19 @@ public class MongoDBManager {
             }
         });
 
+    }
+
+    public ArrayList<POI> getAllPOIs() {
+        return POIs;
+    }
+
+    @Override
+    public String toString(){
+        String AllString = "";
+        for(POI poi: POIs){
+            AllString+=poi.toString();
+        }
+        return AllString;
     }
 
 } // end of Manager class

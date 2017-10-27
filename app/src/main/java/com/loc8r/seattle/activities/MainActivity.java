@@ -61,7 +61,7 @@ public class MainActivity extends LoggedInActivity {
     private boolean mIsLoading;
     private POI mFarthestPOI;
     private boolean mIsFinished;
-    private static final int PAGE_SIZE = 2;
+    private static final int PAGE_SIZE = 30;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +79,11 @@ public class MainActivity extends LoggedInActivity {
 
         //Get list of categories
         getListOfCategories();
+
+        //get all POIs
+        getAllPOIs();
+
+        Log.d(TAG, "onCreate: We're done");
     }
 
     @Override
@@ -123,7 +128,7 @@ public class MainActivity extends LoggedInActivity {
                 mKeyword = null;
 
                 //get the restaurants
-                getPois(true, true);
+                getPoisByDistance(true, true);
                 return true;
             }
         });
@@ -148,7 +153,7 @@ public class MainActivity extends LoggedInActivity {
                 mKeyword = query;
 
                 //get list of restaurants with search query
-                getPois(true, true);
+                getPoisByDistance(true, true);
                 return true;
             }
 
@@ -240,7 +245,7 @@ public class MainActivity extends LoggedInActivity {
                 });
     }
 
-    private void getPois(/*@Nullable String keyword, */boolean withProgressDialog, final boolean clearList)
+    private void getPoisByDistance(/*@Nullable String keyword, */boolean withProgressDialog, final boolean clearList)
     {
         if (mLastLocation == null)
         {
@@ -389,7 +394,7 @@ public class MainActivity extends LoggedInActivity {
             public void onSuccess(List<POI> result)
             {
                 progressDialog.dismiss();
-                Log.e(TAG, "onSuccess: We got ourselves some POI peeps..." + result.toString());
+                Log.e(TAG, "onSuccess: We got ourselves some POI peeps..." + DB().getAllPOIs().toString());
             }
 
             @Override
@@ -401,7 +406,7 @@ public class MainActivity extends LoggedInActivity {
         };
 
         // Call DB singleton to get categories
-        MongoDBManager.getInstance(getApplicationContext()).getCategories(poisQueryListener);
+        MongoDBManager.getInstance(getApplicationContext()).getPOIs(poisQueryListener);
     }
 
     private void initRecyclerView()
@@ -684,7 +689,7 @@ public class MainActivity extends LoggedInActivity {
             /*
             * Get the next page of restaurants
             * */
-            getPois(false, false);
+            getPoisByDistance(false, false);
         }
 
         @Override
@@ -719,5 +724,10 @@ public class MainActivity extends LoggedInActivity {
     {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
+    }
+
+    // Name shortener
+    private MongoDBManager DB(){
+        return MongoDBManager.getInstance(getApplicationContext());
     }
 }

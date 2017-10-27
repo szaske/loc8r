@@ -20,8 +20,8 @@ import java.util.StringTokenizer;
 @Parcel
 public class POI {
     ObjectId id;
-    String img_url;
     String name;
+    String img_url;
     Location location;
     String category;
     String description;
@@ -100,6 +100,22 @@ public class POI {
             e.printStackTrace();
         }
         return poi;
+    }
+
+    @Override
+    public String toString() {
+        return "POI{" +
+                "id=" + id +
+                ",\n img_url='" + img_url + '\'' +
+                ",\n name='" + name + '\'' +
+                ",\n location=" + location +
+                ",\n category='" + category + '\'' +
+                ",\n description='" + description + '\'' +
+                ",\n stampId='" + stampId + '\'' +
+                ",\n stampText='" + stampText + '\'' +
+                ",\n distance=" + distance +
+                ",\n isStamped=" + isStamped +
+                '}';
     }
 
     public ObjectId getId() { return id; }
