@@ -7,14 +7,11 @@ import android.util.Log;
 
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
-import com.facebook.all.All;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-//import com.mongodb.platespace.model.Attributes;
-//import com.mongodb.platespace.model.Poi;
-//import com.mongodb.platespace.model.Review;
+
 import com.loc8r.seattle.models.Stamp;
 import com.mongodb.stitch.android.PipelineStage;
 import com.mongodb.stitch.android.StitchClient;
@@ -27,22 +24,14 @@ import com.mongodb.stitch.android.services.mongodb.MongoClient;
 
 import com.loc8r.seattle.interfaces.QueryListener;
 import com.loc8r.seattle.models.POI;
-import com.loc8r.seattle.models.Stamp;
 
-import org.bson.BsonElement;
-import org.bson.BsonString;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static android.R.attr.category;
-import static android.R.attr.name;
-import static android.R.id.list;
 
 
 /**
@@ -56,7 +45,7 @@ public class MongoDBManager {
     private static MongoDBManager ourInstance;
     private StitchClient mStitchClient;
     private MongoClient mMongoDBClient;
-    public  ArrayList<POI> POIs = new ArrayList<>();
+    public  ArrayList<POI> allPOIs = new ArrayList<>();
     public  ArrayList<Stamp> Stamps = new ArrayList<>();
 
     public String mUserName;
@@ -102,7 +91,7 @@ public class MongoDBManager {
             mUserName = facebookProfile.getName();
         }
 
-        //Get all POIs
+        //Get all allPOIs
 
     }
 
@@ -134,6 +123,7 @@ public class MongoDBManager {
     }
 
     public boolean isConnected() {
+        Log.i(TAG, "isConnected: fired");
         return mStitchClient.isAuthenticated();
     }
 
@@ -197,12 +187,14 @@ public class MongoDBManager {
     }
 
     public void doFacebookAuthentication(final String accessToken, final QueryListener<Void> listener) {
-        /*
+
+        Log.i(TAG, "doFacebookAuthentication: ");
+        /**
         Log in with Facebook.
 
         1. get authentication providers to know if Facebook authentication is enabled by the service.
         2. if Facebook authentication is enabled, try to login
-        * */
+        **/
         mStitchClient.getAuthProviders().addOnCompleteListener(new OnCompleteListener<AvailableAuthProviders>() {
             @Override
             public void onComplete(@NonNull final Task<AvailableAuthProviders> task) {
@@ -274,6 +266,7 @@ public class MongoDBManager {
     * Logout from MongoDB & Facebook SDK
     * */
     public void logout(final QueryListener<Void> listener) {
+        Log.i(TAG, "logout: ");
         LoginManager.getInstance().logOut(); //logout from Facebook
         mUserName = null;
 
@@ -297,10 +290,10 @@ public class MongoDBManager {
     }
 
 
-    // Method for getting nearby POIs
+    // Method for getting nearby allPOIs
 
     /**
-     * @param keyword A searched for limit of the POIs
+     * @param keyword A searched for limit of the allPOIs
      * @param latitude The current Latitude of the device
      * @param longitude The current longitude of the device
      * @param farthestPOI
@@ -321,6 +314,8 @@ public class MongoDBManager {
         *
         * The list has a limit, attributed, and possibly a keyword
         **/
+
+        Log.i(TAG, "geoNear: method fired, allPois count is" + String.valueOf(allPOIs.size()));
 
         Document query = new Document();
 
@@ -396,7 +391,7 @@ public class MongoDBManager {
             {
                 if (task.isSuccessful())
                 {
-                    Log.d(TAG, "then isSuccessful: ");
+                    Log.d(TAG, " GeoNer promise came back successful ");
 
                     List<POI> list = new ArrayList<>();
                     Map<String, Object> map = (Map<String, Object>) task.getResult().get(0);
@@ -466,6 +461,7 @@ public class MongoDBManager {
 
     public void getPOIs(final QueryListener<List<POI>> listener) {
 
+        Log.i(TAG, "getPOIs: method started ");
         Document args = new Document();
         args.put("database", Statics.DB_NAME);
         args.put("collection", DBCollections.POIS);
@@ -474,26 +470,27 @@ public class MongoDBManager {
             @Override
             public Object then(@NonNull Task<List<Object>> task) throws Exception {
                 if (!task.isSuccessful()) {
-                    Log.e(TAG, "Failed to get POIs");
+                    Log.e(TAG, "Failed to get allPOIs");
                     if (listener != null) {
                         listener.onError(task.getException());
                     }
                 } else {
+                    Log.i(TAG, "getPOIS method promise returned (then) ");
                     ArrayList<POI> pois = new ArrayList<>();
                     List<Object> result = task.getResult();
                     if (result == null || result.isEmpty()) {
-                        Log.d(TAG, "No POIs found");
+                        Log.d(TAG, "No allPOIs found");
                     } else {
                         for (Object object : result) {
                             //parse the POI model object from the result
-                            POIs.add(POI.fromDocument((Document) object));
+                            allPOIs.add(POI.fromDocument((Document) object));
                         }
                     }
                     //on to step #2
                     getStamps(listener);
 //                    if (listener != null)
 //                    {
-//                        listener.onSuccess(POIs);
+//                        listener.onSuccess(allPOIs);
 //                    }
                 }
                 return null;
@@ -502,7 +499,7 @@ public class MongoDBManager {
     }
 
     // Gets a list of all Stamps from the DB
-    // And sets the stamped property on those POIs
+    // And sets the stamped property on those allPOIs
     // the user has already visited
 
     public void getStamps(final QueryListener<List<POI>> listener ) {
@@ -523,14 +520,14 @@ public class MongoDBManager {
                         Log.d(TAG, "No Stamps found");
                     } else {
                         for (Object object : result) {
-                            // Check Stamps against the full list of POIs
+                            // Check Stamps against the full list of allPOIs
                             String stampedPoiId = ((Document) object).getString("poiId");
                             StampPOI(stampedPoiId);
                         }
                     }
                     if (listener != null)
                     {
-                        listener.onSuccess(POIs);
+                        listener.onSuccess(allPOIs);
                     }
                 }
                 return null;
@@ -540,11 +537,12 @@ public class MongoDBManager {
 
     // This method stamps a
     private void StampPOI(String stampedPoiId){
-        for(POI poi: POIs){
+        for(POI poi: allPOIs){
             Log.d(TAG, "StampPOI: Comparing StampID: " + stampedPoiId + " to local POIiD:" + poi.getId().toString());
             if(poi.getId().toString().equals(stampedPoiId) ){
                 poi.setStamped(true);
                 Log.i(TAG, "StampPOI: Set POI id " + poi.getId().toString() + "to stamped");
+                break;
             }
         }
     }
@@ -646,13 +644,13 @@ public class MongoDBManager {
     }
 
     public ArrayList<POI> getAllPOIs() {
-        return POIs;
+        return allPOIs;
     }
 
     @Override
     public String toString(){
         String AllString = "";
-        for(POI poi: POIs){
+        for(POI poi: allPOIs){
             AllString+=poi.toString();
         }
         return AllString;

@@ -80,7 +80,7 @@ public class MainActivity extends LoggedInActivity {
         //Get list of categories
         getListOfCategories();
 
-        //get all POIs
+        //get all allPOIs
         getAllPOIs();
 
         Log.d(TAG, "onCreate: We're done");
@@ -393,6 +393,7 @@ public class MainActivity extends LoggedInActivity {
             @Override
             public void onSuccess(List<POI> result)
             {
+                // Currently NOTHING is done with the results, instead we're accessing the POIs from the singleton
                 progressDialog.dismiss();
                 Log.e(TAG, "onSuccess: We got ourselves some POI peeps..." + DB().getAllPOIs().toString());
             }
