@@ -469,6 +469,7 @@ public class MongoDBManager {
         mStitchClient.executePipeline(new PipelineStage("find", Statics.SERVICE_NAME, args)).continueWith(new Continuation<List<Object>, Object>() {
             @Override
             public Object then(@NonNull Task<List<Object>> task) throws Exception {
+
                 if (!task.isSuccessful()) {
                     Log.e(TAG, "Failed to get allPOIs");
                     if (listener != null) {
