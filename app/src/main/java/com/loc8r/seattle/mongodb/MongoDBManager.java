@@ -289,23 +289,16 @@ public class MongoDBManager {
         });
     }
 
-
-    // Method for getting nearby allPOIs
-
     /**
-     * @param keyword A searched for limit of the allPOIs
+     *  Method for getting nearby allPOIs
+     *
      * @param latitude The current Latitude of the device
      * @param longitude The current longitude of the device
-     * @param farthestPOI
-     * @param limit A limit size to the number of results we return
      * @param listener The callback listener
      */
     @SuppressWarnings("unchecked")
-    public void geoNear(@Nullable String keyword,
-                        double latitude,
+    public void geoNear(double latitude,
                         double longitude,
-                        @Nullable POI farthestPOI,
-                        int limit,
                         final QueryListener<List<POI>> listener)
     {
 
@@ -319,61 +312,18 @@ public class MongoDBManager {
 
         Document query = new Document();
 
-        if (keyword != null)
-        {
-            /*
-            User searches for similar poi names.
-            * We implement this search using the $regex operator, with case insensitivity to match upper and lower cases.
-            *
-            *
-            * https://docs.mongodb.com/manual/reference/operator/query/regex/
-            * */
-            query.put(POI.Field.NAME, new Document("$regex", keyword).append("$options", "i"));
-        }
-
-        if (farthestPOI != null)
-        {
-            /*
-            * We already have the farthest poi, so we don't wanna get it the next iteration.
-            * Therefor, get the pois which id != farthestPOI
-            * */
-
-            query.put(POI.Field.ID, new Document("$ne", farthestPOI.getId()));
-        }
-
         List<Document> items = new ArrayList<>();
         items.add(new Document("result", "%%vars.geo_matches")); //bind the arguments to our named pipeline required parameters
 
-
-        /*
-        The pagination is implemented in the following way:
-
-        * 1. to get the first page, we sort the distances with a minimum distance of 0.
-        * This will return the closest poi first, and the farthest last (according to our geoNear named pipeline).
-        *
-        * 2. Once we finished step 1, we keep the distance of the farthest poi (i.e 1000 meters).
-        * For the next page will will set the min distance to the farthest distance, so that the results received will only have
-        * a distance >= farthest poi (I.e, the second stage will return pois with a minimum distance of 1000 meters).
-        *
-        * Note: make sure to exclude the farthest poi so we don't have duplicates (once in stage 1, and second time in stage 2)
-        *
-        * 3. Keep iterating over step 2 until the result list size is smaller than the limit given.
-        * That means there is no more data.
-        *
-        * */
-
-        double minDistance = farthestPOI == null ? 0 : farthestPOI.getDistance();
-
-
         Document argsMap = new Document()
                 .append("latitude", latitude) //the current phone latitude
-                .append("longitude", longitude) //the current phone longitude
-                .append("query", query) //query will contain any additional parameters
-                .append("minDistance", minDistance) //pagination parameter
-                .append("limit", limit); //pagination limit
+                .append("longitude", longitude); //the current phone longitude
+//                .append("query", query) //query will contain any additional parameters
+//                .append("minDistance", minDistance) //pagination parameter
+//                .append("limit", limit); //pagination limit
 
         Document pipelineMap = new Document()
-                .append("name", "geoNear") //our named pipeline in the service
+                .append("name", "getNearbyPOIs") //our named pipeline in the service
                 .append("args", argsMap); //required parameters for the named pipeline
 
         /*
@@ -391,7 +341,7 @@ public class MongoDBManager {
             {
                 if (task.isSuccessful())
                 {
-                    Log.d(TAG, " GeoNer promise came back successful ");
+                    Log.d(TAG, " GeoNear promise came back successful ");
 
                     List<POI> list = new ArrayList<>();
                     Map<String, Object> map = (Map<String, Object>) task.getResult().get(0);

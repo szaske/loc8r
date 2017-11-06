@@ -32,6 +32,7 @@ import com.loc8r.seattle.interfaces.QueryListener;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.mongodb.MongoDBManager;
 import com.loc8r.seattle.utils.ProgressDialog;
+import com.loc8r.seattle.utils.StateManager;
 import com.loc8r.seattle.interfaces.LocationListener;
 
 import com.paginate.Paginate;
@@ -56,7 +57,7 @@ public class MainActivity extends LoggedInActivity {
     private RecyclerView mRecyclerView;
     private Paginate mPaginate;
     private String mKeyword;
-    private Location mLastLocation;
+    // private Location mLastLocation;
     private poiAdapter mAdapter;
     private boolean mIsLoading;
     private POI mFarthestPOI;
@@ -247,12 +248,14 @@ public class MainActivity extends LoggedInActivity {
 
     private void getPoisByDistance(/*@Nullable String keyword, */boolean withProgressDialog, final boolean clearList)
     {
-        if (mLastLocation == null)
+        // Make sure we have a location
+        if (StateManager.getInstance().getCurrentLocation() == null)
         {
             Toast.makeText(this, R.string.location_error, Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Display Progress bars
         mIsLoading = true;
         mAdapter.setLoading(true);
 
@@ -267,8 +270,8 @@ public class MainActivity extends LoggedInActivity {
         /*
         Get a list of pois, sorted by the geo location (closest pois go first), filters and query regex (if not null)
         */
-        MongoDBManager.getInstance(getApplicationContext()).geoNear(mKeyword, mLastLocation.getLatitude()
-            , mLastLocation.getLongitude(), mFarthestPOI, PAGE_SIZE, new QueryListener<List<POI>>() {
+        MongoDBManager.getInstance(getApplicationContext()).geoNear(StateManager.getInstance().getCurrentLocation().getLatitude()
+            , StateManager.getInstance().getCurrentLocation().getLongitude(), new QueryListener<List<POI>>() {
                 @Override
                 public void onSuccess(List<POI> pois)
                 {
@@ -337,8 +340,8 @@ public class MainActivity extends LoggedInActivity {
             @Override
             public void onLocationReceived(Location location)
             {
-                mLastLocation = location;
-                if (mLastLocation != null && mAdapter != null)
+                StateManager.getInstance().setCurrentLocation(location);
+                if (StateManager.getInstance().getCurrentLocation() != null && mAdapter != null)
                 {
 
                     /*once we have a location, add the pagination mechanism and continue*/
@@ -665,7 +668,7 @@ public class MainActivity extends LoggedInActivity {
                         .load(poi.getImg_url())
                         .into(mPoiImg);
                 mName.setText(poi.getName());
-                if (mLastLocation != null)
+                if (StateManager.getInstance().getCurrentLocation() != null)
                 {
                     mDistance.setText(formatDistance(poi.getDistance()));
                 } else
@@ -708,7 +711,7 @@ public class MainActivity extends LoggedInActivity {
             /*
             * indication of whether we finished the pagination or not
             * */
-            return mLastLocation != null && (mIsFinished || isSearching());
+            return StateManager.getInstance().getCurrentLocation() != null && (mIsFinished || isSearching());
         }
     };
 
