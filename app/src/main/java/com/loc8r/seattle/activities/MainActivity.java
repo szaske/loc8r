@@ -41,6 +41,8 @@ import com.squareup.picasso.Picasso;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -62,7 +64,7 @@ public class MainActivity extends LoggedInActivity {
     private boolean mIsLoading;
     private POI mFarthestPOI;
     private boolean mIsFinished;
-    private static final int PAGE_SIZE = 30;
+    private static final int PAGE_SIZE = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +84,8 @@ public class MainActivity extends LoggedInActivity {
         getListOfCategories();
 
         //get all allPOIs
-        getAllPOIs();
+        // getAllPOIs();
+
 
         Log.d(TAG, "onCreate: We're done");
     }
@@ -128,7 +131,6 @@ public class MainActivity extends LoggedInActivity {
                 mFarthestPOI = null;
                 mKeyword = null;
 
-                //get the restaurants
                 getPoisByDistance(true, true);
                 return true;
             }
@@ -147,13 +149,13 @@ public class MainActivity extends LoggedInActivity {
                 //need a dummy view to request focus so that the search EditText doesn't pop the keyboard back up
                 mRecyclerView.requestFocus();
 
-                //clear previous restaurants
+                //clear previous POIs
                 mAdapter.clear();
                 mFarthestPOI = null;
 
                 mKeyword = query;
 
-                //get list of restaurants with search query
+                //get list of POIs with search query
                 getPoisByDistance(true, true);
                 return true;
             }
@@ -246,7 +248,7 @@ public class MainActivity extends LoggedInActivity {
                 });
     }
 
-    private void getPoisByDistance(/*@Nullable String keyword, */boolean withProgressDialog, final boolean clearList)
+    private void getPoisByDistance(boolean withProgressDialog, final boolean clearList)
     {
         // Make sure we have a location
         if (StateManager.getInstance().getCurrentLocation() == null)
@@ -287,21 +289,28 @@ public class MainActivity extends LoggedInActivity {
                         mIsProgressDialogShowing = false;
                     }
 
-                    if (!pois.isEmpty())
-                    {
-                        /*
-                        * the farthest restaurant so we can use it for the next page
-                        * */
-                        mFarthestPOI = pois.get(pois.size() - 1);
-                    }
+//                    if (!pois.isEmpty())
+//                    {
+//                        /*
+//                        * the farthest POI so we can use it for the next page
+//                        * */
+//                        mFarthestPOI = pois.get(pois.size() - 1);
+//                    }
+
+                    //Sort the POIs
+                    Collections.sort(pois, new Comparator<POI>() {
+                                @Override public int compare(POI p1, POI p2) {
+                                    return p1.getDistance() - p2.getDistance();
+                                }
+                            });
 
                     //clear previous results update
-                    if (clearList)
-                    {
-                        mAdapter.clear();
-                    }
+//                    if (clearList)
+//                    {
+//                        mAdapter.clear();
+//                    }
 
-                    mAdapter.addData(pois);
+                    mAdapter.setData(pois);
                     mAdapter.notifyDataSetChanged();
                 }
 
@@ -343,15 +352,18 @@ public class MainActivity extends LoggedInActivity {
                 StateManager.getInstance().setCurrentLocation(location);
                 if (StateManager.getInstance().getCurrentLocation() != null && mAdapter != null)
                 {
-
                     /*once we have a location, add the pagination mechanism and continue*/
-                    if (mPaginate == null)
-                    {
-                        mPaginate = Paginate.with(mRecyclerView, mPaginateCallback)
-                                .setLoadingTriggerThreshold(2)
-                                .build();
+//                    if (mPaginate == null)
+//                    {
+//                        mPaginate = Paginate.with(mRecyclerView, mPaginateCallback)
+//                                .setLoadingTriggerThreshold(2)
+//                                .build();
+//                    }
+//                    mRecyclerView.getAdapter().notifyDataSetChanged();
+                    if (mAdapter.getItemCount()==0){
+                        getPoisByDistance(false, true);
                     }
-                    mRecyclerView.getAdapter().notifyDataSetChanged();
+
                 }
             }
         });
@@ -498,7 +510,7 @@ public class MainActivity extends LoggedInActivity {
             Bind the POI to the UI
             * */
 
-            // TODO Detemrine why we're checking for instance of ViewHolder
+            // TODO Determine why we're checking for instance of ViewHolder
             if (holder instanceof ViewHolder)
             {
                 // ViewHolder vh = (ViewHolder) holder;
@@ -691,7 +703,7 @@ public class MainActivity extends LoggedInActivity {
         public void onLoadMore()
         {
             /*
-            * Get the next page of restaurants
+            * Get the next page of POIs
             * */
             getPoisByDistance(false, false);
         }

@@ -5,6 +5,7 @@ import android.location.Location;
 import android.os.Parcelable;
 
 import com.google.android.gms.nearby.messages.Distance;
+import com.loc8r.seattle.utils.StateManager;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -27,7 +28,7 @@ public class POI {
     String description;
     String stampId;
     String stampText;
-    double distance;
+    //double distance;
     boolean isStamped;
 
     public POI(){}
@@ -85,15 +86,7 @@ public class POI {
             tempLocation.setLongitude((Double) coords.get(0));
             tempLocation.setLatitude((Double) coords.get(1));
             poi.location = tempLocation;
-
-            // Being extra careful here.  Distance will only exist
-            // if we parsed the POI object after a geoNear command,
-            // where the distance was calculated
-            Number distance = (Number) document.get(Field.DIST);
-            if (distance != null)
-            {
-                poi.distance = distance.doubleValue();
-            }
+            //poi.distance = getDistance();
         }
         catch (Exception e)
         {
@@ -113,10 +106,39 @@ public class POI {
                 ",\n description='" + description + '\'' +
                 ",\n stampId='" + stampId + '\'' +
                 ",\n stampText='" + stampText + '\'' +
-                ",\n distance=" + distance +
+                ",\n distance=" + String.valueOf(getDistance()) +
                 ",\n isStamped=" + isStamped +
                 '}';
     }
+
+    /**
+     * Calculate distance to this POI from the users current latitude and longitude
+     * elevation has been ignored.
+     * Uses Haversine method as its base.
+     *
+     * @return distance in meters
+     */
+    public int getDistance() {
+
+        final int R = 6371; // Radius of the earth
+        double lat2 = location.getLatitude();
+        double lon2 = location.getLongitude();
+        double lat1 = StateManager.getInstance().getCurrentLocation().getLatitude();
+        double lon1 = StateManager.getInstance().getCurrentLocation().getLongitude();
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000; // convert to meters
+
+        distance = Math.pow(distance, 2);
+
+        return (int) Math.round(Math.sqrt(distance));
+    }
+
 
     public ObjectId getId() { return id; }
     public void setId(ObjectId id) { this.id = id; }
@@ -130,7 +152,7 @@ public class POI {
     public String getDescription() {
         return description;
     }
-    public double getDistance() { return distance; }
+    //public double getDistance() { return distance; }
     public boolean isStamped() { return isStamped; }
     public void setStamped(boolean stamped) { isStamped = stamped; }
 }

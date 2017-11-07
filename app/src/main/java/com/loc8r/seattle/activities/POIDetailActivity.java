@@ -89,7 +89,7 @@ public class POIDetailActivity extends LoggedInActivity {
                 if (null != mCurrentLocation) {
                     String lat = String.valueOf(mCurrentLocation.getLatitude());
                     String lng = String.valueOf(mCurrentLocation.getLongitude());
-                    String dist = String.valueOf(distance(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude(),detailedPoi.getLatitude(),detailedPoi.getLongitude()));
+                    String dist = String.valueOf(detailedPoi.getDistance());
                     String total = "At Time: " + DateFormat.getTimeInstance().format(new Date()) + "\n" +
                             "Latitude: " + lat + "\n" +
                             "Longitude: " + lng + "\n" +
@@ -138,34 +138,5 @@ public class POIDetailActivity extends LoggedInActivity {
     }
 
 
-    /**
-     * Calculate distance between two points in latitude and longitude
-     * elevation has been ignored.
-     * Uses Haversine method as its base.
-     *
-     * @param lat1 Starting location's latitude
-     * @param lat2 The destination's latitude
-     * @param lon1 Starting location's longitude
-     * @param lon2 The destination's longitude
-     * @return distance in meters
-     */
-    public double distance(double lat1,
-                                  double lon1,
-                                  double lat2,
-                                  double lon2) {
 
-        final int R = 6371; // Radius of the earth
-
-        double latDistance = Math.toRadians(lat2 - lat1);
-        double lonDistance = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = R * c * 1000; // convert to meters
-
-        distance = Math.pow(distance, 2);
-
-        return Math.sqrt(distance);
-    }
 }
