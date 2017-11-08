@@ -65,6 +65,7 @@ public class MainActivity extends LoggedInActivity {
     private POI mFarthestPOI;
     private boolean mIsFinished;
     private static final int PAGE_SIZE = 10;
+    private Dialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,17 +258,20 @@ public class MainActivity extends LoggedInActivity {
             return;
         }
 
-        // Display Progress bars
-        mIsLoading = true;
-        mAdapter.setLoading(true);
+        mProgressDialog = ProgressDialog.getDialog(this, true);
+        mProgressDialog.show();
 
-        final Dialog dialog = withProgressDialog ? ProgressDialog.getDialog(this, false) : null;
-        if (dialog != null)
-        {
-            dialog.show();
-            mIsProgressDialogShowing = true;
-            mAdapter.notifyDataSetChanged();
-        }
+
+        // mIsLoading = true;
+        //mAdapter.setLoading(true);
+
+//        final Dialog dialog = withProgressDialog ? ProgressDialog.getDialog(this, false) : null;
+//        if (dialog != null)
+//        {
+//            dialog.show();
+//            mIsProgressDialogShowing = true;
+//           // mAdapter.notifyDataSetChanged();
+//        }
 
         /*
         Get a list of pois, sorted by the geo location (closest pois go first), filters and query regex (if not null)
@@ -277,17 +281,7 @@ public class MainActivity extends LoggedInActivity {
                 @Override
                 public void onSuccess(List<POI> pois)
                 {
-                    mAdapter.setLoading(false);
-                    mIsLoading = false;
 
-                    //if the list of results is smaller than the page size, the pagination finished
-                    mIsFinished = pois.size() < PAGE_SIZE;
-
-                    if (dialog != null)
-                    {
-                        dialog.dismiss();
-                        mIsProgressDialogShowing = false;
-                    }
 
 //                    if (!pois.isEmpty())
 //                    {
@@ -310,8 +304,17 @@ public class MainActivity extends LoggedInActivity {
 //                        mAdapter.clear();
 //                    }
 
+
                     mAdapter.setData(pois);
                     mAdapter.notifyDataSetChanged();
+                    mProgressDialog.dismiss();
+//                    mAdapter.setLoading(false);
+//                    mIsLoading = false;
+
+
+
+
+
                 }
 
                 @Override
@@ -322,9 +325,9 @@ public class MainActivity extends LoggedInActivity {
                     mIsFinished = true;
                     mAdapter.notifyDataSetChanged();
                     Toast.makeText(MainActivity.this, R.string.unable_to_get_results, Toast.LENGTH_SHORT).show();
-                    if (dialog != null)
+                    if (mProgressDialog != null)
                     {
-                        dialog.dismiss();
+                        mProgressDialog.dismiss();
                     }
                 }
         });
@@ -436,8 +439,11 @@ public class MainActivity extends LoggedInActivity {
         DividerItemDecoration divider = new DividerItemDecoration(this, layoutManager.getOrientation());
         mRecyclerView.addItemDecoration(divider);
         mAdapter = new poiAdapter();
-        mAdapter.setLoading(true);
+        //mAdapter.setLoading(true);
         mRecyclerView.setAdapter(mAdapter);
+
+
+
     }
 
 
@@ -471,7 +477,22 @@ public class MainActivity extends LoggedInActivity {
 
         void setLoading(boolean loading)
         {
-            this.mLoading = loading;
+//            // controls Progress dialogs here
+//            final Dialog mProgressDialog = ProgressDialog.getDialog(MainActivity.this, false);
+//
+//            // Display Progress bars
+//            if(loading) {
+//
+//                mProgressDialog.show();
+//                //mIsProgressDialogShowing = true;
+//            } else {
+//                if (mProgressDialog != null)
+//                {
+//                    mProgressDialog.dismiss();
+//                  //  mIsProgressDialogShowing = false;
+//                }
+//            }
+            // this.mLoading = loading;
         }
 
         ArrayList<POI> getDataSet()
@@ -585,20 +606,7 @@ public class MainActivity extends LoggedInActivity {
         @Override
         public int getItemCount()
         {
-            if (pois == null || pois.size() == 0)
-            {
-                if (mLoading)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return 1;
-                }
-            }
-
             return pois.size();
-
         }
 
         void updatePOI(@NonNull POI poi)
@@ -694,38 +702,38 @@ public class MainActivity extends LoggedInActivity {
     }
 
 
-    /*
-    * Callbacks for RecyclerView pagination
-    * */
-    private Paginate.Callbacks mPaginateCallback = new Paginate.Callbacks()
-    {
-        @Override
-        public void onLoadMore()
-        {
-            /*
-            * Get the next page of POIs
-            * */
-            getPoisByDistance(false, false);
-        }
-
-        @Override
-        public boolean isLoading()
-        {
-            /*
-            loading indication for the pagination adapter
-            */
-            return mIsLoading && !isSearching() && !mIsProgressDialogShowing;
-        }
-
-        @Override
-        public boolean hasLoadedAllItems()
-        {
-            /*
-            * indication of whether we finished the pagination or not
-            * */
-            return StateManager.getInstance().getCurrentLocation() != null && (mIsFinished || isSearching());
-        }
-    };
+//    /*
+//    * Callbacks for RecyclerView pagination
+//    * */
+//    private Paginate.Callbacks mPaginateCallback = new Paginate.Callbacks()
+//    {
+//        @Override
+//        public void onLoadMore()
+//        {
+//            /*
+//            * Get the next page of POIs
+//            * */
+//            getPoisByDistance(false, false);
+//        }
+//
+//        @Override
+//        public boolean isLoading()
+//        {
+//            /*
+//            loading indication for the pagination adapter
+//            */
+//            return mIsLoading && !isSearching() && !mIsProgressDialogShowing;
+//        }
+//
+//        @Override
+//        public boolean hasLoadedAllItems()
+//        {
+//            /*
+//            * indication of whether we finished the pagination or not
+//            * */
+//            return StateManager.getInstance().getCurrentLocation() != null && (mIsFinished || isSearching());
+//        }
+//    };
 
     private boolean isSearching()
     {

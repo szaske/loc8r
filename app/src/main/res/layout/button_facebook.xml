@@ -7,13 +7,14 @@
               android:background="@drawable/facebook_button"
               android:gravity="center_vertical"
               android:orientation="horizontal"
-              android:padding="25dp">
+              android:padding="45dp">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/facebook_button_logo_margin"
-        android:src="@drawable/ic_facebook_logo"/>
+        android:paddingLeft="16dp"
+        android:src="@drawable/ic_facebook_logo" />
 
     <View
         android:layout_width="1dp"
