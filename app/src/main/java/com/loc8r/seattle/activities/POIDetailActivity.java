@@ -42,7 +42,6 @@ public class POIDetailActivity extends LoggedInActivity {
     @BindView(R.id.poiNameTextView) TextView mNameTV;
     @BindView(R.id.poiDescriptionTextView) TextView mDescriptionTV;
     @BindView(R.id.poiLocationTextView) TextView mLocationTV;
-    @BindView(R.id.poiTagsTextView) TextView mTagsTV;
     @BindView(R.id.currentLocationtextView) TextView mLocTV;
 
     Location mCurrentLocation;
@@ -69,8 +68,6 @@ public class POIDetailActivity extends LoggedInActivity {
         mNameTV.setText(detailedPoi.getName());
         mDescriptionTV.setText(detailedPoi.getDescription());
         mLocationTV.setText(detailedPoi.getLongitude().toString()+","+detailedPoi.getLatitude().toString());
-
-
     }
 
     @Override
@@ -136,7 +133,4 @@ public class POIDetailActivity extends LoggedInActivity {
             MongoDBManager.getInstance(getApplicationContext()).addStamp(detailedPoi, queryListener);
         }
     }
-
-
-
 }

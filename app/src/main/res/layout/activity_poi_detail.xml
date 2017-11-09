@@ -8,66 +8,89 @@
     tools:ignore="MissingPrefix">
 
 
-    <ImageView
+    <com.loc8r.seattle.utils.FullScreenImageView
         android:id="@+id/poiImageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/cast_album_art_placeholder" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/poiNameTextView"
         fontPath="fonts/Roboto-Bold.ttf"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:shadowColor="#000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1.5"
         android:text="TextView"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="32sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/poiDescriptionTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/poiLocationTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="@+id/poiTagsTextView"
-        tools:layout_editor_absoluteY="382dp" />
+        app:layout_constraintStart_toStartOf="@+id/poiDescriptionTextView" />
 
     <TextView
         android:id="@+id/poiDescriptionTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="24dp"
+        android:shadowColor="#000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1.5"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="356dp" />
+        android:textColor="@color/primaryTextColor"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/getStampBtn"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/poiTagsTextView"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/DebugInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="408dp" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="32dp"
+        android:background="@color/cast_intro_overlay_background_color"
+        android:padding="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/getStampBtn"
+        app:layout_constraintEnd_toEndOf="@+id/poiImageView">
 
-    <TextView
-        android:id="@+id/currentLocationtextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="434dp" />
+        <TextView
+            android:id="@+id/currentLocationtextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36sp"
+            android:shadowColor="#000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1.5"
+            android:text="TextView"
+            android:textColor="@color/primaryTextColor"
+            app:layout_constraintStart_toStartOf="@+id/DebugInfo"
+            app:layout_constraintTop_toBottomOf="@+id/poiLocationTextView" />
+
+        <TextView
+            android:id="@+id/poiLocationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="#000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1.5"
+            android:text="TextView"
+            android:textColor="@color/primaryTextColor"
+            app:layout_constraintStart_toStartOf="@+id/DebugInfo"
+            app:layout_constraintTop_toTopOf="@+id/DebugInfo" />
+    </android.support.constraint.ConstraintLayout>
+
 
     <Button
         android:id="@+id/getStampBtn"

@@ -59,6 +59,7 @@ public class MainActivity extends LoggedInActivity {
     private RecyclerView mRecyclerView;
     private Paginate mPaginate;
     private String mKeyword;
+
     // private Location mLastLocation;
     private poiAdapter mAdapter;
     private boolean mIsLoading;
@@ -110,9 +111,9 @@ public class MainActivity extends LoggedInActivity {
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
 
-        /* onCloseListener doesn't work.
-          Workaround as suggested in http://stackoverflow.com/questions/9327826/searchviews-oncloselistener-doesnt-work
-         */
+        /**  onCloseListener doesn't work.
+             Workaround as suggested in http://stackoverflow.com/questions/9327826/searchviews-oncloselistener-doesnt-work
+         **/
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener()
         {
             @Override
@@ -170,10 +171,6 @@ public class MainActivity extends LoggedInActivity {
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
-
-
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
@@ -261,75 +258,39 @@ public class MainActivity extends LoggedInActivity {
         mProgressDialog = ProgressDialog.getDialog(this, true);
         mProgressDialog.show();
 
-
-        // mIsLoading = true;
-        //mAdapter.setLoading(true);
-
-//        final Dialog dialog = withProgressDialog ? ProgressDialog.getDialog(this, false) : null;
-//        if (dialog != null)
-//        {
-//            dialog.show();
-//            mIsProgressDialogShowing = true;
-//           // mAdapter.notifyDataSetChanged();
-//        }
-
         /*
         Get a list of pois, sorted by the geo location (closest pois go first), filters and query regex (if not null)
         */
         MongoDBManager.getInstance(getApplicationContext()).geoNear(StateManager.getInstance().getCurrentLocation().getLatitude()
             , StateManager.getInstance().getCurrentLocation().getLongitude(), new QueryListener<List<POI>>() {
-                @Override
-                public void onSuccess(List<POI> pois)
+            @Override
+            public void onSuccess(List<POI> pois)
+            {
+
+                //Sort the POIs
+                Collections.sort(pois, new Comparator<POI>() {
+                            @Override public int compare(POI p1, POI p2) {
+                                return p1.getDistance() - p2.getDistance();
+                            }
+                        });
+                mAdapter.setData(pois);
+                mAdapter.notifyDataSetChanged();
+                mProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onError(Exception e)
+            {
+                mAdapter.setLoading(false);
+                mIsLoading = false;
+                mIsFinished = true;
+                mAdapter.notifyDataSetChanged();
+                Toast.makeText(MainActivity.this, R.string.unable_to_get_results, Toast.LENGTH_SHORT).show();
+                if (mProgressDialog != null)
                 {
-
-
-//                    if (!pois.isEmpty())
-//                    {
-//                        /*
-//                        * the farthest POI so we can use it for the next page
-//                        * */
-//                        mFarthestPOI = pois.get(pois.size() - 1);
-//                    }
-
-                    //Sort the POIs
-                    Collections.sort(pois, new Comparator<POI>() {
-                                @Override public int compare(POI p1, POI p2) {
-                                    return p1.getDistance() - p2.getDistance();
-                                }
-                            });
-
-                    //clear previous results update
-//                    if (clearList)
-//                    {
-//                        mAdapter.clear();
-//                    }
-
-
-                    mAdapter.setData(pois);
-                    mAdapter.notifyDataSetChanged();
                     mProgressDialog.dismiss();
-//                    mAdapter.setLoading(false);
-//                    mIsLoading = false;
-
-
-
-
-
                 }
-
-                @Override
-                public void onError(Exception e)
-                {
-                    mAdapter.setLoading(false);
-                    mIsLoading = false;
-                    mIsFinished = true;
-                    mAdapter.notifyDataSetChanged();
-                    Toast.makeText(MainActivity.this, R.string.unable_to_get_results, Toast.LENGTH_SHORT).show();
-                    if (mProgressDialog != null)
-                    {
-                        mProgressDialog.dismiss();
-                    }
-                }
+            }
         });
     }
 
@@ -355,22 +316,13 @@ public class MainActivity extends LoggedInActivity {
                 StateManager.getInstance().setCurrentLocation(location);
                 if (StateManager.getInstance().getCurrentLocation() != null && mAdapter != null)
                 {
-                    /*once we have a location, add the pagination mechanism and continue*/
-//                    if (mPaginate == null)
-//                    {
-//                        mPaginate = Paginate.with(mRecyclerView, mPaginateCallback)
-//                                .setLoadingTriggerThreshold(2)
-//                                .build();
-//                    }
-//                    mRecyclerView.getAdapter().notifyDataSetChanged();
+                    // This is where the magic happens
                     if (mAdapter.getItemCount()==0){
                         getPoisByDistance(false, true);
                     }
-
                 }
             }
         });
-
     }
 
     private void getListOfCategories()
@@ -428,6 +380,9 @@ public class MainActivity extends LoggedInActivity {
         MongoDBManager.getInstance(getApplicationContext()).getPOIs(poisQueryListener);
     }
 
+    /**
+     *  Initialize the Recycler View & Adapter
+     */
     private void initRecyclerView()
     {
         mRecyclerView = findViewById(R.id.recycler_view);
@@ -441,12 +396,7 @@ public class MainActivity extends LoggedInActivity {
         mAdapter = new poiAdapter();
         //mAdapter.setLoading(true);
         mRecyclerView.setAdapter(mAdapter);
-
-
-
     }
-
-
 
     /**
      * RecyclerView adapter to display a list of Seattle POI
@@ -477,22 +427,7 @@ public class MainActivity extends LoggedInActivity {
 
         void setLoading(boolean loading)
         {
-//            // controls Progress dialogs here
-//            final Dialog mProgressDialog = ProgressDialog.getDialog(MainActivity.this, false);
-//
-//            // Display Progress bars
-//            if(loading) {
-//
-//                mProgressDialog.show();
-//                //mIsProgressDialogShowing = true;
-//            } else {
-//                if (mProgressDialog != null)
-//                {
-//                    mProgressDialog.dismiss();
-//                  //  mIsProgressDialogShowing = false;
-//                }
-//            }
-            // this.mLoading = loading;
+            // Nothing to see here
         }
 
         ArrayList<POI> getDataSet()
@@ -503,7 +438,6 @@ public class MainActivity extends LoggedInActivity {
         void addData(List<POI> data)
         {
             pois.addAll(data);
-            // invalidateOptionsMenu();
         }
 
         @Override
@@ -527,9 +461,9 @@ public class MainActivity extends LoggedInActivity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            /*
+            /**
             Bind the POI to the UI
-            * */
+            **/
 
             // TODO Determine why we're checking for instance of ViewHolder
             if (holder instanceof ViewHolder)
@@ -537,18 +471,11 @@ public class MainActivity extends LoggedInActivity {
                 // ViewHolder vh = (ViewHolder) holder;
                 POI data = pois.get(position);
                 ((ViewHolder) holder).bindPoi(data);
-
-                // moved
-                // vh.mName.setText(data.getName());
-
-                //setAddress(vh, data.getAddress());
-                // vh.mPhone.setText(data.getPhone());
-
             }
         }
 
-        /*In this app if the distance to the POI is bigger than 10 miles, we round the number.
-        * If the distance is smaller than 10 miles, we wanna show the distance with 1 digit after the decimal point
+        /** In this app if the distance to the POI is bigger than 10 miles, we round the number.
+         *  If the distance is smaller than 10 miles, we wanna show the distance with 1 digit after the decimal point
          * (I.e 12.8 miles will be 12 miles,  7.823 will be 7.8 miles).*/
         private String formatDistance(double distanceMeters)
         {
@@ -573,21 +500,6 @@ public class MainActivity extends LoggedInActivity {
         {
             return meters * 0.000621371192;
         }
-
-//    private void setAddress(ViewHolder vh, String address)
-//    {
-//        try
-//        {
-//            String[] split = address.split(",");
-//            vh.mAddress.setText(split[0].trim() + ", " + split[1].trim());
-//            vh.mZipCode.setText(split[2].trim());
-//
-//        }
-//        catch (Exception e)
-//        {
-//            Log.e(TAG, "unable to parse address", e);
-//        }
-//    }
 
         @Override
         public int getItemViewType(int position)
@@ -631,25 +543,11 @@ public class MainActivity extends LoggedInActivity {
                 int itemPosition = mRecyclerView.getChildLayoutPosition(v);
                 POI dataToSend = pois.get(itemPosition);
 
-                //get the POI and show it in the map activity
-//                Intent intent = POIDetailActivity.newIntent(MainActivity.this, data);
-//                startActivityForResult(intent, REQUEST_CODE);
-
-                // somewhere inside an Activity
-
-//                Intent intent = new Intent(this,myActivity2.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putString(“myValue“, myValue);
-//                intent.putExtras(bundle);
-//                navigation.this.startActivity(intent);
-
-
                 Intent i = new Intent(MainActivity.this, POIDetailActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("poi", Parcels.wrap(dataToSend));
                 i.putExtras(bundle);
                 startActivity(i); // dataToSend is now passed to the new Activity
-                // finish(); // TODO: Why is finish needed??
             }
         }
 
@@ -700,40 +598,6 @@ public class MainActivity extends LoggedInActivity {
         }
 
     }
-
-
-//    /*
-//    * Callbacks for RecyclerView pagination
-//    * */
-//    private Paginate.Callbacks mPaginateCallback = new Paginate.Callbacks()
-//    {
-//        @Override
-//        public void onLoadMore()
-//        {
-//            /*
-//            * Get the next page of POIs
-//            * */
-//            getPoisByDistance(false, false);
-//        }
-//
-//        @Override
-//        public boolean isLoading()
-//        {
-//            /*
-//            loading indication for the pagination adapter
-//            */
-//            return mIsLoading && !isSearching() && !mIsProgressDialogShowing;
-//        }
-//
-//        @Override
-//        public boolean hasLoadedAllItems()
-//        {
-//            /*
-//            * indication of whether we finished the pagination or not
-//            * */
-//            return StateManager.getInstance().getCurrentLocation() != null && (mIsFinished || isSearching());
-//        }
-//    };
 
     private boolean isSearching()
     {

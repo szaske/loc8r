@@ -43,7 +43,7 @@
     <string name="cancel">Cancel</string>
 
     <!--MainActivity strings -->
-    <string name="welcome_back_message">Welcome back,&#032;</string>
+    <string name="welcome_back_message">Welcome back,&#160;</string>
 
     <!--Recyclerview strings-->
     <string name="unknown">N.A</string>

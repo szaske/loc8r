@@ -64,8 +64,8 @@ public abstract class SignBaseActivity extends FontsActivity
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
 
-        mEmail = (EditText) findViewById(R.id.email);
-        mPassword = (EditText) findViewById(R.id.password);
+        mEmail = findViewById(R.id.email);
+        mPassword = findViewById(R.id.password);
 
         findViewById(R.id.sign_in).setOnClickListener(new View.OnClickListener()
         {

@@ -51,17 +51,17 @@ public class MongoDBManager {
     public String mUserName;
 
 
-    /*
+    /**
     * Helper class to keep all the statics
     * */
-    private class Statics {
 
+    private class Statics {
         private static final String APP_ID = "seapass-iqdtw";
         private static final String SERVICE_NAME = "mongodb-atlas";
         private static final String DB_NAME = "SeaPassDB";
     }
 
-    /*
+    /**
      * Helper class to keep the names of the database collections in one place
      */
     private class DBCollections {
@@ -70,12 +70,10 @@ public class MongoDBManager {
         private static final String STAMPS = "stamps";
     }
 
-
     public synchronized static MongoDBManager getInstance(Context context) {
         if (ourInstance == null) {
             ourInstance = new MongoDBManager(context);
         }
-
         return ourInstance;
     }
 
@@ -90,14 +88,11 @@ public class MongoDBManager {
         if (facebookProfile != null) {
             mUserName = facebookProfile.getName();
         }
-
-        //Get all allPOIs
-
     }
 
-    /*
-    Helper method to reduce the boilerplate code
-    * */
+    /**
+        Helper method to reduce the boilerplate code
+    **/
     private MongoClient.Database getDatabase() {
         return mMongoDBClient.getDatabase(Statics.DB_NAME);
     }
@@ -128,12 +123,12 @@ public class MongoDBManager {
     }
 
     public void doAnonymousAuthentication(final QueryListener<Void> loginListener) {
-        /*
+        /**
         Log in anonymously.
 
         1. get authentication providers to know if anonymous authentication is enabled by the service.
         2. if anonymous authentication is enabled, try to login
-        * */
+        **/
         mStitchClient.getAuthProviders().addOnCompleteListener(new OnCompleteListener<AvailableAuthProviders>() {
             @Override
             public void onComplete(@NonNull final Task<AvailableAuthProviders> task) {
@@ -318,9 +313,6 @@ public class MongoDBManager {
         Document argsMap = new Document()
                 .append("latitude", latitude) //the current phone latitude
                 .append("longitude", longitude); //the current phone longitude
-//                .append("query", query) //query will contain any additional parameters
-//                .append("minDistance", minDistance) //pagination parameter
-//                .append("limit", limit); //pagination limit
 
         Document pipelineMap = new Document()
                 .append("name", "getNearbyPOIs") //our named pipeline in the service
@@ -367,9 +359,7 @@ public class MongoDBManager {
                     {
                         listener.onError(task.getException());
                     }
-
                 }
-
                 return null;
             }
         });
