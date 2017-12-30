@@ -7,7 +7,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 /**
  *  This makes using fonts easier
  */
-public class FontsActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {

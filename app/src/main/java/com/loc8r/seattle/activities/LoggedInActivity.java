@@ -27,7 +27,7 @@ import com.google.android.gms.location.LocationServices;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
 
-public class LoggedInActivity extends FontsActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class LoggedInActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final int LOCATION_REQUEST_CODE = 420;
     private static final String TAG = LoggedInActivity.class.getSimpleName();
 
