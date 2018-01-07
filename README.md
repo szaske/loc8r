@@ -1,4 +1,8 @@
-Work Items TODO:
+Sign in Procedure
 
-1. Create POI RecyclerView
-2. Create Detailed POI page
+A. Already Signed In
+0. LoggedIn Activity OnCreate
+1. SignBaseActivity: OnCreate
+2. MongoDB is checked, and if logged in move to MainActivity
+3. OnConnected then updateLocation
+4. UpdateLocation then getPois

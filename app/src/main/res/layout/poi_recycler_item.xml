@@ -30,15 +30,37 @@
         app:layout_constraintHorizontal_bias="0.0" />
 
     <TextView
-        android:id="@+id/poiTitleTextView"
+        android:id="@+id/poiNameTextView"
+        app:fontPath="fonts/Roboto-Bold.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
+        android:shadowColor="#000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1.5"
         android:text="TextView"
-        android:textColor="?android:attr/colorForeground"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="@+id/poiImageView"
         app:layout_constraintLeft_toLeftOf="@+id/poiImageView" />
+
+    <TextView
+        android:id="@+id/poiDistanceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="16dp"
+        android:shadowColor="#000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1.5"
+        android:text="TextView"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/poiNameTextView"
+        app:layout_constraintLeft_toRightOf="@+id/poiNameTextView" />
 
 
 </android.support.constraint.ConstraintLayout>

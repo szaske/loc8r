@@ -1,61 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.loc8r.seattle.activities.MainActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
+    <include layout="@layout/toolbar" />
 
-    <Button
-        android:id="@+id/pinOnMapButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Pin On Map"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/mapCollectionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="8dp"
-        android:text="Map Collection"
-        app:layout_constraintLeft_toLeftOf="@+id/pinOnMapButton"
-        app:layout_constraintTop_toBottomOf="@+id/pinOnMapButton" />
-
-    <Button
-        android:id="@+id/withRecyclerButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="8dp"
-        android:text="Collection with Recycler"
-        app:layout_constraintLeft_toLeftOf="@+id/mapCollectionButton"
-        app:layout_constraintTop_toBottomOf="@+id/mapCollectionButton" />
-
-    <Button
-        android:id="@+id/dataFromFirebaseButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="8dp"
-        android:text="Data from Firebase"
-        app:layout_constraintLeft_toLeftOf="@+id/withRecyclerButton"
-        app:layout_constraintTop_toBottomOf="@+id/withRecyclerButton" />
-
-    <Button
-        android:id="@+id/exploreButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="8dp"
-        android:text="Explore Seattle"
-        app:layout_constraintLeft_toLeftOf="@+id/dataFromFirebaseButton"
-        app:layout_constraintTop_toBottomOf="@+id/dataFromFirebaseButton" />
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
