@@ -46,10 +46,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends LoggedInActivity {
+public class NearbyPOIActivity extends LoggedInActivity {
 
     // Variables
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = NearbyPOIActivity.class.getSimpleName();
     private boolean mIsProgressDialogShowing = false;
     private String mUsersFirstName;
     private SearchView mSearchView;
@@ -71,7 +71,7 @@ public class MainActivity extends LoggedInActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_nearbyPOIs);
         // ButterKnife.bind(this);
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -231,7 +231,7 @@ public class MainActivity extends LoggedInActivity {
                     {
                         dialog.dismiss();
                         mIsProgressDialogShowing = false;
-                        startActivity(SignInActivity.newIntent(MainActivity.this));
+                        startActivity(SignInActivity.newIntent(NearbyPOIActivity.this));
                         finish();
                     }
 
@@ -241,7 +241,7 @@ public class MainActivity extends LoggedInActivity {
                         Log.e(TAG, "onError: unable to logout", e);
                         dialog.dismiss();
                         mIsProgressDialogShowing = false;
-                        Toast.makeText(MainActivity.this, "Unable to logout", Toast.LENGTH_LONG).show();
+                        Toast.makeText(NearbyPOIActivity.this, "Unable to logout", Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -285,7 +285,7 @@ public class MainActivity extends LoggedInActivity {
                 mIsLoading = false;
                 mIsFinished = true;
                 mAdapter.notifyDataSetChanged();
-                Toast.makeText(MainActivity.this, R.string.unable_to_get_results, Toast.LENGTH_SHORT).show();
+                Toast.makeText(NearbyPOIActivity.this, R.string.unable_to_get_results, Toast.LENGTH_SHORT).show();
                 if (mProgressDialog != null)
                 {
                     mProgressDialog.dismiss();
@@ -543,7 +543,7 @@ public class MainActivity extends LoggedInActivity {
                 int itemPosition = mRecyclerView.getChildLayoutPosition(v);
                 POI dataToSend = pois.get(itemPosition);
 
-                Intent i = new Intent(MainActivity.this, POIDetailActivity.class);
+                Intent i = new Intent(NearbyPOIActivity.this, POIDetailActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("poi", Parcels.wrap(dataToSend));
                 i.putExtras(bundle);
