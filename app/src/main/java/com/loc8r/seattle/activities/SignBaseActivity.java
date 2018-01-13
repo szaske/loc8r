@@ -98,7 +98,7 @@ public abstract class SignBaseActivity extends BaseActivity
             }
         });
 
-        //user is already logged in, continue to MainActivity
+        //user is already logged in, continue to NearbyPOIActivity
         if (MongoDBManager.getInstance(getApplicationContext()).isConnected())
         {
             //fetchProfile();
@@ -275,10 +275,12 @@ public abstract class SignBaseActivity extends BaseActivity
 
     private void login()
     {
-        //go to MainActivity
+        //go to NearbyPOIActivity
         Log.d(LOG_TAG, "login: logging in with user: " + MongoDBManager.getInstance(getApplicationContext()).getUserId());
 
-        Intent intent = new Intent(SignBaseActivity.this, MainActivity.class);
+        // Intent intent = new Intent(SignBaseActivity.this, NearbyPOIActivity.class);
+        Intent intent = new Intent(SignBaseActivity.this, MainListActivity.class);
+
         startActivity(intent);
         finish();
     }

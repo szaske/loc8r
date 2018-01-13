@@ -42,7 +42,7 @@
     <string name="log_out_message">Are you sure you want to log out of Seattle Passport?</string>
     <string name="cancel">Cancel</string>
 
-    <!--MainActivity strings -->
+    NearbyPOIActivityvity strings -->
     <string name="welcome_back_message">Welcome back,&#160;</string>
 
     <!--Recyclerview strings-->
@@ -54,5 +54,6 @@
     <!--POI Detail Activity Strings-->
     <string name="get_stamp_button">Get Stamp</string>
     <string name="stamp_error">Error getting Stamp</string>
+    <string name="poi_list_title">POI List</string>
 
 </resources>
