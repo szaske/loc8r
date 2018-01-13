@@ -71,10 +71,14 @@ public class NearbyPOIActivity extends LoggedInActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nearbyPOIs);
+        setContentView(R.layout.activity_nearbypois);
         // ButterKnife.bind(this);
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+
+        //Allow up link to parent
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
+
         initRecyclerView();
 
 
@@ -92,13 +96,13 @@ public class NearbyPOIActivity extends LoggedInActivity {
         Log.d(TAG, "onCreate: We're done");
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        MenuItem mapItem = menu.findItem(R.id.menu_map);
-
-        return super.onPrepareOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu)
+//    {
+//        MenuItem mapItem = menu.findItem(R.id.menu_map);
+//
+//        return super.onPrepareOptionsMenu(menu);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)

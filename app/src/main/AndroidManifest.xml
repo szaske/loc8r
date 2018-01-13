@@ -19,7 +19,11 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".activities.NearbyPOIActivity" />
+        <activity android:name=".activities.NearbyPOIActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.loc8r.seattle.activities.MainListActivity" />
+        </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -39,6 +43,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.SignUpActivity"></activity>
+        <activity android:name=".activities.MainListActivity"></activity>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -52,7 +57,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".activities.MainListActivity"></activity>
+
     </application>
 
 </manifest>

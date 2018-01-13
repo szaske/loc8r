@@ -278,7 +278,9 @@ public abstract class SignBaseActivity extends BaseActivity
         //go to NearbyPOIActivity
         Log.d(LOG_TAG, "login: logging in with user: " + MongoDBManager.getInstance(getApplicationContext()).getUserId());
 
-        Intent intent = new Intent(SignBaseActivity.this, NearbyPOIActivity.class);
+        // Intent intent = new Intent(SignBaseActivity.this, NearbyPOIActivity.class);
+        Intent intent = new Intent(SignBaseActivity.this, MainListActivity.class);
+
         startActivity(intent);
         finish();
     }
