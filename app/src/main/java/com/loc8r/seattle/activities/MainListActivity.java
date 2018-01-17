@@ -46,9 +46,9 @@ public class MainListActivity extends LoggedInActivity {
 
         List<ListItem> data = new ArrayList<>();
 
-        data.add(new ListItem("Batman vs Superman", R.drawable.ice_cream_icon));
-        data.add(new ListItem("Number 2", R.drawable.ice_cream_icon));
-        data.add(new ListItem("Third Thing", R.drawable.ice_cream_icon));
+        data.add(new ListItem("Explore Seattle", R.drawable.ice_cream_icon));
+        data.add(new ListItem("Seattle Passport", R.drawable.ice_cream_icon));
+        data.add(new ListItem("Settings", R.drawable.ice_cream_icon));
 
         return data;
     }
