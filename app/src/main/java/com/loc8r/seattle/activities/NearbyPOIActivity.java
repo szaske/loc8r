@@ -449,7 +449,8 @@ public class NearbyPOIActivity extends LoggedInActivity {
         {
             if (viewType == EMPTY_VIEW)
             {
-                /* No results */
+                /* No results. show an empty page */
+                // TODO: Add text to blank page explaining that now results were found.
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_view, parent, false);
                 return new EmptyViewHolder(view);
             }
