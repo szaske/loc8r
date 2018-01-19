@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.loc8r.seattle.R;
@@ -20,6 +23,11 @@ import java.util.List;
 
 public class MainListActivity extends LoggedInActivity {
 
+    private static final String TAG = LoggedInActivity.class.getSimpleName();
+    private Button mExploreButton;
+    private Button mPassportButton;
+    private Button mSettingsButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,42 +36,56 @@ public class MainListActivity extends LoggedInActivity {
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
-
-        //Implement a List in the Activity view
-        List<ListItem> data = fill_with_data();
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvMainList);
-        Main_List_Adapter adapter = new Main_List_Adapter(data, new Main_List_Adapter.OnMenuClickListener() {
-            @Override public void OnMenuClick(ListItem item) {
-                clicked(item);
+        mExploreButton = findViewById(R.id.explore_Button);
+        mExploreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Explore button pressed ");
+                Intent intent = new Intent(MainListActivity.this, MapActivity.class);
+                startActivity(intent);
             }
         });
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mPassportButton = findViewById(R.id.my_passport_Button);
+        mPassportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Passport button pressed ");
+//                Intent intent = new Intent(MainListActivity.this, NearbyPOIActivity.class);
+//                startActivity(intent);
+            }
+        });
+
+        mSettingsButton = findViewById(R.id.settings_Button);
+        mSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Settings button pressed ");
+//                Intent intent = new Intent(MainListActivity.this, NearbyPOIActivity.class);
+//                startActivity(intent);
+            }
+        });
+
     }
 
-    private List<ListItem> fill_with_data() {
 
-        List<ListItem> data = new ArrayList<>();
+// Removed.  This code can be used as the click event method for a recyclerview
 
-        data.add(new ListItem("Explore Seattle", R.drawable.ice_cream_icon));
-        data.add(new ListItem("Seattle Passport", R.drawable.ice_cream_icon));
-        data.add(new ListItem("Settings", R.drawable.ice_cream_icon));
-
-        return data;
-    }
-
-    private void clicked(ListItem item){
-        switch (item.getTitle()) {
-            case "Number 2":
-                Intent intent = new Intent(MainListActivity.this, NearbyPOIActivity.class);
-                startActivity(intent);
-                break;
-            default:
-                Toast.makeText(getApplicationContext(), "Item " + item.getTitle() + " Clicked", Toast.LENGTH_LONG).show();
-                break;
-        }
-    }
+//    private void clicked(ListItem item){
+//        switch (item.getTitle()) {
+//            case "Explore Seattle":
+//                Log.d(TAG, "Explore button pressed ");
+//                Intent intent = new Intent(MainListActivity.this, NearbyPOIActivity.class);
+//                startActivity(intent);
+//                break;
+//            case "My Passport":
+//                Toast.makeText(getApplicationContext(), "Item " + item.getTitle() + " Clicked", Toast.LENGTH_LONG).show();
+//                break;
+//            default:
+//                Toast.makeText(getApplicationContext(), "Item " + item.getTitle() + " Clicked", Toast.LENGTH_LONG).show();
+//                break;
+//        }
+//    }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)

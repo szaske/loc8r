@@ -60,6 +60,7 @@ dependencies {
 
     //    MongoDB dependencies
     implementation 'org.mongodb:stitch:0.1.0-SNAPSHOT'
+
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     implementation 'uk.co.chrisjenx:calligraphy:2.2.0'
     implementation 'com.github.markomilos:paginate:0.5.1'
@@ -67,6 +68,16 @@ dependencies {
     implementation 'com.google.android.gms:play-services:11.4.2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     annotationProcessor 'org.parceler:parceler:1.1.9'
+
+    // Mapbox Maps SDK dependency
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.3.1'
+
+    // Mapbox Services SDK dependency to retrieve direction routes
+    implementation 'com.mapbox.mapboxsdk:mapbox-java-services:2.2.6'
+
+    // Mapbox Buildings Plugin for showing and customizing 3D building extrusions
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-building:0.1.0'
+
 
 }
 

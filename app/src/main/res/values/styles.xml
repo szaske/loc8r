@@ -72,4 +72,20 @@
         <item name="titleTextColor">@color/primaryTextColor</item>
         <item name="fontPath">@string/font_medium</item>
     </style>
+
+    <!--Official Theme Section-->
+
+    <style name="MainMenu_Title">
+        <item name="android:textSize">66sp</item>
+
+        <item name="titleTextColor">@color/secondaryColor</item>
+    </style>
+
+    <!-- Green theme for Map Activity -->
+    <style name="AppTheme.Green" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary_green</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_green</item>
+        <item name="colorAccent">@color/colorAccent_green</item>
+    </style>
+
 </resources>

@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/main_menu_bg"
+    android:theme="@style/Theme.SeattlePassport"
+
     tools:context="com.loc8r.seattle.activities.MainListActivity">
 
     <include
@@ -16,22 +19,65 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:text="@string/poi_list_title"
-        android:textSize="32sp"
+        android:textAppearance="@style/MainMenu_Title"
+        android:textStyle="bold"
+        android:textColor="@color/secondaryColor"
         app:fontPath="@string/font_comfortaa_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvMainList"
-        android:layout_width="240dp"
-        android:layout_height="400dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+    <Button
+        android:id="@+id/explore_Button"
+        android:layout_width="280dp"
+        android:layout_height="100dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/main_menu_button"
+        android:shadowColor="#000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1.5"
+        android:text="Explore"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="20sp"
+        app:fontPath="fonts/Roboto-Bold.ttf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+    <Button
+        android:id="@+id/my_passport_Button"
+        android:layout_width="280dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/main_menu_button"
+        android:shadowColor="#000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1.5"
+        android:text="My Passport"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="20sp"
+        app:fontPath="fonts/Roboto-Bold.ttf"
+        app:layout_constraintStart_toStartOf="@+id/explore_Button"
+        app:layout_constraintTop_toBottomOf="@+id/explore_Button" />
+
+    <Button
+        android:id="@+id/settings_Button"
+        android:layout_width="280dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/main_menu_button"
+        android:shadowColor="#000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1.5"
+        android:text="Settings"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="20sp"
+        app:fontPath="fonts/Roboto-Bold.ttf"
+        app:layout_constraintStart_toStartOf="@+id/my_passport_Button"
+        app:layout_constraintTop_toBottomOf="@+id/my_passport_Button" />
 </android.support.constraint.ConstraintLayout>
