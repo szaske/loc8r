@@ -18,11 +18,11 @@ tools:context="com.loc8r.seattle.activities.MapActivity">
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
     android:layout_marginTop="0dp"
-    mapbox:mapbox_cameraTargetLat="40.713469"
-    mapbox:mapbox_cameraTargetLng="-74.006735"
-    mapbox:mapbox_cameraTilt="48"
-    mapbox:mapbox_cameraZoom="12"
-    mapbox:mapbox_cameraZoomMin="10"
+    mapbox:mapbox_cameraTargetLat="47.620628"
+    mapbox:mapbox_cameraTargetLng="-122.349031"
+    mapbox:mapbox_cameraTilt="0"
+    mapbox:mapbox_cameraZoom="15"
+    mapbox:mapbox_cameraZoomMin="16"
     mapbox:mapbox_uiAttribution="false"/>
 
 <android.support.v7.widget.RecyclerView

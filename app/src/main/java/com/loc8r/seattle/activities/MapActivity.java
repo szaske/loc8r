@@ -2,6 +2,7 @@ package com.loc8r.seattle.activities;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
@@ -19,7 +20,9 @@ import android.widget.Toast;
 
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.adapters.POIMapRecyclerViewAdapter;
+import com.loc8r.seattle.interfaces.LocationListener;
 import com.loc8r.seattle.models.IndividualLocation;
+import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.LinearLayoutManagerWithSmoothScroller;
 import com.mapbox.androidsdk.plugins.building.BuildingPlugin;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -48,8 +51,10 @@ import com.mapbox.services.commons.models.Position;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -60,21 +65,31 @@ import static com.mapbox.services.Constants.PRECISION_6;
 
 public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewAdapter.ClickListener {
 
-    private static final LatLngBounds LOCKED_MAP_CAMERA_BOUNDS = new LatLngBounds.Builder()
-            .include(new LatLng(40.87096725853152, -74.08277394720501))
-            .include(new LatLng(40.67035340371385,
-                    -73.87063900287112)).build();
-    private static final LatLng MOCK_DEVICE_LOCATION_LAT_LNG = new LatLng(40.713469, -74.006735);
+
+    //private static final LatLngBounds LOCKED_MAP_CAMERA_BOUNDS = new LatLngBounds.Builder()
+//            .include(new LatLng(40.87096725853152, -74.08277394720501))
+//            .include(new LatLng(40.67035340371385,
+//                    -73.87063900287112)).build();
+    private static final LatLng MOCK_DEVICE_LOCATION_LAT_LNG = new LatLng(47.658331, -122.328474);
+
+
+    private static final String TAG = LoggedInActivity.class.getSimpleName();
+    Location mCurrentLocation;
     private static final int MAPBOX_LOGO_OPACITY = 75;
-    private static final int CAMERA_MOVEMENT_SPEED_IN_MILSECS = 1200;
+    private static final int CAMERA_MOVEMENT_SPEED_IN_MILSECS = 600;
     private static final float NAVIGATION_LINE_WIDTH = 9;
-    private DirectionsRoute currentRoute;
-    private FeatureCollection featureCollection;
+//    private DirectionsRoute currentRoute;
+//    private FeatureCollection featureCollection;
     private MapboxMap mapboxMap;
     private MapView mapView;
-    private MapboxDirections directionsApiClient;
+//    private MapboxDirections directionsApiClient;
     private RecyclerView locationsRecyclerView;
-    private ArrayList<IndividualLocation> listOfIndividualLocations;
+
+
+    // Altered in attempt to move to POI class
+    // private ArrayList<IndividualLocation> listOfIndividualLocations;
+    private ArrayList<POI> listOfPOIs;
+
     private CustomThemeManager customThemeManager;
     private POIMapRecyclerViewAdapter styleRvAdapter;
     private int chosenTheme = 3;
@@ -95,15 +110,16 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
         setContentView(R.layout.activity_map);
 
         // Create a GeoJSON feature collection from the GeoJSON file in the assets folder.
-        try {
-            getFeatureCollectionFromJson();
-        } catch (Exception exception) {
-            Log.e("MapActivity", "onCreate: " + exception);
-            Toast.makeText(this, R.string.failure_to_load_file, Toast.LENGTH_LONG).show();
-        }
+//        try {
+//            getFeatureCollectionFromJson();
+//        } catch (Exception exception) {
+//            Log.e("MapActivity", "onCreate: " + exception);
+//            Toast.makeText(this, R.string.failure_to_load_file, Toast.LENGTH_LONG).show();
+//        }
 
         // Initialize a list of IndividualLocation objects for future use with recyclerview
-        listOfIndividualLocations = new ArrayList<>();
+        //listOfIndividualLocations = new ArrayList<>();
+        listOfPOIs = CreateDummyPOIList();
 
         // Initialize the theme that was selected in the previous activity. The blue theme is set as the backup default.
         //chosenTheme = getIntent().getIntExtra(SELECTED_THEME, R.style.AppTheme_Green);
@@ -127,48 +143,49 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
                 logo.setImageAlpha(MAPBOX_LOGO_OPACITY);
 
                 // Set bounds for the map camera so that the user can't pan the map outside of the NYC area
-                mapboxMap.setLatLngBoundsForCameraTarget(LOCKED_MAP_CAMERA_BOUNDS);
+                // mapboxMap.setLatLngBoundsForCameraTarget(LOCKED_MAP_CAMERA_BOUNDS);
 
-                // Create a list of features from the feature collection
-                List<Feature> featureList = featureCollection.getFeatures();
+                // Create a list of pois from the feature collection
+                //List<Feature> featureList = featureCollection.getFeatures();
 
                 // Loop through the locations to add markers to the map
-                for (int x = 0; x < featureList.size(); x++) {
+                for (int x = 0; x < listOfPOIs.size(); x++) {
 
-                    Feature singleLocation = featureList.get(x);
+                    //Feature singleLocation = featureList.get(x);
+                    POI singlePOI = listOfPOIs.get(x);
 
                     // Get the single location's String properties to place in its map marker
-                    String singleLocationName = singleLocation.getStringProperty("name");
-                    String singleLocationHours = singleLocation.getStringProperty("hours");
-                    String singleLocationDescription = singleLocation.getStringProperty("description");
-                    String singleLocationPhoneNum = singleLocation.getStringProperty("phone");
+                    String singlePOIName = singlePOI.getName();
+                    // String singleLocationHours = singleLocation.getStringProperty("hours");
+                    String singlePOIDescription = singlePOI.getDescription();
+                    // String singleLocationPhoneNum = singleLocation.getStringProperty("phone");
 
                     // Get the single location's LatLng coordinates
-                    Position singleLocationPosition = (Position) singleLocation.getGeometry().getCoordinates();
+                    //Position singlePOIPosition = (Position) singlePOI.getGeometry().getCoordinates();
 
                     // Create a new LatLng object with the Position object created above
-                    LatLng singleLocationLatLng = new LatLng(singleLocationPosition.getLatitude(),
-                            singleLocationPosition.getLongitude());
+                    LatLng singlePOILatLng = new LatLng(singlePOI.getLatitude(),
+                            singlePOI.getLongitude());
 
                     // Add the location to the Arraylist of locations for later use in the recyclerview
-                    listOfIndividualLocations.add(new IndividualLocation(
-                            singleLocationName,
-                            singleLocationDescription,
-                            singleLocationHours,
-                            singleLocationPhoneNum,
-                            singleLocationLatLng
-                    ));
+//                    listOfPOIs.add(new POI(
+//                            singleLocationName,
+//                            singleLocationDescription,
+//                            singleLocationHours,
+//                            singleLocationPhoneNum,
+//                            singleLocationLatLng
+//                    ));
 
                     // Add the location's marker to the map
                     mapboxMap.addMarker(new MarkerOptions()
-                            .position(singleLocationLatLng)
-                            .title(singleLocationName)
+                            .position(singlePOILatLng)
+                            .title(singlePOIName)
                             .icon(customThemeManager.getUnselectedMarkerIcon()));
 
                     // Call getInformationFromDirectionsApi() to eventually display the location's
                     // distance from mocked device location
-                    getInformationFromDirectionsApi(singleLocationLatLng.getLatitude(),
-                            singleLocationLatLng.getLongitude(), false, x);
+//                    getInformationFromDirectionsApi(singleLocationLatLng.getLatitude(),
+//                            singleLocationLatLng.getLongitude(), false, x);
                 }
 
                 // Add the fake device location marker to the map. In a real use case scenario, the Mapbox location layer plugin
@@ -182,81 +199,130 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
         });
     }
 
+    public ArrayList<POI> CreateDummyPOIList(){
+        ArrayList<POI> POIList = new ArrayList<POI>();
+        // dicks 47.661116, -122.327877
+        // String name, Location location, String description, String img_url, String category, String stampId, String stampText
+        POIList.add(new POI("Dick's",CreateLocation(47.661116, -122.327877),"Dicks", "www.zaske.com", "street art", "StampIS1","Stamp Text 1"));
+        POIList.add(new POI("Sea Monster Lounge",CreateLocation(47.661542, -122.332299),"Sea Monster", "www.zaske2.com", "street art", "StampIS2","Stamp Text 2"));
+        POIList.add(new POI("Library",CreateLocation(47.661173, -122.338994),"Library", "www.zaske3.com", "street art", "StampIS3","Stamp Text 3"));
+        return POIList;
+    }
+
+    //
+    public Location CreateLocation(Double latitude, Double longitude){
+        Location tempLocation = new Location("");
+        tempLocation.setLongitude(longitude);
+        tempLocation.setLatitude(latitude);
+        return tempLocation;
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.d(TAG, "onConnected() called with: " + "bundle = [" + bundle + "]");
+                /*
+        * get the last location of the device
+        * */
+        getContinousLocationUpdates(new LocationListener()
+        {
+            @Override
+            public void onLocationReceived(Location location)
+            {
+                mCurrentLocation = location;
+                Log.d(TAG, "UI update initiated .............");
+                if (null != mCurrentLocation) {
+                    String lat = String.valueOf(mCurrentLocation.getLatitude());
+                    String lng = String.valueOf(mCurrentLocation.getLongitude());
+//                    String dist = String.valueOf(detailedPoi.getDistance());
+//                    String total = "At Time: " + DateFormat.getTimeInstance().format(new Date()) + "\n" +
+//                            "Latitude: " + lat + "\n" +
+//                            "Longitude: " + lng + "\n" +
+//                            "Accuracy: " + String.valueOf(mCurrentLocation.getAccuracy()) + "\n" +
+//                            "Provider: " + String.valueOf(mCurrentLocation.getProvider()) + "\n" +
+//                            "Distance to POI: " + dist;
+//                    mLocTV.setText(total);
+                } else {
+                    Log.d(TAG, "location is null ...............");
+                }
+            }
+        });
+    }
+
     @Override
     public void onItemClick(int position) {
 
         // Get the selected individual location via its card's position in the recyclerview of cards
-        IndividualLocation selectedLocation = listOfIndividualLocations.get(position);
+        POI selectedPOICard = listOfPOIs.get(position);
 
         // Retrieve and change the selected card's marker to the selected marker icon
         Marker markerTiedToSelectedCard = mapboxMap.getMarkers().get(position);
         adjustMarkerSelectStateIcons(markerTiedToSelectedCard);
 
         // Reposition the map camera target to the selected marker
-        LatLng selectedLocationLatLng = selectedLocation.getLocation();
-        repositionMapCamera(selectedLocationLatLng);
+        LatLng selectedPOILatLng = selectedPOICard.getLatLng();
+        repositionMapCamera(selectedPOILatLng);
 
         // Check for an internet connection before making the call to Mapbox Directions API
-        if (deviceHasInternetConnection()) {
-            // Start call to the Mapbox Directions API
-            getInformationFromDirectionsApi(selectedLocationLatLng.getLatitude(),
-                    selectedLocationLatLng.getLongitude(), true, null);
-        } else {
-            Toast.makeText(this, R.string.no_internet_message, Toast.LENGTH_LONG).show();
-        }
+//        if (deviceHasInternetConnection()) {
+//            // Start call to the Mapbox Directions API
+//            getInformationFromDirectionsApi(selectedPOILatLng.getLatitude(),
+//                    selectedPOILatLng.getLongitude(), true, null);
+//        } else {
+//            Toast.makeText(this, R.string.no_internet_message, Toast.LENGTH_LONG).show();
+//        }
     }
 
-    private void getInformationFromDirectionsApi(double destinationLatCoordinate, double destinationLongCoordinate,
-                                                 final boolean fromMarkerClick, @Nullable final Integer listIndex) {
-        // Set up origin and destination coordinates for the call to the Mapbox Directions API
-        Position mockCurrentLocation = Position.fromLngLat(MOCK_DEVICE_LOCATION_LAT_LNG.getLongitude(),
-                MOCK_DEVICE_LOCATION_LAT_LNG.getLatitude());
-        Position destinationMarker = Position.fromLngLat(destinationLongCoordinate, destinationLatCoordinate);
-
-        // Initialize the directionsApiClient object for eventually drawing a navigation route on the map
-        directionsApiClient = new MapboxDirections.Builder()
-                .setOrigin(mockCurrentLocation)
-                .setDestination(destinationMarker)
-                .setOverview(DirectionsCriteria.OVERVIEW_FULL)
-                .setProfile(DirectionsCriteria.PROFILE_DRIVING)
-                .setAccessToken(getString(R.string.access_token))
-                .build();
-
-        directionsApiClient.enqueueCall(new Callback<DirectionsResponse>() {
-            @Override
-            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-                // Check that the response isn't null and that the response has a route
-                if (response.body() == null) {
-                    Log.e("MapActivity", "No routes found, make sure you set the right user and access token.");
-                } else if (response.body().getRoutes().size() < 1) {
-                    Log.e("MapActivity", "No routes found");
-                } else {
-                    if (fromMarkerClick) {
-                        // Retrieve and draw the navigation route on the map
-                        currentRoute = response.body().getRoutes().get(0);
-                        drawNavigationPolylineRoute(currentRoute);
-                    } else {
-                        // Use Mapbox Turf helper method to convert meters to miles and then format the mileage number
-                        DecimalFormat df = new DecimalFormat("#.#");
-                        String finalConvertedFormattedDistance = String.valueOf(df.format(TurfHelpers.convertDistance(
-                                response.body().getRoutes().get(0).getDistance(), "meters", "miles")));
-
-                        // Set the distance for each location object in the list of locations
-                        if (listIndex != null) {
-                            listOfIndividualLocations.get(listIndex).setDistance(finalConvertedFormattedDistance);
-                            // Refresh the displayed recyclerview when the location's distance is set
-                            styleRvAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DirectionsResponse> call, Throwable throwable) {
-                Toast.makeText(MapActivity.this, R.string.failure_to_retrieve, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+//    private void getInformationFromDirectionsApi(double destinationLatCoordinate, double destinationLongCoordinate,
+//                                                 final boolean fromMarkerClick, @Nullable final Integer listIndex) {
+//        // Set up origin and destination coordinates for the call to the Mapbox Directions API
+//        Position mockCurrentLocation = Position.fromLngLat(MOCK_DEVICE_LOCATION_LAT_LNG.getLongitude(),
+//                MOCK_DEVICE_LOCATION_LAT_LNG.getLatitude());
+//        Position destinationMarker = Position.fromLngLat(destinationLongCoordinate, destinationLatCoordinate);
+//
+//        // Initialize the directionsApiClient object for eventually drawing a navigation route on the map
+//        directionsApiClient = new MapboxDirections.Builder()
+//                .setOrigin(mockCurrentLocation)
+//                .setDestination(destinationMarker)
+//                .setOverview(DirectionsCriteria.OVERVIEW_FULL)
+//                .setProfile(DirectionsCriteria.PROFILE_DRIVING)
+//                .setAccessToken(getString(R.string.access_token))
+//                .build();
+//
+//        directionsApiClient.enqueueCall(new Callback<DirectionsResponse>() {
+//            @Override
+//            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
+//                // Check that the response isn't null and that the response has a route
+//                if (response.body() == null) {
+//                    Log.e("MapActivity", "No routes found, make sure you set the right user and access token.");
+//                } else if (response.body().getRoutes().size() < 1) {
+//                    Log.e("MapActivity", "No routes found");
+//                } else {
+//                    if (fromMarkerClick) {
+//                        // Retrieve and draw the navigation route on the map
+//                        currentRoute = response.body().getRoutes().get(0);
+//                        drawNavigationPolylineRoute(currentRoute);
+//                    } else {
+//                        // Use Mapbox Turf helper method to convert meters to miles and then format the mileage number
+//                        DecimalFormat df = new DecimalFormat("#.#");
+//                        String finalConvertedFormattedDistance = String.valueOf(df.format(TurfHelpers.convertDistance(
+//                                response.body().getRoutes().get(0).getDistance(), "meters", "miles")));
+//
+//                        // Set the distance for each location object in the list of locations
+//                        if (listIndex != null) {
+//                            listOfIndividualLocations.get(listIndex).setDistance(finalConvertedFormattedDistance);
+//                            // Refresh the displayed recyclerview when the location's distance is set
+//                            styleRvAdapter.notifyDataSetChanged();
+//                        }
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<DirectionsResponse> call, Throwable throwable) {
+//                Toast.makeText(MapActivity.this, R.string.failure_to_retrieve, Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
 
     private void repositionMapCamera(LatLng newTarget) {
         CameraPosition newCameraPosition = new CameraPosition.Builder()
@@ -268,42 +334,42 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
     private void addMockDeviceLocationMarkerToMap() {
         // Add the fake user location marker to the map
         mapboxMap.addMarker(new MarkerOptions()
-                .position(MOCK_DEVICE_LOCATION_LAT_LNG)
+                .position(new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude()))
                 .title(getString(R.string.mock_location_title))
                 .icon(customThemeManager.getMockLocationIcon()));
     }
 
-    private void getFeatureCollectionFromJson() throws IOException {
-        try {
-            // Use fromJson() method to convert the GeoJSON file into a usable FeatureCollection object
-            featureCollection = FeatureCollection.fromJson(loadGeoJsonFromAsset("list_of_pois.geojson"));
-        } catch (Exception exception) {
-            Log.e("MapActivity", "getFeatureCollectionFromJson: " + exception);
-        }
-    }
-
-    private String loadGeoJsonFromAsset(String filename) {
-        try {
-            // Load the GeoJSON file from the local asset folder
-            InputStream is = getAssets().open(filename);
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            return new String(buffer, "UTF-8");
-        } catch (Exception exception) {
-            Log.e("MapActivity", "Exception Loading GeoJSON: " + exception.toString());
-            exception.printStackTrace();
-            return null;
-        }
-    }
+//    private void getFeatureCollectionFromJson() throws IOException {
+//        try {
+//            // Use fromJson() method to convert the GeoJSON file into a usable FeatureCollection object
+//            featureCollection = FeatureCollection.fromJson(loadGeoJsonFromAsset("list_of_pois.geojson"));
+//        } catch (Exception exception) {
+//            Log.e("MapActivity", "getFeatureCollectionFromJson: " + exception);
+//        }
+//    }
+//
+//    private String loadGeoJsonFromAsset(String filename) {
+//        try {
+//            // Load the GeoJSON file from the local asset folder
+//            InputStream is = getAssets().open(filename);
+//            int size = is.available();
+//            byte[] buffer = new byte[size];
+//            is.read(buffer);
+//            is.close();
+//            return new String(buffer, "UTF-8");
+//        } catch (Exception exception) {
+//            Log.e("MapActivity", "Exception Loading GeoJSON: " + exception.toString());
+//            exception.printStackTrace();
+//            return null;
+//        }
+//    }
 
     private void setUpRecyclerViewOfLocationCards(int chosenTheme) {
         // Initialize the recyclerview of location cards and a custom class for automatic card scrolling
         locationsRecyclerView = findViewById(R.id.map_layout_rv);
         locationsRecyclerView.setHasFixedSize(true);
         locationsRecyclerView.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(this));
-        styleRvAdapter = new POIMapRecyclerViewAdapter(listOfIndividualLocations,
+        styleRvAdapter = new POIMapRecyclerViewAdapter(listOfPOIs,
                 getApplicationContext(), this, chosenTheme);
         locationsRecyclerView.setAdapter(styleRvAdapter);
         SnapHelper snapHelper = new LinearSnapHelper();
@@ -351,16 +417,16 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
         }
 
         // Get the directionsApiClient route to the selected marker except if the mock device location marker is selected
-        if (!marker.getIcon().equals(customThemeManager.getMockLocationIcon())) {
-            // Check for an internet connection before making the call to Mapbox Directions API
-            if (deviceHasInternetConnection()) {
-                // Start the call to the Mapbox Directions API
-                getInformationFromDirectionsApi(marker.getPosition().getLatitude(),
-                        marker.getPosition().getLongitude(), true, null);
-            } else {
-                Toast.makeText(this, R.string.no_internet_message, Toast.LENGTH_LONG).show();
-            }
-        }
+//        if (!marker.getIcon().equals(customThemeManager.getMockLocationIcon())) {
+//            // Check for an internet connection before making the call to Mapbox Directions API
+//            if (deviceHasInternetConnection()) {
+//                // Start the call to the Mapbox Directions API
+//                getInformationFromDirectionsApi(marker.getPosition().getLatitude(),
+//                        marker.getPosition().getLongitude(), true, null);
+//            } else {
+//                Toast.makeText(this, R.string.no_internet_message, Toast.LENGTH_LONG).show();
+//            }
+//        }
     }
 
     private void drawNavigationPolylineRoute(DirectionsRoute route) {

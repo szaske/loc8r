@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loc8r.seattle.R;
-import com.loc8r.seattle.models.IndividualLocation;
+// import com.loc8r.seattle.models.IndividualLocation;
 import com.loc8r.seattle.models.POI;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
 public class POIMapRecyclerViewAdapter extends
         RecyclerView.Adapter<POIMapRecyclerViewAdapter.ViewHolder> {
 
-    private List<IndividualLocation> listOfPOI;
+    private List<POI> listOfPOI;
     private Context context;
     private int selectedTheme;
     private static ClickListener clickListener;
@@ -42,7 +42,7 @@ public class POIMapRecyclerViewAdapter extends
     private int locationDistanceNumColor = 0;
     private int milesAbbreviationColor = 0;
 
-    public POIMapRecyclerViewAdapter(List<IndividualLocation> styles,
+    public POIMapRecyclerViewAdapter(List<POI> styles,
                                        Context context, ClickListener cardClickListener, int selectedTheme) {
         this.context = context;
         this.listOfPOI = styles;
@@ -69,13 +69,16 @@ public class POIMapRecyclerViewAdapter extends
     @Override
     public void onBindViewHolder(ViewHolder card, int position) {
 
-        IndividualLocation locationCard = listOfPOI.get(position);
+        POI locationCard = listOfPOI.get(position);
 
         card.nameTextView.setText(locationCard.getName());
-        card.addressTextView.setText(locationCard.getAddress());
-        card.phoneNumTextView.setText(locationCard.getPhoneNum());
-        card.hoursTextView.setText(locationCard.getHours());
-        card.distanceNumberTextView.setText(locationCard.getDistance());
+        // card.addressTextView.setText(locationCard.getAddress());
+        // card.phoneNumTextView.setText(locationCard.getPhoneNum());
+        // card.hoursTextView.setText(locationCard.getHours());
+
+        // Removing Distance temporarily
+        //card.distanceNumberTextView.setText(locationCard.getDistance());
+        card.distanceNumberTextView.setText("23");
 
         // Set Theme items, adjusted for SP color scheme
         emojiForCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.money_bag_icon, null);

@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import com.google.android.gms.nearby.messages.Distance;
 import com.loc8r.seattle.utils.StateManager;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -139,6 +140,12 @@ public class POI {
         return (int) Math.round(Math.sqrt(distance));
     }
 
+    public LatLng getLatLng(){
+        LatLng tempLatLng = new LatLng();
+        tempLatLng.setLongitude(this.getLongitude());
+        tempLatLng.setLatitude(this.getLatitude());
+        return tempLatLng;
+    }
 
     public ObjectId getId() { return id; }
     public void setId(ObjectId id) { this.id = id; }
