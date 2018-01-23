@@ -4,7 +4,7 @@ package com.loc8r.seattle.models;
 import android.location.Location;
 import android.os.Parcelable;
 
-import com.google.android.gms.nearby.messages.Distance;
+//import com.google.android.gms.nearby.messages.Distance;
 import com.loc8r.seattle.utils.StateManager;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 

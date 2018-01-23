@@ -1,0 +1,10 @@
+Test GPS track:
+
+Start (John Stanford IS):
+Lat: 47.657685
+Long: -122.323866
+
+
+End (Dick's)
+Lat: 47.661210
+Long: -122.327797

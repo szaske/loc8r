@@ -51,8 +51,8 @@ public class MainListActivity extends LoggedInActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Passport button pressed ");
-//                Intent intent = new Intent(MainListActivity.this, NearbyPOIActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(MainListActivity.this, MapsActivity.class);
+                startActivity(intent);
             }
         });
 

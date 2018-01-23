@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="32dp"
-        android:background="@color/cast_intro_overlay_background_color"
+        android:background="@color/colorPrimary_green"
         android:padding="16dp"
         app:layout_constraintBottom_toTopOf="@+id/getStampBtn"
         app:layout_constraintEnd_toEndOf="@+id/poiImageView">

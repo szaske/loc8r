@@ -1,5 +1,8 @@
 package com.loc8r.seattle.activities;
 
+import android.animation.ObjectAnimator;
+import android.animation.TypeEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
@@ -7,7 +10,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -21,8 +23,8 @@ import android.widget.Toast;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.adapters.POIMapRecyclerViewAdapter;
 import com.loc8r.seattle.interfaces.LocationListener;
-import com.loc8r.seattle.models.IndividualLocation;
 import com.loc8r.seattle.models.POI;
+import com.loc8r.seattle.utils.Constants;
 import com.loc8r.seattle.utils.LinearLayoutManagerWithSmoothScroller;
 import com.mapbox.androidsdk.plugins.building.BuildingPlugin;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -33,33 +35,16 @@ import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.services.api.directions.v5.DirectionsCriteria;
-import com.mapbox.services.api.directions.v5.MapboxDirections;
-import com.mapbox.services.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.services.api.directions.v5.models.DirectionsRoute;
-import com.mapbox.services.api.utils.turf.TurfHelpers;
-import com.mapbox.services.commons.geojson.Feature;
-import com.mapbox.services.commons.geojson.FeatureCollection;
 import com.mapbox.services.commons.geojson.LineString;
 import com.mapbox.services.commons.models.Position;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.mapbox.services.Constants.PRECISION_6;
 
@@ -74,7 +59,12 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
 
 
     private static final String TAG = LoggedInActivity.class.getSimpleName();
+
     Location mCurrentLocation;
+
+    // The marker showing our current location
+    Marker marker;
+
     private static final int MAPBOX_LOGO_OPACITY = 75;
     private static final int CAMERA_MOVEMENT_SPEED_IN_MILSECS = 600;
     private static final float NAVIGATION_LINE_WIDTH = 9;
@@ -100,7 +90,7 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
 
         // Configure the Mapbox access token. Configuration can either be called in your application
         // class or in the same activity which contains the mapview.
-        Mapbox.getInstance(this, getString(R.string.access_token));
+        Mapbox.getInstance(this, getString(R.string.MAPBOX_ACCESS_TOKEN));
 
         // Hide the status bar for the map to fill the entire screen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -188,15 +178,20 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
 //                            singleLocationLatLng.getLongitude(), false, x);
                 }
 
-                // Add the fake device location marker to the map. In a real use case scenario, the Mapbox location layer plugin
-                // can be used to easily display the device's location
-                addMockDeviceLocationMarkerToMap();
+                //Removed as there is a chance we haven't gotten our current location yet.
+                // addDeviceLocationMarkerToMap();
+
+                // reset camera to point at current device location
+                cameraToCurrentLocation();
 
                 setUpMarkerClickListener();
 
-                setUpRecyclerViewOfLocationCards(chosenTheme);
+                // setUpRecyclerViewOfLocationCards(chosenTheme);
             }
         });
+
+        // Create RV outside of Map
+        setUpRecyclerViewOfLocationCards(chosenTheme);
     }
 
     public ArrayList<POI> CreateDummyPOIList(){
@@ -228,21 +223,23 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
             @Override
             public void onLocationReceived(Location location)
             {
+                // Check if this is the first time location was retrieved
+                if(mCurrentLocation==null){
+                    Toast.makeText(getApplicationContext(), "location change detected", Toast.LENGTH_SHORT).show();
+                }
+
                 mCurrentLocation = location;
-                Log.d(TAG, "UI update initiated .............");
-                if (null != mCurrentLocation) {
-                    String lat = String.valueOf(mCurrentLocation.getLatitude());
-                    String lng = String.valueOf(mCurrentLocation.getLongitude());
-//                    String dist = String.valueOf(detailedPoi.getDistance());
-//                    String total = "At Time: " + DateFormat.getTimeInstance().format(new Date()) + "\n" +
-//                            "Latitude: " + lat + "\n" +
-//                            "Longitude: " + lng + "\n" +
-//                            "Accuracy: " + String.valueOf(mCurrentLocation.getAccuracy()) + "\n" +
-//                            "Provider: " + String.valueOf(mCurrentLocation.getProvider()) + "\n" +
-//                            "Distance to POI: " + dist;
-//                    mLocTV.setText(total);
-                } else {
-                    Log.d(TAG, "location is null ...............");
+
+                if(mapboxMap != null){
+
+                    //check to see if the current location marker exists
+                    if(marker==null){
+                        addDeviceLocationMarkerToMap();
+                    }else{
+                        animateMarkerToCurrentLocation();
+                    }
+
+                    Toast.makeText(getApplicationContext(), "location change detected", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -324,6 +321,13 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
 //        });
 //    }
 
+
+
+    private void cameraToCurrentLocation(){
+        if(mCurrentLocation != null) {
+            repositionMapCamera(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+        }
+    }
     private void repositionMapCamera(LatLng newTarget) {
         CameraPosition newCameraPosition = new CameraPosition.Builder()
                 .target(newTarget)
@@ -331,12 +335,42 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
         mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(newCameraPosition), CAMERA_MOVEMENT_SPEED_IN_MILSECS);
     }
 
-    private void addMockDeviceLocationMarkerToMap() {
-        // Add the fake user location marker to the map
-        mapboxMap.addMarker(new MarkerOptions()
+    // Add the user location marker to the map
+    private void addDeviceLocationMarkerToMap() {
+        marker = mapboxMap.addMarker(new MarkerOptions()
                 .position(new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude()))
-                .title(getString(R.string.mock_location_title))
-                .icon(customThemeManager.getMockLocationIcon()));
+                .title(getString(R.string.device_location_title))
+                .icon(customThemeManager.getLocationIcon()));
+    }
+
+    private void animateMarkerToCurrentLocation(){
+
+        LatLng updatedLocation = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+
+        repositionMapCamera(updatedLocation);
+        ValueAnimator markerAnimator = ObjectAnimator.ofObject(marker, "position",
+                new LatLngEvaluator(), marker.getPosition(), updatedLocation);
+        markerAnimator.setDuration(1000);
+        markerAnimator.start();
+    }
+
+    private LatLng locationToLatLong(Location location){
+        return new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
+    }
+
+    private static class LatLngEvaluator implements TypeEvaluator<LatLng> {
+        // Method is used to interpolate the marker animation.
+
+        private LatLng latLng = new LatLng();
+
+        @Override
+        public LatLng evaluate(float fraction, LatLng startValue, LatLng endValue) {
+            latLng.setLatitude(startValue.getLatitude()
+                    + ((endValue.getLatitude() - startValue.getLatitude()) * fraction));
+            latLng.setLongitude(startValue.getLongitude()
+                    + ((endValue.getLongitude() - startValue.getLongitude()) * fraction));
+            return latLng;
+        }
     }
 
 //    private void getFeatureCollectionFromJson() throws IOException {
@@ -376,6 +410,7 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
         snapHelper.attachToRecyclerView(locationsRecyclerView);
     }
 
+    //Creates click listener that
     private void setUpMarkerClickListener() {
         mapboxMap.setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
             @Override
@@ -406,18 +441,18 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
     private void adjustMarkerSelectStateIcons(Marker marker) {
         // Set all of the markers' icons to the unselected marker icon
         for (Marker singleMarker : mapboxMap.getMarkers()) {
-            if (!singleMarker.getTitle().equals(getString(R.string.mock_location_title))) {
+            if (!singleMarker.getTitle().equals(getString(R.string.device_location_title))) {
                 singleMarker.setIcon(customThemeManager.getUnselectedMarkerIcon());
             }
         }
 
         // Change the selected marker's icon to a selected state marker except if the mock device location marker is selected
-        if (!marker.getIcon().equals(customThemeManager.getMockLocationIcon())) {
+        if (!marker.getIcon().equals(customThemeManager.getLocationIcon())) {
             marker.setIcon(customThemeManager.getSelectedMarkerIcon());
         }
 
         // Get the directionsApiClient route to the selected marker except if the mock device location marker is selected
-//        if (!marker.getIcon().equals(customThemeManager.getMockLocationIcon())) {
+//        if (!marker.getIcon().equals(customThemeManager.getLocationIcon())) {
 //            // Check for an internet connection before making the call to Mapbox Directions API
 //            if (deviceHasInternetConnection()) {
 //                // Start the call to the Mapbox Directions API
@@ -512,7 +547,7 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
         private Context context;
         private Icon unselectedMarkerIcon;
         private Icon selectedMarkerIcon;
-        private Icon mockLocationIcon;
+        private Icon LocationIcon;
         private int navigationLineColor;
         private MapboxMap mapboxMap;
         private MapView mapView;
@@ -529,9 +564,9 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
 
             mapboxMap.setStyle(getString(R.string.terminal_map_style));
             navigationLineColor = getResources().getColor(R.color.navigationRouteLine_green);
-            unselectedMarkerIcon = IconFactory.getInstance(context).fromResource(R.drawable.green_unselected_money);
-            selectedMarkerIcon = IconFactory.getInstance(context).fromResource(R.drawable.green_selected_money);
-            mockLocationIcon = IconFactory.getInstance(context).fromResource(R.drawable.green_user_location);
+            unselectedMarkerIcon = IconFactory.getInstance(context).fromResource(R.drawable.green_unselected_seattle);
+            selectedMarkerIcon = IconFactory.getInstance(context).fromResource(R.drawable.green_selected_seattle);
+            LocationIcon = IconFactory.getInstance(context).fromResource(R.drawable.green_user_location);
 
         }
 
@@ -551,8 +586,8 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
             return selectedMarkerIcon;
         }
 
-        Icon getMockLocationIcon() {
-            return mockLocationIcon;
+        Icon getLocationIcon() {
+            return LocationIcon;
         }
 
         int getNavigationLineColor() {
