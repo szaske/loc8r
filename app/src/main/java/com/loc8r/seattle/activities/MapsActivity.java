@@ -1,24 +1,34 @@
 package com.loc8r.seattle.activities;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.TransitionManager;
+import android.animation.ValueAnimator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+
+
 import android.util.Log;
+import android.view.Gravity;
+import android.view.ViewGroup;
 import android.widget.Toast;
+import android.util.DisplayMetrics;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -26,19 +36,29 @@ import com.loc8r.seattle.R;
 import com.loc8r.seattle.adapters.POIMapRecyclerViewAdapter;
 import com.loc8r.seattle.interfaces.LocationListener;
 import com.loc8r.seattle.models.POI;
-import com.loc8r.seattle.utils.LinearLayoutManagerWithSmoothScroller;
+import android.view.View;
 
 import java.util.ArrayList;
 
-public class MapsActivity extends LoggedInActivity implements POIMapRecyclerViewAdapter.ClickListener, OnMapReadyCallback {
+public class MapsActivity extends LoggedInActivity implements
+        POIMapRecyclerViewAdapter.ClickListener,
+        GoogleMap.OnMarkerClickListener,
+        OnMapReadyCallback {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     private GoogleMap mMap;
     private Marker mDeviceMarker;
     private Location mCurrentLocation;
     private ArrayList<POI> listOfPOIs;
+    private ArrayList<Marker> listOfPOIMarkers = new ArrayList<Marker>();
     private RecyclerView locationsRecyclerView;
+    private ViewPager mViewPager;
+    // private CardPagerAdapter mCardAdapter;
     private POIMapRecyclerViewAdapter mapRVAdapter;
+    public ViewGroup transitionsContainer;
+    private View AnimeView;
+    Animation slide_up_animation;
+    Animation testAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +78,42 @@ public class MapsActivity extends LoggedInActivity implements POIMapRecyclerView
         // Create RV outside of Map
         setUpRecyclerViewOfLocationCards();
 
+        // Name the drawer
+        transitionsContainer = findViewById(R.id.mapDrawer);
+        AnimeView = findViewById(R.id.mapDrawer);
+
+        Log.d(TAG, "transitionContainer child count is " + String.valueOf(transitionsContainer.getChildCount()));
+
+        CreateAnimation();
     }
 
+    public void CreateAnimation(){
+        // Load the animation from XML
+        slide_up_animation = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.slide_up);
+
+        slide_up_animation = new Animation(MapsActivity.this,)
+
+        // set the animation listener
+        slide_up_animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                if (animation == slide_up_animation) {
+                    Toast.makeText(MapsActivity.this, "Animation Stopped", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+    }
 
     /**
      * Manipulates the map once available.
@@ -82,7 +136,8 @@ public class MapsActivity extends LoggedInActivity implements POIMapRecyclerView
         // Add markers for all nearby POIs
         AddPOIsToMap();
 
-        //Now we want to zoom into our current location, but we have to do this in our
+        // Set listeners for marker events.  See the bottom of this class for their behavior.
+        mMap.setOnMarkerClickListener(this);
     }
 
     public ArrayList<POI> CreateDummyPOIList(){
@@ -109,30 +164,67 @@ public class MapsActivity extends LoggedInActivity implements POIMapRecyclerView
 
             // Add the location's marker to the map
             LatLng poiLatLng = new LatLng(singlePOI.getLatitude(), singlePOI.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(poiLatLng).title(singlePOI.getName()));
+
+            Marker tempMarker = mMap.addMarker(new MarkerOptions()
+            .position(poiLatLng)
+            .title(singlePOI.getName()));
+
+            // Create a list of markers so we can address them when clicked (so we have an index of current markers)
+            listOfPOIMarkers.add(tempMarker);
         }
     }
 
     private LatLng locationToLatLong(Location location){
-        return new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
+        return new LatLng(location.getLatitude(),location.getLongitude());
     }
 
     private void setUpRecyclerViewOfLocationCards() {
         // Initialize the recyclerview of location cards and a custom class for automatic card scrolling
         locationsRecyclerView = findViewById(R.id.map_rv);
         locationsRecyclerView.setHasFixedSize(true);
-        locationsRecyclerView.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(this));
+
+
+        // locationsRecyclerView.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(this));
+        //locationsRecyclerView.setLayoutManager(new GridLayoutManager(this,2,GridLayoutManager.HORIZONTAL, false));
+        locationsRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         mapRVAdapter = new POIMapRecyclerViewAdapter(listOfPOIs,
                 getApplicationContext(), this, 3);
         locationsRecyclerView.setAdapter(mapRVAdapter);
         SnapHelper snapHelper = new LinearSnapHelper();
+
         snapHelper.attachToRecyclerView(locationsRecyclerView);
+
+//        //Setup ViewPager
+//        mViewPager = findViewById(R.id.viewPager);
+//
+//        // Create the Card Adapter
+//        mCardAdapter = new CardPagerAdapter();
+//
+//        for (int x = 0; x < listOfPOIs.size(); x++) {
+//            mCardAdapter.addCardItem(listOfPOIs.get(x));
+//        }
+//
+//        //Assign the adapter
+//        mViewPager.setAdapter(mCardAdapter);
+
     }
 
+    // Click event listener for the RV
     @Override public void onItemClick(int position) {
 
         // Get the selected individual location via its card's position in the recyclerview of cards
         POI selectedPOICard = listOfPOIs.get(position);
+        Marker selectedPOIMarker = listOfPOIMarkers.get(position);
+
+        Toast.makeText(getApplicationContext(), "Card #" + position+ " clicked", Toast.LENGTH_SHORT).show();
+
+        // Zoom in to the linked marker
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedPOIMarker.getPosition(), 16));
+
+        //scroll the recycler view
+        locationsRecyclerView.smoothScrollToPosition(position);
+
+        TransitionManager.beginDelayedTransition(transitionsContainer, new Slide(Gravity.BOTTOM));
 
         // TODO: update below code to work with Google Maps
         // Retrieve and change the selected card's marker to the selected marker icon
@@ -143,6 +235,23 @@ public class MapsActivity extends LoggedInActivity implements POIMapRecyclerView
 //        LatLng selectedPOILatLng = selectedPOICard.getLatLng();
 //        repositionMapCamera(selectedPOILatLng);
     }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+
+        // Get the height of the display
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenHeight = displayMetrics.heightPixels;
+
+        AnimeView.startAnimation(slide_up_animation);
+
+        // We return false to indicate that we have not consumed the event and that we wish
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false;
+    }
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -159,13 +268,11 @@ public class MapsActivity extends LoggedInActivity implements POIMapRecyclerView
                 // Check if this is the first time location was retrieved
                 if(mCurrentLocation==null){
                     Toast.makeText(getApplicationContext(), "Initial location detected", Toast.LENGTH_SHORT).show();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationToLatLong(location), 16));
                 }
 
-                // Store returned location
+                // Store returned location in a member variable
                 mCurrentLocation = location;
-
-                // Zoom into our current location
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationToLatLong(location), 16));
 
             }
         });

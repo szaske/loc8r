@@ -23,7 +23,7 @@
     <!--We need to integrate these colors into a holistic app color scheme-->
     <color name="colorPrimary_green">#5AE323</color>
     <color name="colorPrimaryDark_green">#3BC802</color>
-    <color name="colorAccent_green">#78F645</color>
+    <color name="colorAccent_green">#78f645</color>
     <color name="navigationRouteLine_green">#3BC802</color>
     <color name="cardHourAndPhoneTextColor_green">#000000</color>
     <color name="white">#FFFFFF</color>

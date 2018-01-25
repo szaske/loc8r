@@ -8,11 +8,12 @@ import android.support.v7.widget.RecyclerView;
 
 /**
  * Custom class for scrolling the recyclerview of cards to the corresponding selected marker's card
+ *  From https://mcochin.wordpress.com/2015/05/13/android-customizing-smoothscroller-for-the-recyclerview/
  */
 public class LinearLayoutManagerWithSmoothScroller extends LinearLayoutManager {
 
   public LinearLayoutManagerWithSmoothScroller(Context context) {
-    super(context, HORIZONTAL, false);
+    super (context, HORIZONTAL, false);
   }
 
   @Override

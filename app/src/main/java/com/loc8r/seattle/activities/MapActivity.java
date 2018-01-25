@@ -401,7 +401,7 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
     private void setUpRecyclerViewOfLocationCards(int chosenTheme) {
         // Initialize the recyclerview of location cards and a custom class for automatic card scrolling
         locationsRecyclerView = findViewById(R.id.map_layout_rv);
-        locationsRecyclerView.setHasFixedSize(true);
+        // locationsRecyclerView.setHasFixedSize(true);
         locationsRecyclerView.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(this));
         styleRvAdapter = new POIMapRecyclerViewAdapter(listOfPOIs,
                 getApplicationContext(), this, chosenTheme);

@@ -95,13 +95,8 @@ public class POIMapRecyclerViewAdapter extends
         card.constraintUpperColorSection.setBackgroundColor(upperCardSectionColor);
         card.backgroundCircleImageView.setImageDrawable(backgroundCircle);
         card.nameTextView.setTextColor(locationNameColor);
-        card.phoneNumTextView.setTextColor(locationPhoneNumColor);
-        card.hoursTextView.setTextColor(locationHoursColor);
-        card.hoursHeaderTextView.setTextColor(locationHoursHeaderColor);
         card.distanceNumberTextView.setTextColor(locationDistanceNumColor);
         card.milesAbbreviationTextView.setTextColor(milesAbbreviationColor);
-        card.addressTextView.setTextColor(locationAddressColor);
-        card.phoneHeaderTextView.setTextColor(locationPhoneHeaderColor);
     }
 
     private void setColors(int colorForUpperCard, int colorForName, int colorForAddress,
@@ -121,10 +116,6 @@ public class POIMapRecyclerViewAdapter extends
     private void setAlphas(ViewHolder card, float addressAlpha, float hoursHeaderAlpha, float hoursNumAlpha,
                            float phoneHeaderAlpha, float phoneNumAlpha, float milesAbbreviationAlpha) {
         card.addressTextView.setAlpha(addressAlpha);
-        card.hoursHeaderTextView.setAlpha(hoursHeaderAlpha);
-        card.hoursTextView.setAlpha(hoursNumAlpha);
-        card.phoneHeaderTextView.setAlpha(phoneHeaderAlpha);
-        card.phoneNumTextView.setAlpha(phoneNumAlpha);
         card.milesAbbreviationTextView.setAlpha(milesAbbreviationAlpha);
     }
 
