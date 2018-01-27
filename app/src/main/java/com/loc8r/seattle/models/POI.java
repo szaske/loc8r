@@ -2,19 +2,18 @@ package com.loc8r.seattle.models;
 
 
 import android.location.Location;
-import android.os.Parcelable;
 
-//import com.google.android.gms.nearby.messages.Distance;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.loc8r.seattle.utils.StateManager;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
+
 
 /**
  * A POJO Class for a POI (Point Of Interest)
@@ -140,12 +139,12 @@ public class POI {
         return (int) Math.round(Math.sqrt(distance));
     }
 
-    public LatLng getLatLng(){
-        LatLng tempLatLng = new LatLng();
-        tempLatLng.setLongitude(this.getLongitude());
-        tempLatLng.setLatitude(this.getLatitude());
-        return tempLatLng;
-    }
+//    public LatLng getLatLng(){
+//        LatLng tempLatLng = new LatLng();
+//        tempLatLng.setLongitude(this.getLongitude());
+//        tempLatLng.setLatitude(this.getLatitude());
+//        return tempLatLng;
+//    }
 
     public ObjectId getId() { return id; }
     public void setId(ObjectId id) { this.id = id; }

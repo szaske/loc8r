@@ -28,25 +28,48 @@
         android:overScrollMode="never"
         android:paddingLeft="180dp"
         android:paddingRight="180dp"
+        android:visibility="gone"
         mapbox:layout_constraintEnd_toEndOf="parent"
         mapbox:layout_constraintStart_toStartOf="parent"
-        mapbox:layout_constraintTop_toTopOf="@+id/map" />
+        mapbox:layout_constraintTop_toTopOf="@+id/map">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/rootView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        mapbox:layout_constraintBottom_toBottomOf="@+id/map"
+        mapbox:layout_constraintEnd_toEndOf="@+id/map"
+        mapbox:layout_constraintStart_toStartOf="@+id/map"
+        tools:context="com.loc8r.seattle.activities.MapsActivity">
+
+        <include
+            layout="@layout/map_drawer"
+            tools:visibility="visible" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
 
     <LinearLayout
-        android:id="@+id/mapDrawer"
+        android:id="@+id/mapDrawerContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
+            android:id="@+id/mapDrawer"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:background="@color/com_facebook_blue"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/heightTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -62,6 +85,7 @@
         </LinearLayout>
 
     </LinearLayout>
+
 
 </android.support.constraint.ConstraintLayout>
 

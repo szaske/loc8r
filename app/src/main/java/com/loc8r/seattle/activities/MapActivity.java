@@ -252,12 +252,12 @@ public class MapActivity extends LoggedInActivity implements POIMapRecyclerViewA
         POI selectedPOICard = listOfPOIs.get(position);
 
         // Retrieve and change the selected card's marker to the selected marker icon
-        Marker markerTiedToSelectedCard = mapboxMap.getMarkers().get(position);
-        adjustMarkerSelectStateIcons(markerTiedToSelectedCard);
-
-        // Reposition the map camera target to the selected marker
-        LatLng selectedPOILatLng = selectedPOICard.getLatLng();
-        repositionMapCamera(selectedPOILatLng);
+//        Marker markerTiedToSelectedCard = mapboxMap.getMarkers().get(position);
+//        adjustMarkerSelectStateIcons(markerTiedToSelectedCard);
+//
+//        // Reposition the map camera target to the selected marker
+//        LatLng selectedPOILatLng = selectedPOICard.getLatLng();
+//        repositionMapCamera(selectedPOILatLng);
 
         // Check for an internet connection before making the call to Mapbox Directions API
 //        if (deviceHasInternetConnection()) {

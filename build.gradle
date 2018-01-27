@@ -3,6 +3,13 @@
 
 
 buildscript {
+
+    ext {
+        versions = [
+                supportV7: '26.1.0'
+        ]
+    }
+
     repositories {
         jcenter()
         google()
@@ -22,6 +29,7 @@ allprojects {
         mavenCentral()
         maven { url "https://maven.google.com" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url 'https://jitpack.io' }
         google()
     }
 }
