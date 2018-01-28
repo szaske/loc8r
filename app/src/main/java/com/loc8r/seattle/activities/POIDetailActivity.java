@@ -44,6 +44,7 @@ public class POIDetailActivity extends LoggedInActivity {
     @BindView(R.id.poiLocationTextView) TextView mLocationTV;
     @BindView(R.id.currentLocationtextView) TextView mLocTV;
 
+    // TODO Should I move currentLocation to the State Manager?
     Location mCurrentLocation;
     POI detailedPoi;
 
@@ -70,6 +71,8 @@ public class POIDetailActivity extends LoggedInActivity {
         mLocationTV.setText(detailedPoi.getLongitude().toString()+","+detailedPoi.getLatitude().toString());
     }
 
+
+    // TODO Determine if I need to cancel location update onPause or onStop.
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected() called with: " + "bundle = [" + bundle + "]");

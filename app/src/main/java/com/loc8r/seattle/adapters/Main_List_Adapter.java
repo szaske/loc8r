@@ -1,15 +1,15 @@
 package com.loc8r.seattle.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loc8r.seattle.R;
-import com.loc8r.seattle.interfaces.OnMenuClickListener;
 import com.loc8r.seattle.models.ListItem;
 
 import java.util.Collections;
@@ -90,18 +90,19 @@ public class Main_List_Adapter extends RecyclerView.Adapter<Main_List_Adapter.Ma
     //
     static class Main_List_View_Holder extends RecyclerView.ViewHolder {
 
-        TextView title;
-        ImageView imageView;
+        Button title;
+        //ImageView imageView;
 
         Main_List_View_Holder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.poiGroupTextView);
-            imageView = (ImageView) itemView.findViewById(R.id.poiGroupBackgroundImageView);
+            title = (Button) itemView.findViewById(R.id.poiMenuItemButton);
+            // imageView = (ImageView) itemView.findViewById(R.id.poiGroupBackgroundImageView);
         }
 
         public void bind(final ListItem item, final OnMenuClickListener listener){
             title.setText(item.getTitle());
             // Set background image here
+            Log.d("ViewHolder-", "bind: method fired");
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View view) {
                     listener.OnMenuClick(item);

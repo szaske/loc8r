@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/map_activity_framelayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.loc8r.seattle.activities.MapActivity"
+    tools:ignore="MissingPrefix">
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.loc8r.seattle.activities.MapsActivity" />
+
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/rootView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        mapbox:layout_constraintBottom_toBottomOf="@+id/map"
+        mapbox:layout_constraintEnd_toEndOf="@+id/map"
+        mapbox:layout_constraintStart_toStartOf="@+id/map"
+        tools:context="com.loc8r.seattle.activities.MapsActivity">
+
+        <include
+            layout="@layout/map_drawer"
+            tools:visibility="visible" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+
+</android.support.constraint.ConstraintLayout>
+
