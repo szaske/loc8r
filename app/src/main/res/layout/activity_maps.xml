@@ -17,23 +17,6 @@
         android:layout_height="match_parent"
         tools:context="com.loc8r.seattle.activities.MapsActivity" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/map_rv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:clipToPadding="false"
-        android:overScrollMode="never"
-        android:paddingLeft="180dp"
-        android:paddingRight="180dp"
-        android:visibility="gone"
-        mapbox:layout_constraintEnd_toEndOf="parent"
-        mapbox:layout_constraintStart_toStartOf="parent"
-        mapbox:layout_constraintTop_toTopOf="@+id/map">
-
-    </android.support.v7.widget.RecyclerView>
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/rootView"
@@ -51,40 +34,6 @@
             tools:visibility="visible" />
 
     </android.support.design.widget.CoordinatorLayout>
-
-
-    <LinearLayout
-        android:id="@+id/mapDrawerContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:id="@+id/mapDrawer"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:background="@color/com_facebook_blue"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/heightTV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="Hello There" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="HIDE" />
-        </LinearLayout>
-
-    </LinearLayout>
 
 
 </android.support.constraint.ConstraintLayout>
