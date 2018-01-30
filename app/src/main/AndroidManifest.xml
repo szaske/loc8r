@@ -15,9 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SeattlePassport">
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
         <!--
          The API key for Google Maps-based APIs is defined as a string resource.
          (See the file "res/values/google_maps_api.xml").
@@ -33,30 +30,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GOOGLE_MAPS_KEY" />
 
-        <activity android:name=".activities.NearbyPOIActivity">
+        <activity android:name=".activities.POIDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.loc8r.seattle.activities.MainListActivity" />
         </activity>
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="Seattle Passport" />
-        <activity android:name=".activities.POIDetailActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.loc8r.seattle.activities.NearbyPOIActivity" />
-        </activity>
         <activity android:name=".activities.BaseActivity" />
         <activity android:name=".activities.GMS_Activity" />
-        <activity android:name=".activities.SignInActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.MainListActivity" />
         <activity
             android:name=".activities.MapsActivity"

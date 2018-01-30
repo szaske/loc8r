@@ -111,7 +111,7 @@ public class MainListActivity extends GMS_Activity {
                 //openMap();
                 break;
             case R.id.menu_log_out:
-                showLogoutDialog();
+                showLogoutDialog(this);
                 break;
         }
 

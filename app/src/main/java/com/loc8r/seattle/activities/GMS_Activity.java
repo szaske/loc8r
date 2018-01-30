@@ -1,12 +1,15 @@
 package com.loc8r.seattle.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,8 +27,10 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.auth.FirebaseAuth;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
+import com.loc8r.seattle.utils.Constants;
 
 public class GMS_Activity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final int LOCATION_REQUEST_CODE = 420;
@@ -279,7 +284,12 @@ public class GMS_Activity extends BaseActivity implements GoogleApiClient.Connec
 
     }
 
-    protected void showLogoutDialog()
+    /**
+     *  Show a dialog box to ensure the user really wants to logout
+     *
+     * @param context
+     */
+    protected void showLogoutDialog(final Context context)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
         builder.setTitle(R.string.log_out)
@@ -299,9 +309,29 @@ public class GMS_Activity extends BaseActivity implements GoogleApiClient.Connec
                     {
                         dialog.dismiss();
                         // Logout here
-                        //logout();
+                        logout(context);
                     }
                 }).show();
+    }
+
+    /**
+     *  Logout of Firebase Authentication
+     *
+     * @param context The current context
+     */
+    private void logout(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Constants.PREFERENCES_PREVIOUS_USER_KEY, FirebaseAuth
+                .getInstance()
+                .getCurrentUser()
+                .getEmail()).apply();
+
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void checkLocationPermission()

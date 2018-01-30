@@ -27,7 +27,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
 import com.loc8r.seattle.models.POI;
-import com.loc8r.seattle.mongodb.MongoDBManager;
+// import com.loc8r.seattle.mongodb.MongoDBManager;
+import com.loc8r.seattle.utils.FirebaseManager;
 import com.loc8r.seattle.utils.StateManager;
 import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
@@ -45,8 +46,6 @@ public class MapsActivity extends GMS_Activity implements
     private static final String TAG = MapsActivity.class.getSimpleName();
     private GoogleMap mMap;
     private ArrayList<POI> mListOfPOIs;
-    private ArrayList<Marker> mlistOfPOIMarkers = new ArrayList<Marker>();
-    public ViewGroup mDrawerContainer;
     private Animation mDrawer_up_animation;
 
     private SlideUp mDrawer;
@@ -89,7 +88,7 @@ public class MapsActivity extends GMS_Activity implements
             }
         } else {
             // Nope it's a fresh start, get the pois from the Internet
-            mListOfPOIs = MongoDBManager.getInstance(getApplicationContext()).CreateDummyPOIList();
+            mListOfPOIs = FirebaseManager.getInstance(getApplicationContext()).CreateDummyPOIList();
         }
     }
 

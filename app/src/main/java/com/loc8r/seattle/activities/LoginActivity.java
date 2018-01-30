@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +18,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.loc8r.seattle.R;
+import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.utils.Constants;
+import com.loc8r.seattle.utils.FirebaseManager;
+import com.loc8r.seattle.utils.StateManager;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,6 +75,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+
+                    //Get all stamps for this user.  This may not actually be called if the data in the cloud is not dirty.
+                    // Need to figure this out
+                    getAllStamps();
+
+
                     Intent intent = new Intent(LoginActivity.this, MainListActivity.class);
 
                     // NEW TASK FLAG - makes the activity we're going to be on the stack history
@@ -105,6 +119,39 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             loginWithPassword();
         }
     }
+
+    public void getAllStamps() {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users")
+                .document(user.getUid())
+                .collection("stamps")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        ArrayList<Stamp> stamps = new ArrayList<Stamp>();
+
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Stamp addStamp = document.toObject(Stamp.class);
+                                stamps.add(addStamp);
+                                //Log.d(TAG, document.getId() + " => " + document.getData());
+                                Log.d(TAG, addStamp.toString());
+                            }
+
+                            // Save stamps to StateManager
+                            StateManager.getInstance().setStamps(stamps);
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+
 
     private void loginWithPassword() {
         String email = mEmailEditText.getText().toString().trim();

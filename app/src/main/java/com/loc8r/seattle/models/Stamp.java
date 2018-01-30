@@ -1,15 +1,8 @@
 package com.loc8r.seattle.models;
 
-import android.location.Location;
-
-import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
 import java.util.Date;
-
-import static android.R.attr.name;
 
 /**
  * A POJO Class for a Stamp
@@ -17,9 +10,8 @@ import static android.R.attr.name;
 
 @Parcel
 public class Stamp {
-    ObjectId id;
     String category;
-    Date date;
+    String timestamp;
     String ownerId;
     String poiId;
     String stampId;
@@ -29,80 +21,78 @@ public class Stamp {
 
     public  Stamp(String stampId,
                   String category,
-                  Date date,
-                  String ownerId,
+                  String timestamp,
                   String poiId,
                   String stampText){
-        this.category = category;
-        this.date = date;
-        this.ownerId = ownerId;
-        this.poiId = poiId;
         this.stampId = stampId;
+        this.category = category;
+        this.timestamp = timestamp;
+        this.poiId = poiId;
         this.stampText = stampText;
     }
 
     /**
      * Helper class to keep all the field names in one place
      **/
-    public class Field
-    {
-        public static final String ID = "_id";
-        public static final String CAT = "category";
-        public static final String DATE = "date";
-        public static final String OWNER_ID = "ownerId";
-        public static final String POI_ID = "poiId";
-        public static final String STAMP_TEXT = "stampText";
-        public static final String STAMP_ID = "stampId";
-    }
+//    public class Field
+//    {
+//        public static final String ID = "_id";
+//        public static final String CAT = "category";
+//        public static final String DATE = "timestamp";
+//        public static final String OWNER_ID = "ownerId";
+//        public static final String POI_ID = "poiId";
+//        public static final String STAMP_TEXT = "stampText";
+//        public static final String STAMP_ID = "stampId";
+//    }
 
     /**
      * Parse the POI object from the MongoDB document
      **/
-    public static Stamp fromDocument(Document document)
-    {
-        Stamp stamp = new Stamp();
-        try
-        {
-            stamp.id = document.getObjectId(Field.ID);
-            stamp.category = document.getString(Field.CAT);
-            stamp.date = document.getDate(Field.DATE);
-            stamp.poiId = document.getString(Field.POI_ID);
-            stamp.stampId = document.getString(Field.STAMP_ID);
-            stamp.stampText = document.getString(Field.STAMP_TEXT);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return stamp;
+//    public static Stamp fromDocument(Document document)
+//    {
+//        Stamp stamp = new Stamp();
+//        try
+//        {
+//            stamp.id = document.getObjectId(Field.ID);
+//            stamp.category = document.getString(Field.CAT);
+//            stamp.timestamp = document.getTimestamp(Field.DATE);
+//            stamp.poiId = document.getString(Field.POI_ID);
+//            stamp.stampId = document.getString(Field.STAMP_ID);
+//            stamp.stampText = document.getString(Field.STAMP_TEXT);
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//        return stamp;
+//    }
+
+    @Override
+    public String toString() {
+        return "Stamp{" +
+                "id=" + stampId +
+                ",\n timestamp='" + timestamp +
+                '}';
     }
 
     // Getters
-    public ObjectId getId() { return id; }
     public String getCategory() { return category; }
-    public Date getDate() { return date; }
-    public String getPoiID() { return poiId; }
+    public String getTimestamp() { return timestamp; }
+    public String getPoiId() { return poiId; }
     public String getStampId() { return stampId; }
     public String getStampText() { return stampText; }
 
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-
+    // Setters
     public void setCategory(String category) {
         this.category = category;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public void setPoiId(String poiId) {
-        this.poiId = poiId;
+    public void setPoiId(String pid) {
+        this.poiId = pid;
     }
 
     public void setStampId(String stampId) {
@@ -112,4 +102,5 @@ public class Stamp {
     public void setStampText(String stampText) {
         this.stampText = stampText;
     }
+
 }
