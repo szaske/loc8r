@@ -32,7 +32,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug{
+        debug {
         }
     }
 }
@@ -41,6 +41,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     // Testing Dependencies
+    implementation 'com.google.firebase:firebase-database:11.8.0'
+    implementation 'com.google.firebase:firebase-auth:11.8.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -79,13 +81,13 @@ dependencies {
     annotationProcessor 'org.parceler:parceler:1.1.9'
 
     // Mapbox Maps SDK dependency
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.3.1'
+    //implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.3.1'
 
     // Mapbox Services SDK dependency to retrieve direction routes
-    implementation 'com.mapbox.mapboxsdk:mapbox-java-services:2.2.6'
+    //implementation 'com.mapbox.mapboxsdk:mapbox-java-services:2.2.6'
 
     // Mapbox Buildings Plugin for showing and customizing 3D building extrusions
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-building:0.1.0'
+    //implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-building:0.1.0'
 
 
 }
@@ -94,3 +96,5 @@ dependencies {
 
 apply plugin: 'com.android.application'
 //apply plugin: 'com.google.gms.google-services'
+
+apply plugin: 'com.google.gms.google-services'

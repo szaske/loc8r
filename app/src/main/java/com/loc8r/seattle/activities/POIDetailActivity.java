@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,11 +62,35 @@ public class POIDetailActivity extends LoggedInActivity {
         setContentView(R.layout.activity_poi_detail);
         ButterKnife.bind(this);
         detailedPoi = Parcels.unwrap(getIntent().getParcelableExtra("poi"));
+
+        // addOnPreDrawListener is required so we can measure the size of the image on this
+        // specific phone.  Without the listener code we might
+        ViewTreeObserver vto = mImageIV.getViewTreeObserver();
+        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            public boolean onPreDraw() {
+                mImageIV.getViewTreeObserver().removeOnPreDrawListener(this);
+                // Should add
+                // .error(R.drawable.error)
+                // .placeholder(R.drawable.blank_img)
+                //
+                //
+                // Also should add a progressbar
+                // here is a good example : https://stackoverflow.com/questions/22143157/android-picasso-placeholder-and-error-image-styling
+                Picasso.with(getApplicationContext())
+                        .load(detailedPoi.getImg_url())
+                        .centerCrop()
+                        .resize(mImageIV.getMeasuredWidth(),mImageIV.getMeasuredHeight())
+                        .into(mImageIV);
+
+                return true;
+            }
+        });
+
         Log.d(TAG, "Detail view " + detailedPoi.getName() + "Lat =" + detailedPoi.getLatitude());
-        Picasso
-                .with(this)
-                .load(detailedPoi.getImg_url())
-                .into(mImageIV);
+//        Picasso
+//                .with(this)
+//                .load(detailedPoi.getImg_url())
+//                .into(mImageIV);
         mNameTV.setText(detailedPoi.getName());
         mDescriptionTV.setText(detailedPoi.getDescription());
         mLocationTV.setText(detailedPoi.getLongitude().toString()+","+detailedPoi.getLatitude().toString());

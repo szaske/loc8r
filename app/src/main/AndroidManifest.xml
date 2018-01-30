@@ -59,8 +59,6 @@
         <activity android:name=".activities.MainListActivity" />
 
 
-
-        <activity android:name=".activities.MapActivity" />
         <activity
             android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps">

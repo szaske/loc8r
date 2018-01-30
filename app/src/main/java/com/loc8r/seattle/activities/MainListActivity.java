@@ -41,7 +41,7 @@ public class MainListActivity extends LoggedInActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Explore button pressed ");
-                Intent intent = new Intent(MainListActivity.this, MapActivity.class);
+                Intent intent = new Intent(MainListActivity.this, MapsActivity.class);
                 startActivity(intent);
             }
         });
@@ -51,8 +51,6 @@ public class MainListActivity extends LoggedInActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Passport button pressed ");
-                Intent intent = new Intent(MainListActivity.this, MapsActivity.class);
-                startActivity(intent);
             }
         });
 
@@ -122,7 +120,7 @@ public class MainListActivity extends LoggedInActivity {
                 //openMap();
                 break;
             case R.id.menu_log_out:
-                //showLogoutDialog();
+                showLogoutDialog();
                 break;
         }
 

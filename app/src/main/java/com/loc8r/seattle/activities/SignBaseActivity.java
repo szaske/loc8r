@@ -99,61 +99,61 @@ public abstract class SignBaseActivity extends BaseActivity
         });
 
         //user is already logged in, continue to NearbyPOIActivity
-        if (MongoDBManager.getInstance(getApplicationContext()).isConnected())
-        {
-            //fetchProfile();
-            login();
-        }
+//        if (MongoDBManager.getInstance(getApplicationContext()).isConnected())
+//        {
+//            //fetchProfile();
+//            login();
+//        }
 
 
         //Facebook login
-        mCallbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>()
-        {
-            @Override
-            public void onSuccess(LoginResult loginResult)
-            {
-                Log.d(LOG_TAG, "Facebook login onSuccess: ");
-                showLoginProgressDialog();
-
-                //we are logged in to Facebook SDK, login with the same token to MongoDB
-                MongoDBManager.getInstance(getApplicationContext()).doFacebookAuthentication(loginResult.getAccessToken().getToken(), new QueryListener<Void>()
-                {
-                    @Override
-                    public void onSuccess(Void result)
-                    {
-                        Log.d(LOG_TAG, "onSuccess: login with facebook successful");
-                        dismissLoginProgressBar();
-
-                        //User is logged in to MongoDB via Facebook
-                        login();
-                    }
-
-                    @Override
-                    public void onError(Exception e)
-                    {
-                        Log.d(LOG_TAG, "onError: ");
-                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        dismissLoginProgressBar();
-                    }
-                });
-            }
-
-            @Override
-            public void onCancel()
-            {
-                Log.d(LOG_TAG, "Facebook login onCancel: ");
-                dismissLoginProgressBar();
-            }
-
-            @Override
-            public void onError(FacebookException error)
-            {
-                Log.e(LOG_TAG, "Facebook login onError: ", error);
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                dismissLoginProgressBar();
-            }
-        });
+//        mCallbackManager = CallbackManager.Factory.create();
+//        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>()
+//        {
+//            @Override
+//            public void onSuccess(LoginResult loginResult)
+//            {
+//                Log.d(LOG_TAG, "Facebook login onSuccess: ");
+//                showLoginProgressDialog();
+//
+//                //we are logged in to Facebook SDK, login with the same token to MongoDB
+//                MongoDBManager.getInstance(getApplicationContext()).doFacebookAuthentication(loginResult.getAccessToken().getToken(), new QueryListener<Void>()
+//                {
+//                    @Override
+//                    public void onSuccess(Void result)
+//                    {
+//                        Log.d(LOG_TAG, "onSuccess: login with facebook successful");
+//                        dismissLoginProgressBar();
+//
+//                        //User is logged in to MongoDB via Facebook
+//                        login();
+//                    }
+//
+//                    @Override
+//                    public void onError(Exception e)
+//                    {
+//                        Log.d(LOG_TAG, "onError: ");
+//                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+//                        dismissLoginProgressBar();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onCancel()
+//            {
+//                Log.d(LOG_TAG, "Facebook login onCancel: ");
+//                dismissLoginProgressBar();
+//            }
+//
+//            @Override
+//            public void onError(FacebookException error)
+//            {
+//                Log.e(LOG_TAG, "Facebook login onError: ", error);
+//                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+//                dismissLoginProgressBar();
+//            }
+//        });
 
         // Click listener for Facebook Button
         findViewById(R.id.btn_fb_login).setOnClickListener(new View.OnClickListener()
@@ -162,84 +162,84 @@ public abstract class SignBaseActivity extends BaseActivity
             public void onClick(View v)
             {
                 showLoginProgressDialog();
-                loginToMyFbApp();
+                // loginToMyFbApp();
             }
         });
 
     } // End of OnCreate
 
-    private void facebookLogin()
-    {
-        // TODO determine what exact permissions I need for Facebook
-        LoginManager.getInstance().logInWithReadPermissions(SignBaseActivity.this, Arrays.asList("public_profile", "user_friends", "email"));
-    }
+//    private void facebookLogin()
+//    {
+//        // TODO determine what exact permissions I need for Facebook
+//        LoginManager.getInstance().logInWithReadPermissions(SignBaseActivity.this, Arrays.asList("public_profile", "user_friends", "email"));
+//    }
 
-    private void loginToMyFbApp()
-    {
-        if (AccessToken.getCurrentAccessToken() != null)
-        {
-            mAccessTokenTracker = new AccessTokenTracker()
-            {
-                @Override
-                protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken)
-                {
-                    mAccessTokenTracker.stopTracking();
-                    if (currentAccessToken == null)
-                    {
-                        //(the user has revoked your permissions -
-                        //by going to his settings and deleted your app)
-                        //do the simple login to FaceBook
-                        //case 1
-                        facebookLogin();
-                    }
-                    else
-                    {
-                        //you've got the new access token now.
-                        //AccessToken.getToken() could be same for both
-                        //parameters but you should only use "currentAccessToken"
-                        //case 2
-                        fetchProfile();
-                    }
-                }
-            };
-            mAccessTokenTracker.startTracking();
-            AccessToken.refreshCurrentAccessTokenAsync();
-        }
-        else
-        {
-            //do the simple login to FaceBook
-            //case 1
-            facebookLogin();
-        }
-    }
+//    private void loginToMyFbApp()
+//    {
+//        if (AccessToken.getCurrentAccessToken() != null)
+//        {
+//            mAccessTokenTracker = new AccessTokenTracker()
+//            {
+//                @Override
+//                protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken)
+//                {
+//                    mAccessTokenTracker.stopTracking();
+//                    if (currentAccessToken == null)
+//                    {
+//                        //(the user has revoked your permissions -
+//                        //by going to his settings and deleted your app)
+//                        //do the simple login to FaceBook
+//                        //case 1
+//                        facebookLogin();
+//                    }
+//                    else
+//                    {
+//                        //you've got the new access token now.
+//                        //AccessToken.getToken() could be same for both
+//                        //parameters but you should only use "currentAccessToken"
+//                        //case 2
+//                        fetchProfile();
+//                    }
+//                }
+//            };
+//            mAccessTokenTracker.startTracking();
+//            AccessToken.refreshCurrentAccessTokenAsync();
+//        }
+//        else
+//        {
+//            //do the simple login to FaceBook
+//            //case 1
+//            facebookLogin();
+//        }
+//    }
 
     // TODO Determine if FetchProfile is even needed.
-    private void fetchProfile()
-    {
-        GraphRequest request = GraphRequest.newMeRequest(
-                AccessToken.getCurrentAccessToken(),
-                new GraphRequest.GraphJSONObjectCallback()
-                {
-                    @Override
-                    public void onCompleted(JSONObject profileData, GraphResponse response)
-                    {
-                        Log.v("fetched info", profileData.toString());
-                        try{
-                            mUsersFirstName = profileData.getString("first_name");
-                            mUsersLastName = profileData.getString("last_name");
-                            mUsersID = profileData.getString("id");
-                        } catch(JSONException e){
-                            Log.e(LOG_TAG, "JSONException: ", e);
-                        }
-
-                        facebookLogin();
-                    }
-                });
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,first_name,last_name"); //write the fields you need
-        request.setParameters(parameters);
-        request.executeAsync();
-    }
+//    private void fetchProfile()
+//    {
+//        GraphRequest request = GraphRequest.newMeRequest(
+//                AccessToken.getCurrentAccessToken(),
+//                new GraphRequest.GraphJSONObjectCallback()
+//                {
+//                    @Override
+//                    public void onCompleted(JSONObject profileData, GraphResponse response)
+//                    {
+//                        Log.v("fetched info", profileData.toString());
+//                        try{
+//                            mUsersFirstName = profileData.getString("first_name");
+//                            mUsersLastName = profileData.getString("last_name");
+//                            mUsersID = profileData.getString("id");
+//                        } catch(JSONException e){
+//                            Log.e(LOG_TAG, "JSONException: ", e);
+//                        }
+//
+//                        facebookLogin();
+//                    }
+//                });
+//        Bundle parameters = new Bundle();
+//        parameters.putString("fields", "id,first_name,last_name"); //write the fields you need
+//        request.setParameters(parameters);
+//        request.executeAsync();
+//    }
 
     @Override
     protected void onPause()

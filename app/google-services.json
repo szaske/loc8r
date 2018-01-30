@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "415883341181-c6nhl95b5lli1a1srrr3nom7hlkgn9b1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.loc8r.seattle",
+            "certificate_hash": "58ffda576a3d03b5701514092ed3432381338b26"
+          }
+        },
+        {
           "client_id": "415883341181-13ckcsv9imbmh7k40jdh0gv3nlt56mr5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

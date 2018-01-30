@@ -195,29 +195,29 @@ public class NearbyPOIActivity extends LoggedInActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showLogoutDialog()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
-        builder.setTitle(R.string.log_out)
-                .setMessage(R.string.log_out_message)
-                .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton(R.string.log_out, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.dismiss();
-                        logout();
-                    }
-                }).show();
-    }
+//    private void showLogoutDialog()
+//    {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
+//        builder.setTitle(R.string.log_out)
+//                .setMessage(R.string.log_out_message)
+//                .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which)
+//                    {
+//                        dialog.dismiss();
+//                    }
+//                })
+//                .setNegativeButton(R.string.log_out, new DialogInterface.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which)
+//                    {
+//                        dialog.dismiss();
+//                        logout();
+//                    }
+//                }).show();
+//    }
 
     private void logout()
     {

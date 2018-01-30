@@ -242,7 +242,7 @@ public class LoggedInActivity extends BaseActivity implements GoogleApiClient.Co
                 .show();
     }
 
-    private void showLocationEnabledDialog()
+    public void showLocationEnabledDialog()
     {
         if (mLocationEnabledDialog != null && mLocationEnabledDialog.isShowing())
         {
@@ -279,6 +279,30 @@ public class LoggedInActivity extends BaseActivity implements GoogleApiClient.Co
 
     }
 
+    protected void showLogoutDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
+        builder.setTitle(R.string.log_out)
+                .setMessage(R.string.log_out_message)
+                .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.log_out, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.dismiss();
+                        // Logout here
+                        //logout();
+                    }
+                }).show();
+    }
 
     private void checkLocationPermission()
     {
