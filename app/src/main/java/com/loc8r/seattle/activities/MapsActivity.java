@@ -3,11 +3,9 @@ package com.loc8r.seattle.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 
-import android.animation.ValueAnimator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
@@ -40,7 +38,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-public class MapsActivity extends LoggedInActivity implements
+public class MapsActivity extends GMS_Activity implements
         GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback {
 
@@ -210,7 +208,7 @@ public class MapsActivity extends LoggedInActivity implements
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Allow the map to see the devices location, this should ALREADY have permission to get location from LoggedInActivity
+        // Allow the map to see the devices location, this should ALREADY have permission to get location from GMS_Activity
         mMap.setMyLocationEnabled(true);
 
         if(mListOfPOIs!=null && StateManager.getInstance().getCurrentLocation()!=null){

@@ -3,10 +3,8 @@ package com.loc8r.seattle.activities;
 import android.app.Dialog;
 import android.location.Location;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,26 +17,21 @@ import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.mongodb.MongoDBManager;
 import com.loc8r.seattle.utils.ProgressDialog;
-import com.paginate.Paginate;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.loc8r.seattle.R.id.poiImageView;
-
-public class POIDetailActivity extends LoggedInActivity {
+public class POIDetailActivity extends GMS_Activity {
 
     // Variables
-    private static final String TAG = LoggedInActivity.class.getSimpleName();
+    private static final String TAG = GMS_Activity.class.getSimpleName();
     @BindView(R.id.poiImageView) ImageView mImageIV;
     @BindView(R.id.poiNameTextView) TextView mNameTV;
     @BindView(R.id.poiDescriptionTextView) TextView mDescriptionTV;

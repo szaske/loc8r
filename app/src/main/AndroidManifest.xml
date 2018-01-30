@@ -26,12 +26,13 @@
          sign the APK for publishing.
          You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-        <!--<meta-data-->
-            <!--android:name="com.google.android.geo.API_KEY"-->
-            <!--android:value="${GOOGLE_MAP_KEY}" />-->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.geo.API_KEY" -->
+        <!-- android:value="${GOOGLE_MAP_KEY}" /> -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GOOGLE_MAPS_KEY" />
+
         <activity android:name=".activities.NearbyPOIActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -47,7 +48,7 @@
                 android:value="com.loc8r.seattle.activities.NearbyPOIActivity" />
         </activity>
         <activity android:name=".activities.BaseActivity" />
-        <activity android:name=".activities.LoggedInActivity" />
+        <activity android:name=".activities.GMS_Activity" />
         <activity android:name=".activities.SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,12 +58,17 @@
         </activity>
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.MainListActivity" />
-
-
         <activity
             android:name=".activities.MapsActivity"
-            android:label="@string/title_activity_maps">
+            android:label="@string/title_activity_maps" />
+        <activity android:name=".activities.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        <activity android:name=".activities.CreateAccountActivity"></activity>
     </application>
 
 </manifest>

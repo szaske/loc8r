@@ -27,9 +27,9 @@ import com.google.android.gms.location.LocationServices;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
 
-public class LoggedInActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class GMS_Activity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final int LOCATION_REQUEST_CODE = 420;
-    private static final String TAG = LoggedInActivity.class.getSimpleName();
+    private static final String TAG = GMS_Activity.class.getSimpleName();
 
     private GoogleApiClient mGoogleApiClient;
     private AlertDialog mLocationEnabledDialog;
@@ -218,7 +218,7 @@ public class LoggedInActivity extends BaseActivity implements GoogleApiClient.Co
                     public void onClick(DialogInterface dialog, int which)
                     {
                         dialog.dismiss();
-                        ActivityCompat.requestPermissions(LoggedInActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_CODE);
+                        ActivityCompat.requestPermissions(GMS_Activity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_CODE);
                     }
                 })
                 .setNegativeButton(R.string.exit, new DialogInterface.OnClickListener()
