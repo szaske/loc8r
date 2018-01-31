@@ -6,7 +6,6 @@ import android.location.Location;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 
-import android.animation.ValueAnimator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
@@ -28,7 +27,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
 import com.loc8r.seattle.models.POI;
-import com.loc8r.seattle.mongodb.MongoDBManager;
+// import com.loc8r.seattle.mongodb.MongoDBManager;
+import com.loc8r.seattle.utils.FirebaseManager;
 import com.loc8r.seattle.utils.StateManager;
 import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
@@ -39,15 +39,13 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-public class MapsActivity extends LoggedInActivity implements
+public class MapsActivity extends GMS_Activity implements
         GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     private GoogleMap mMap;
     private ArrayList<POI> mListOfPOIs;
-    private ArrayList<Marker> mlistOfPOIMarkers = new ArrayList<Marker>();
-    public ViewGroup mDrawerContainer;
     private Animation mDrawer_up_animation;
 
     private SlideUp mDrawer;
@@ -73,19 +71,25 @@ public class MapsActivity extends LoggedInActivity implements
         // Get notified when the map is ready to be used.
         mapFragment.getMapAsync(this);
 
-        // Get and remember the full list of POI objects
-        mListOfPOIs = MongoDBManager.getInstance(getApplicationContext()).CreateDummyPOIList();
-
-        // Create RV outside of Map
-        // setUpRecyclerViewOfLocationCards();
-
         // Drawer Setup
         DrawerSetup();
 
-        // Change text in mDrawer to screen height
-        //setHeightText();
+        // Check to see if this is a configuration changes or first start.
+        // if it's a configuration change get pois from bundle
+        if(savedInstanceState!=null){
+            if(savedInstanceState.containsKey("pois")){
+                mListOfPOIs = Parcels.unwrap(savedInstanceState.getParcelable ("pois"));
 
-
+// Not currently saving drawer state
+//                boolean showDrawer = Parcels.unwrap(savedInstanceState.getParcelable ("drawerIsVisible"));
+//                if(showDrawer){
+//                    mDrawer.show();
+//                }
+            }
+        } else {
+            // Nope it's a fresh start, get the pois from the Internet
+            mListOfPOIs = FirebaseManager.getInstance(getApplicationContext()).CreateDummyPOIList();
+        }
     }
 
     public void CreateAnimation(){
@@ -118,6 +122,21 @@ public class MapsActivity extends LoggedInActivity implements
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         return metrics.heightPixels;
+    }
+
+    // A callback method, which is invoked on configuration is changed
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // Adding the pointList arraylist to Bundle
+        outState.putParcelable("pois", Parcels.wrap(mListOfPOIs));
+
+        //remember drawer state
+        if (mDrawer!=null) {
+            outState.putParcelable("drawerIsVisible", Parcels.wrap(mDrawer.isVisible()));
+        }
+
+        // Saving the bundle
+        super.onSaveInstanceState(outState);
     }
 
     private void DrawerSetup(){
@@ -175,34 +194,6 @@ public class MapsActivity extends LoggedInActivity implements
 
     }
 
-    public static void move(final ViewGroup viewG){
-        ValueAnimator va = ValueAnimator.ofFloat(0f, 300f);
-        int mDuration = 2000; //in millis
-        va.setDuration(mDuration);
-        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            public void onAnimationStart(ValueAnimator animation)
-            {
-                // This is the key...
-                //set the coordinates for the bounds (left, top, right, bottom) based on the offset value (50px) in a resource XML
-                viewG.setTranslationY(300f);
-            }
-
-
-            public void onAnimationUpdate(ValueAnimator animation) {
-                viewG.setTranslationY((float)animation.getAnimatedValue());
-            }
-
-            public void onAnimationEnd(ValueAnimator animation){
-                viewG.clearAnimation();
-            }
-        });
-        // va.setRepeatCount(5);
-        va.start();
-    }
-
-
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -216,29 +207,16 @@ public class MapsActivity extends LoggedInActivity implements
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Allow the map to see the devices location, this should ALREADY have permission to get location from LoggedInActivity
+        // Allow the map to see the devices location, this should ALREADY have permission to get location from GMS_Activity
         mMap.setMyLocationEnabled(true);
 
-        // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(AUSTRALIA.getCenter(), 10));
-
-        // Add markers for all nearby POIs
-        //CreateListOfMarkers();
+        if(mListOfPOIs!=null && StateManager.getInstance().getCurrentLocation()!=null){
+            DrawNearbyMarkers();
+        }
 
         // Set listeners for marker events.  See the bottom of this class for their behavior.
         mMap.setOnMarkerClickListener(this);
     }
-
-//    public ArrayList<POI> CreateDummyPOIList(){
-//        ArrayList<POI> tempPOIList = new ArrayList<POI>();
-//
-//        tempPOIList.add(new POI("Dick's",CreateLocation(47.661116, -122.327877),"Dicks", "www.zaske.com", "street art", "StampIS1","Stamp Text 1"));
-//        tempPOIList.add(new POI("Sea Monster Lounge",CreateLocation(47.661542, -122.332299),"Sea Monster", "www.zaske2.com", "street art", "StampIS2","Stamp Text 2"));
-//        tempPOIList.add(new POI("Library",CreateLocation(47.661173, -122.338994),"Library", "www.zaske3.com", "street art", "StampIS3","Stamp Text 3"));
-//        tempPOIList.add(new POI("Portage Bay Cafe",CreateLocation(47.657846, -122.317634),"Famous eatery with a great waffle bar", "www.zaske3.com", "street art", "StampIS4","Stamp Text 4"));
-//        tempPOIList.add(new POI("University Barbershop",CreateLocation(47.658945, -122.313323),"Seattle's best barbershop", "www.zaske3.com", "street art", "StampIS5","Stamp Text 5"));
-//        tempPOIList.add(new POI("Burke Museum",CreateLocation(47.660704, -122.310510),"Famous natural history museum", "www.zaske3.com", "street art", "StampIS6","Stamp Text 6"));
-//        return tempPOIList;
-//    }
 
     // Create a location given a Lat & Long
     public Location CreateLocation(Double latitude, Double longitude){
@@ -272,6 +250,26 @@ public class MapsActivity extends LoggedInActivity implements
         return false;
     }
 
+    private void DrawNearbyMarkers(){
+        // Step through all POI's and show markers for close ones (800 meters)
+        for (POI poi : mListOfPOIs) {
+            // if the POI is within 800 meters
+            if (poi.getDistance() < 800) {
+                // Add the location's marker to the map
+                LatLng poiLatLng = new LatLng(poi.getLatitude(), poi.getLongitude());
+
+                Marker tempMarker = mMap.addMarker(new MarkerOptions()
+                        .position(poiLatLng)
+                        .title(poi.getName()));
+                tempMarker.setTag(mListOfPOIs.indexOf(poi));
+
+                //log that the marker is displayed
+                Log.d(TAG, "showing marker "+ poi.getName());
+            }
+        }
+
+    }
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected() called with: " + "bundle = [" + bundle + "]");
@@ -302,22 +300,8 @@ public class MapsActivity extends LoggedInActivity implements
                         // clear all current markers on map
                         mMap.clear();
 
-                        // Step through all POI's and show markers for close ones (400 meters)
-                        for (POI poi : mListOfPOIs) {
-                            // if the POI is within 800 meters
-                            if (poi.getDistance() < 800) {
-                                // Add the location's marker to the map
-                                LatLng poiLatLng = new LatLng(poi.getLatitude(), poi.getLongitude());
-
-                                Marker tempMarker = mMap.addMarker(new MarkerOptions()
-                                        .position(poiLatLng)
-                                        .title(poi.getName()));
-                                tempMarker.setTag(mListOfPOIs.indexOf(poi));
-
-                                //log that the marker is displayed
-                                Log.d(TAG, "showing marker "+ poi.getName());
-                            }
-                        }
+                        // Step through all POI's and show markers for close ones (800 meters)
+                        DrawNearbyMarkers();
 
                     }
 

@@ -1,12 +1,15 @@
 package com.loc8r.seattle.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,12 +27,14 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.auth.FirebaseAuth;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
+import com.loc8r.seattle.utils.Constants;
 
-public class LoggedInActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class GMS_Activity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final int LOCATION_REQUEST_CODE = 420;
-    private static final String TAG = LoggedInActivity.class.getSimpleName();
+    private static final String TAG = GMS_Activity.class.getSimpleName();
 
     private GoogleApiClient mGoogleApiClient;
     private AlertDialog mLocationEnabledDialog;
@@ -218,7 +223,7 @@ public class LoggedInActivity extends BaseActivity implements GoogleApiClient.Co
                     public void onClick(DialogInterface dialog, int which)
                     {
                         dialog.dismiss();
-                        ActivityCompat.requestPermissions(LoggedInActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_CODE);
+                        ActivityCompat.requestPermissions(GMS_Activity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_CODE);
                     }
                 })
                 .setNegativeButton(R.string.exit, new DialogInterface.OnClickListener()
@@ -242,7 +247,7 @@ public class LoggedInActivity extends BaseActivity implements GoogleApiClient.Co
                 .show();
     }
 
-    private void showLocationEnabledDialog()
+    public void showLocationEnabledDialog()
     {
         if (mLocationEnabledDialog != null && mLocationEnabledDialog.isShowing())
         {
@@ -279,6 +284,55 @@ public class LoggedInActivity extends BaseActivity implements GoogleApiClient.Co
 
     }
 
+    /**
+     *  Show a dialog box to ensure the user really wants to logout
+     *
+     * @param context
+     */
+    protected void showLogoutDialog(final Context context)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
+        builder.setTitle(R.string.log_out)
+                .setMessage(R.string.log_out_message)
+                .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.log_out, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.dismiss();
+                        // Logout here
+                        logout(context);
+                    }
+                }).show();
+    }
+
+    /**
+     *  Logout of Firebase Authentication
+     *
+     * @param context The current context
+     */
+    private void logout(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Constants.PREFERENCES_PREVIOUS_USER_KEY, FirebaseAuth
+                .getInstance()
+                .getCurrentUser()
+                .getEmail()).apply();
+
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 
     private void checkLocationPermission()
     {

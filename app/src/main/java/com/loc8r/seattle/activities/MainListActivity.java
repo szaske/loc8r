@@ -1,10 +1,7 @@
 package com.loc8r.seattle.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -12,18 +9,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.loc8r.seattle.R;
-import com.loc8r.seattle.adapters.Main_List_Adapter;
-import com.loc8r.seattle.models.ListItem;
 
-import java.util.ArrayList;
-import java.util.List;
+public class MainListActivity extends GMS_Activity {
 
-public class MainListActivity extends LoggedInActivity {
-
-    private static final String TAG = LoggedInActivity.class.getSimpleName();
+    private static final String TAG = GMS_Activity.class.getSimpleName();
     private Button mExploreButton;
     private Button mPassportButton;
     private Button mSettingsButton;
@@ -41,7 +32,7 @@ public class MainListActivity extends LoggedInActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Explore button pressed ");
-                Intent intent = new Intent(MainListActivity.this, MapActivity.class);
+                Intent intent = new Intent(MainListActivity.this, MapsActivity.class);
                 startActivity(intent);
             }
         });
@@ -51,8 +42,6 @@ public class MainListActivity extends LoggedInActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Passport button pressed ");
-                Intent intent = new Intent(MainListActivity.this, MapsActivity.class);
-                startActivity(intent);
             }
         });
 
@@ -122,7 +111,7 @@ public class MainListActivity extends LoggedInActivity {
                 //openMap();
                 break;
             case R.id.menu_log_out:
-                //showLogoutDialog();
+                showLogoutDialog(this);
                 break;
         }
 

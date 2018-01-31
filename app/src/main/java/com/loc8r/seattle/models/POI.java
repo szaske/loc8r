@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 @Parcel
 public class POI {
-    ObjectId id;
+    String id;
     String name;
     String img_url;
     Location location;
@@ -33,7 +33,8 @@ public class POI {
 
     public POI(){}
 
-    public POI(String name, Location location, String description, String img_url, String category, String stampId, String stampText) {
+    public POI(String id, String name, Location location, String description, String img_url, String category, String stampId, String stampText) {
+        this.id = id;
         this.name = name;
         this.location = location;
         this.description = description;
@@ -47,53 +48,53 @@ public class POI {
     /**
     * Helper class to keep all the field names in one place
     **/
-    public class Field
-    {
-        public static final String ID = "_id";
-        public static final String NAME = "name";
-        static final String DESC = "description";
-        static final String LOC = "location";
-        static final String COORD = "coordinates";
-        static final String IMG_URL = "img_url";
-        static final String DIST = "dist";
-        static final String CAT = "category";
-        static final String STAMP_ID = "stampId";
-        static final String STAMP_TEXT = "stampText";
-    }
+//    public class Field
+//    {
+//        public static final String ID = "_id";
+//        public static final String NAME = "name";
+//        static final String DESC = "description";
+//        static final String LOC = "location";
+//        static final String COORD = "coordinates";
+//        static final String IMG_URL = "img_url";
+//        static final String DIST = "dist";
+//        static final String CAT = "category";
+//        static final String STAMP_ID = "stampId";
+//        static final String STAMP_TEXT = "stampText";
+//    }
 
     /**
     * Parse the POI object from the MongoDB document
     **/
-    public static POI fromDocument(Document document)
-    {
-        POI poi = new POI();
-        try
-        {
-            poi.id = document.getObjectId(Field.ID);
-            poi.name = document.getString(Field.NAME);
-            poi.description = document.getString(Field.DESC);
-            poi.img_url = document.getString(Field.IMG_URL);
-            poi.category = document.getString(Field.CAT);
-            poi.stampText = document.getString(Field.STAMP_TEXT);
-            poi.stampId = document.getString(Field.STAMP_ID);
-
-            Document location = (Document) document.get(Field.LOC);
-            ArrayList coords = (ArrayList) location.get(Field.COORD);
-            Location tempLocation = new Location("");
-            /**
-            * note: in MongoDB the longitude is at position 0, and the latitude is in position 1
-            **/
-            tempLocation.setLongitude((Double) coords.get(0));
-            tempLocation.setLatitude((Double) coords.get(1));
-            poi.location = tempLocation;
-            //poi.distance = getDistance();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return poi;
-    }
+//    public static POI fromDocument(Document document)
+//    {
+//        POI poi = new POI();
+//        try
+//        {
+//            poi.id = document.getObjectId(Field.ID);
+//            poi.name = document.getString(Field.NAME);
+//            poi.description = document.getString(Field.DESC);
+//            poi.img_url = document.getString(Field.IMG_URL);
+//            poi.category = document.getString(Field.CAT);
+//            poi.stampText = document.getString(Field.STAMP_TEXT);
+//            poi.stampId = document.getString(Field.STAMP_ID);
+//
+//            Document location = (Document) document.get(Field.LOC);
+//            ArrayList coords = (ArrayList) location.get(Field.COORD);
+//            Location tempLocation = new Location("");
+//            /**
+//            * note: in MongoDB the longitude is at position 0, and the latitude is in position 1
+//            **/
+//            tempLocation.setLongitude((Double) coords.get(0));
+//            tempLocation.setLatitude((Double) coords.get(1));
+//            poi.location = tempLocation;
+//            //poi.distance = getDistance();
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//        return poi;
+//    }
 
     @Override
     public String toString() {
@@ -146,8 +147,8 @@ public class POI {
 //        return tempLatLng;
 //    }
 
-    public ObjectId getId() { return id; }
-    public void setId(ObjectId id) { this.id = id; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
     public String getImg_url() { return img_url; }
     public String getName() { return name; }
     public String getStampId() { return stampId; }
