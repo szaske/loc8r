@@ -79,12 +79,6 @@ public class MapsActivity extends GMS_Activity implements
         if(savedInstanceState!=null){
             if(savedInstanceState.containsKey("pois")){
                 mListOfPOIs = Parcels.unwrap(savedInstanceState.getParcelable ("pois"));
-
-// Not currently saving drawer state
-//                boolean showDrawer = Parcels.unwrap(savedInstanceState.getParcelable ("drawerIsVisible"));
-//                if(showDrawer){
-//                    mDrawer.show();
-//                }
             }
         } else {
             // Nope it's a fresh start, get the pois from the Internet

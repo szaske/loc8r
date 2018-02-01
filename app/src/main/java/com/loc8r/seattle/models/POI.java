@@ -8,8 +8,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.loc8r.seattle.utils.StateManager;
 
-import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;

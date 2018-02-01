@@ -1,21 +1,6 @@
 <resources>
     <string name="app_name">loc8r</string>
 
-    <!--existing Mapbox string, not sure it works anymore
-    <string name="mapbox_access_token">pk.eyJ1Ijoic3phc2tlIiwiYSI6ImNqMGxpNmhkMDAwMDgyeXFxdGc1Z3AxZmkifQ.03hssNNdqFo5KnamavUJuQ</string>
-    -->
-    <!-- Works, but it also not what was describe in the most recent tutorial
-    Your token can be retrieved at https://www.mapbox.com/studio/account/tokens/
-    -->
-
-    <!-- current version as per the most recent Mapbox documentation
-    be retrieved at https://www.mapbox.com/account/
-    -->
-    <!--<string name="access_token" translatable="false">pk.eyJ1Ijoic3phc2tlIiwiYSI6ImNqMGxpNmhkMDAwMDgyeXFxdGc1Z3AxZmkifQ.03hssNNdqFo5KnamavUJuQ</string>-->
-
-    <string name="facebook_app_id">342940636168116</string>
-    <string name="fb_login_protocol_scheme">fb342940636168116</string>
-
     <!--Font strings-->
     <string name="font_comfortaa_light" translatable="false">fonts/Comfortaa-Light.ttf</string>
     <string name="font_light" translatable="false">fonts/Roboto-Light.ttf</string>
@@ -67,20 +52,7 @@
     <string name="get_stamp_button">Get Stamp</string>
     <string name="stamp_error">Error getting Stamp</string>
     <string name="poi_list_title">Seattle Passport</string>
+    <string name="title_activity_maps">Explorer STZ</string>
 
-    <!--MapActivity Strings-->
-    <string name="purple_map_style" translatable="false">mapbox://styles/mapbox/cj7bww7is2f4i2rnwyxkzpwu7</string>
-    <string name="blue_map_style" translatable="false">mapbox://styles/mapbox/cj7bwwv3caf7l2spgukxm8bwv</string>
-    <string name="terminal_map_style" translatable="false">mapbox://styles/mapbox/cj62n87yx3mvi2rp93sfp2w9z</string>
-    <string name="map_view">Map view</string>
-    <string name="failure_to_load_file">Failure to load the local file of locations. Please try reloading the app.</string>
-    <string name="device_location_title">device location</string>
-    <string name="select_a_theme">Tap on a theme</string>
-    <string name="no_internet_message">Route drawing not possible because there\'s no internet connection!</string>
-    <string name="failure_to_retrieve">Failure to retrieve the navigation route!</string>
-    <string name="hours">Hours</string>
-    <string name="phone">Phone</string>
-    <string name="distance">mi</string>
-    <string name="title_activity_maps">Map</string>
 
 </resources>
