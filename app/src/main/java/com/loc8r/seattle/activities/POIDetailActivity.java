@@ -19,8 +19,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
 import com.loc8r.seattle.interfaces.QueryListener;
@@ -55,8 +58,10 @@ public class POIDetailActivity extends GMS_Activity {
 
 
     // TODO Should I move currentLocation to the State Manager?
-    Location mCurrentLocation;
-    POI detailedPoi;
+    private Location mCurrentLocation;
+    private POI detailedPoi;
+    private FirebaseFirestore db;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +101,13 @@ public class POIDetailActivity extends GMS_Activity {
         mNameTV.setText(detailedPoi.getName());
         mDescriptionTV.setText(detailedPoi.getDescription());
         mLocationTV.setText(detailedPoi.getLongitude().toString()+","+detailedPoi.getLatitude().toString());
+
+        // Access a Cloud Firestore instance from your Activity
+        db = FirebaseFirestore.getInstance();
+
+        //        //Get the Firebase user
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
     }
 
 
@@ -180,34 +192,36 @@ public class POIDetailActivity extends GMS_Activity {
 
     @OnClick(R.id.getStampBtn)
     public void onStampButtonClick() {
+
+        //TODO Add a check to determine if we're within a constant amount of meters from the POI.  If close enough then enable the button
+
+        //Create a doc reference to this specific stamp
+        DocumentReference stampDocRef = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("stamps")
+                .document(detailedPoi.getStampId());
+
+        //Attempt to get the document/object...if it does not exist then get the stamp
+        stampDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                //City city = documentSnapshot.toObject(City.class);
+                if(documentSnapshot.exists()){
+                    Log.d(TAG, "the stamp already EXISTS, aborting save");
+                } else {
+                    Log.d(TAG, "onSuccess: NO Stamp found, lets make one");
+                    AddStampToDB();
+                }
+            }
+        });
+    }
+
+    private void AddStampToDB(){
         Log.d(TAG, "onClick: fired");
-
-        // Realtime DB approach
-//        //Get the Firebase user
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
-
         User ESUser = new User();
-//
-//        // Create a user branch in the DB
-//        DatabaseReference UserFireBaseReference = FirebaseDatabase
-//                .getInstance()
-//                .getReference(Constants.FIREBASE_CHILD_USERS)
-//                .child(uid)
-//                .child(Constants.FIREBASE_CHILD_STAMPS);
-//
-//        DatabaseReference pushRef = UserFireBaseReference.push(); // This makes a user branch
-//
-//        String id = pushRef.getKey(); //this gets our unique GUID
-//
         Stamp newStamp = CreateStamp(); // Create a new stamp
-//
-//        // mAww.setPushId(pushId); // this sets our ID
-//        pushRef.setValue(newStamp); // This saves the Aww
-
-        // Access a Cloud Firestore instance from your Activity
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // Create the user with a stamps collection
         db.collection("users")
@@ -228,11 +242,7 @@ public class POIDetailActivity extends GMS_Activity {
                     }
                 });
 
-
         Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
-//            Intent intent = new Intent(MainActivity.this, RestaurantListActivity.class);
-//            intent.putExtra("location", location);
-//            startActivity(intent);
-
     }
+
 }

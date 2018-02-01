@@ -78,7 +78,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                     //Get all stamps for this user.  This may not actually be called if the data in the cloud is not dirty.
                     // Need to figure this out
-                    getAllStamps();
+                    // getAllStamps();
 
 
                     Intent intent = new Intent(LoginActivity.this, MainListActivity.class);
@@ -126,30 +126,30 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("users")
-                .document(user.getUid())
-                .collection("stamps")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            .document(user.getUid())
+            .collection("stamps")
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                        ArrayList<Stamp> stamps = new ArrayList<Stamp>();
+                    ArrayList<Stamp> stamps = new ArrayList<Stamp>();
 
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot document : task.getResult()) {
-                                Stamp addStamp = document.toObject(Stamp.class);
-                                stamps.add(addStamp);
-                                //Log.d(TAG, document.getId() + " => " + document.getData());
-                                Log.d(TAG, addStamp.toString());
-                            }
-
-                            // Save stamps to StateManager
-                            StateManager.getInstance().setStamps(stamps);
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            Stamp addStamp = document.toObject(Stamp.class);
+                            stamps.add(addStamp);
+                            //Log.d(TAG, document.getId() + " => " + document.getData());
+                            Log.d(TAG, addStamp.toString());
                         }
+
+                        // Save stamps to StateManager
+                        StateManager.getInstance().setStamps(stamps);
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                });
+                }
+            });
     }
 
 
