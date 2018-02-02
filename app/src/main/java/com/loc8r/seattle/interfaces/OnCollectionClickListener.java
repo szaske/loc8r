@@ -7,5 +7,5 @@ import com.loc8r.seattle.models.POI;
  */
 
 public interface OnCollectionClickListener {
-    void OnCollectionClick(POI item);
+    void OnCollectionClick(String item);
 }

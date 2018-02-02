@@ -16,6 +16,7 @@ import com.loc8r.seattle.models.POI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.SortedSet;
 
 /**
  * Created by steve on 1/9/2018.
@@ -25,12 +26,12 @@ public class Collections_Adapter extends RecyclerView.Adapter<Collections_Adapte
 
 
     // Class variables
-    ArrayList<POI> list;
+    ArrayList<String> list;
     OnCollectionClickListener listener;
     //Context context;
 
     // Constructor
-    public Collections_Adapter(ArrayList<POI> list, OnCollectionClickListener listener) {
+    public Collections_Adapter(ArrayList<String> list, OnCollectionClickListener listener) {
         this.list = list;
         this.listener = listener;
         //this.context = context;
@@ -79,8 +80,8 @@ public class Collections_Adapter extends RecyclerView.Adapter<Collections_Adapte
             // imageView = (ImageView) itemView.findViewById(R.id.poiGroupBackgroundImageView);
         }
 
-        public void bind(final POI item, final OnCollectionClickListener listener){
-            name.setText(item.getName());
+        public void bind(final String item, final OnCollectionClickListener listener){
+            name.setText(item);
             // Set background image here
             Log.d("ViewHolder-", "bind: method fired");
             itemView.setOnClickListener(new View.OnClickListener() {

@@ -59,9 +59,9 @@ public class MainListActivity extends GMS_Activity {
             }
         });
 
-        for(POI poi :listOfAllPOIs()){
-            Log.d(TAG, "onCreate: POI list included"+ poi.toString());
-        }
+//        for(POI poi :listOfAllPOIs()){
+//            Log.d(TAG, "onCreate: POI list included"+ poi.toString());
+//        }
 
     }
 

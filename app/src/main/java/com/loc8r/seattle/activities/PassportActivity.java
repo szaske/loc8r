@@ -11,6 +11,7 @@ import com.loc8r.seattle.adapters.Collections_Adapter;
 import com.loc8r.seattle.interfaces.OnCollectionClickListener;
 import com.loc8r.seattle.models.ListItem;
 import com.loc8r.seattle.models.POI;
+import com.loc8r.seattle.utils.FirebaseManager;
 
 public class PassportActivity extends GMS_Activity implements OnCollectionClickListener{
     private static final String TAG = PassportActivity.class.getSimpleName();
@@ -41,13 +42,13 @@ public class PassportActivity extends GMS_Activity implements OnCollectionClickL
         //mAdapter = new Collections_Adapter(listOfAllPOIs(), this);
         //mRecyclerView.setAdapter(mAdapter);
 
-        mRecyclerView.setAdapter(new Collections_Adapter(listOfAllPOIs(), this));
+        mRecyclerView.setAdapter(new Collections_Adapter(FirebaseManager.getInstance(getApplicationContext()).listOfCollections, this));
 
         // mAdapter.setClickListener(this); // Bind the listener
     }
 
     @Override
-    public void OnCollectionClick(POI poi) {
-        Log.d(TAG, "OnCollectionClick: Clicked on " + poi.getName());
+    public void OnCollectionClick(String collectionName) {
+        Log.d(TAG, "OnCollectionClick: Clicked on " + collectionName);
     }
 }

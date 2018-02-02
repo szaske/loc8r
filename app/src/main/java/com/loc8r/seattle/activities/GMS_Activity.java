@@ -398,7 +398,7 @@ public class GMS_Activity extends BaseActivity implements GoogleApiClient.Connec
     }
 
     /**
-     *  Helper method to shorten Firebase singleton calls
+     *  Helper methods to shorten Firebase singleton calls
      *
      * @return List of All current POIs
      */
