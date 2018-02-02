@@ -24,7 +24,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.utils.Constants;
-import com.loc8r.seattle.utils.FirebaseManager;
 import com.loc8r.seattle.utils.StateManager;
 
 import java.util.ArrayList;

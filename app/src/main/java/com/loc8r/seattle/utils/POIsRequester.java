@@ -1,6 +1,6 @@
 package com.loc8r.seattle.utils;
 
-import android.content.Context;
+import android.app.Activity;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -14,9 +14,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.loc8r.seattle.models.POI;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -24,44 +23,41 @@ import java.util.TreeSet;
  * Created by steve on 1/30/2018.
  */
 
-public class FirebaseManager {
+public class POIsRequester {
 
-    private static final String TAG = FirebaseManager.class.getSimpleName();
+    public interface FireBasePOIResponse {
+        void onPOIsReceived(ArrayList<POI> POIs);
+    }
+
+    private static final String TAG = POIsRequester.class.getSimpleName();
     FirebaseFirestore db;
     FirebaseUser user;
+    private FireBasePOIResponse mResponseListener;
     public ArrayList<POI> listOfPOIs;
     public ArrayList<String> listOfCollections;
     // Static singleton instance
-    public static FirebaseManager ourInstance;
+    // public static POIsRequester ourInstance;
 
-    public FirebaseManager(Context context) {
+//    public POIsRequester(Context context) {
+//        user = FirebaseAuth.getInstance().getCurrentUser();
+//        db = FirebaseFirestore.getInstance();
+//    }
+
+    public POIsRequester(Activity listeningActivity) {
+        mResponseListener = (FireBasePOIResponse) listeningActivity;
         user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
-
-        //Gets the full list of POIs on creation
-        GetAllPOI();
-
     }
 
+    // Method to insure POIsRequester is a singleton
+//    public synchronized static POIsRequester getInstance(Context context) {
+//        if (ourInstance == null) {
+//            ourInstance = new POIsRequester(context);
+//        }
+//        return ourInstance;
+//    }
 
 
-    // Method to insure FirebaseManager is a singleton
-    public synchronized static FirebaseManager getInstance(Context context) {
-        if (ourInstance == null) {
-            ourInstance = new FirebaseManager(context);
-        }
-        return ourInstance;
-    }
-
-    private void CreateListOfCollections() {
-        SortedSet<String> CollectionsSet = new TreeSet<>(new AtoZComparator());
-        for(POI poi: listOfPOIs){
-            CollectionsSet.add(poi.getCategory());
-        }
-        ArrayList<String> CollectionsArray = new ArrayList<>();
-        CollectionsArray.addAll(CollectionsSet);
-        listOfCollections = CollectionsArray;
-    }
 
     public void GetAllStamps() {
         db.collection("users")
@@ -82,13 +78,15 @@ public class FirebaseManager {
                 });
     }
 
-    public void GetAllPOI() {
+    public void GetAllPOI() throws IOException {
+        Log.d("STZ", "GetAllPOI method started ");
         db.collection("pois")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            Log.d("STZ", "Getting POIs task completed successfully, now converting to POI class ");
                             ArrayList<POI> results = new ArrayList<>();
                             for (DocumentSnapshot document : task.getResult()) {
                                 POI sentPOI = document.toObject(POI.class);
@@ -96,9 +94,9 @@ public class FirebaseManager {
                                 // Log.d(TAG, document.getId() + " => " + document.getData());
                             }
                             listOfPOIs = results;
-
+                            Log.d("STZ", "onComplete: ");
                             //Now create a list of categories
-                            CreateListOfCollections();
+                            //CreateListOfCollections();
 
                         } else {
                             Log.d(TAG, "Error getting POIs. ", task.getException());

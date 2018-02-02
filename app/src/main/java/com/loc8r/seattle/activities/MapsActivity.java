@@ -11,7 +11,6 @@ import android.view.animation.AnimationUtils;
 
 import android.util.Log;
 import android.view.Gravity;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +27,6 @@ import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
 import com.loc8r.seattle.models.POI;
 // import com.loc8r.seattle.mongodb.MongoDBManager;
-import com.loc8r.seattle.utils.FirebaseManager;
 import com.loc8r.seattle.utils.StateManager;
 import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
@@ -36,8 +34,6 @@ import com.mancj.slideup.SlideUpBuilder;
 import android.view.View;
 
 import org.parceler.Parcels;
-
-import java.util.ArrayList;
 
 public class MapsActivity extends GMS_Activity implements
         GoogleMap.OnMarkerClickListener,
