@@ -25,12 +25,16 @@ public class FirebaseManager {
     private static final String TAG = FirebaseManager.class.getSimpleName();
     FirebaseFirestore db;
     FirebaseUser user;
+    public ArrayList<POI> listOfPOIs;
     // Static singleton instance
-    private static FirebaseManager ourInstance;
+    public static FirebaseManager ourInstance;
 
     public FirebaseManager(Context context) {
         user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
+
+        //Gets the full list of POIs on creation
+        CreateDummyPOIList();
     }
 
     // Method to insure FirebaseManager is a singleton
@@ -64,7 +68,7 @@ public class FirebaseManager {
     }
 
 
-    public ArrayList<POI> CreateDummyPOIList(){
+    public void CreateDummyPOIList(){
         ArrayList<POI> tempPOIList = new ArrayList<POI>();
 
         tempPOIList.add(new POI("1","Dick's",CreateLocation(47.661116, -122.327877),"Since 1954, original of a chain dishing out burgers, fries & hand-dipped shakes (open late).", "https://www.zaske.com/loc8r/seattle_medal.jpg", "street art", "StampIS1","Stamp Text 1"));
@@ -75,7 +79,9 @@ public class FirebaseManager {
         tempPOIList.add(new POI("4","Portage Bay Cafe",CreateLocation(47.657846, -122.317634),"A tasty place to go for an all-American, local/organic/sustainable-focused breakfast or brunch, including cage-free eggs from Olympia, hams and sausages made in-house with Carlton Farms pork, all-organic and local-when-possible veggies, and so forth. Reservations are highly recommended on the weekends.", "https://www.zaske.com/loc8r/seattle_skyline1.jpg", "street art", "StampIS4","Stamp Text 4"));
         tempPOIList.add(new POI("5","University Barbershop",CreateLocation(47.658945, -122.313323),"A great neighborhood barbershop, serving 'The Ave' for over 75 years", "https://www.zaske.com/loc8r/seattle_market.jpg", "street art", "StampIS5","Stamp Text 5"));
         tempPOIList.add(new POI("6","Burke Museum",CreateLocation(47.660704, -122.310510),"The Burke Museum of Natural History and Culture (Burke Museum) is a natural history museum in Seattle, Washington, in the United States. Established in 1899 as the Washington State Museum, it traces its origins to a high school naturalist club formed in 1879. The museum is the oldest natural history museum west of the Mississippi River and boasts a collection of more than 16 million artifacts, including the world's largest collection of spread bird wings. Located on the campus of the University of Washington, the Burke Museum is the official state museum of Washington.", "https://www.zaske.com/loc8r/seattle_library.jpg", "street art", "StampIS6","Stamp Text 6"));
-        return tempPOIList;
+
+        // Store our POIs in the public variable
+        listOfPOIs = tempPOIList;
     }
 
     // Create a location given a Lat & Long

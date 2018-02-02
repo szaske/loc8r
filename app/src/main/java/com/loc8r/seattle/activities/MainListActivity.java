@@ -11,10 +11,11 @@ import android.view.View;
 import android.widget.Button;
 
 import com.loc8r.seattle.R;
+import com.loc8r.seattle.models.POI;
 
 public class MainListActivity extends GMS_Activity {
 
-    private static final String TAG = GMS_Activity.class.getSimpleName();
+    private static final String TAG = MainListActivity.class.getSimpleName();
     private Button mExploreButton;
     private Button mPassportButton;
     private Button mSettingsButton;
@@ -42,6 +43,9 @@ public class MainListActivity extends GMS_Activity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Passport button pressed ");
+                Intent intent = new Intent(MainListActivity.this, PassportActivity.class);
+                startActivity(intent);
+
             }
         });
 
@@ -54,6 +58,10 @@ public class MainListActivity extends GMS_Activity {
 //                startActivity(intent);
             }
         });
+
+        for(POI poi :listOfAllPOIs()){
+            Log.d(TAG, "onCreate: POI list included"+ poi.toString());
+        }
 
     }
 

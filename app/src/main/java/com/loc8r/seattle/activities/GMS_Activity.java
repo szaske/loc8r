@@ -30,7 +30,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
+import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.Constants;
+import com.loc8r.seattle.utils.FirebaseManager;
+
+import java.util.ArrayList;
 
 public class GMS_Activity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final int LOCATION_REQUEST_CODE = 420;
@@ -391,6 +395,15 @@ public class GMS_Activity extends BaseActivity implements GoogleApiClient.Connec
         intent.setData(uri);
         startActivity(intent);
 
+    }
+
+    /**
+     *  Helper method to shorten Firebase singleton calls
+     *
+     * @return List of All current POIs
+     */
+    public ArrayList<POI> listOfAllPOIs(){
+        return FirebaseManager.getInstance(getApplicationContext()).listOfPOIs;
     }
 
 }

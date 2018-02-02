@@ -54,5 +54,8 @@
     <string name="poi_list_title">Seattle Passport</string>
     <string name="title_activity_maps">Explorer STZ</string>
 
+    <!--Passport Activity Strings-->
+    <string name="title_activity_passport">My Passport</string>
+
 
 </resources>

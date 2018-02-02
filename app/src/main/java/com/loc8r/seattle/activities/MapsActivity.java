@@ -45,7 +45,7 @@ public class MapsActivity extends GMS_Activity implements
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     private GoogleMap mMap;
-    private ArrayList<POI> mListOfPOIs;
+
     private Animation mDrawer_up_animation;
 
     private SlideUp mDrawer;
@@ -73,17 +73,6 @@ public class MapsActivity extends GMS_Activity implements
 
         // Drawer Setup
         DrawerSetup();
-
-        // Check to see if this is a configuration changes or first start.
-        // if it's a configuration change get pois from bundle
-        if(savedInstanceState!=null){
-            if(savedInstanceState.containsKey("pois")){
-                mListOfPOIs = Parcels.unwrap(savedInstanceState.getParcelable ("pois"));
-            }
-        } else {
-            // Nope it's a fresh start, get the pois from the Internet
-            mListOfPOIs = FirebaseManager.getInstance(getApplicationContext()).CreateDummyPOIList();
-        }
     }
 
     public void CreateAnimation(){
@@ -122,7 +111,8 @@ public class MapsActivity extends GMS_Activity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         // Adding the pointList arraylist to Bundle
-        outState.putParcelable("pois", Parcels.wrap(mListOfPOIs));
+        // Saved in baseActivity instead
+        // outState.putParcelable("pois", Parcels.wrap(mListOfPOIs));
 
         //remember drawer state
         if (mDrawer!=null) {
@@ -204,7 +194,7 @@ public class MapsActivity extends GMS_Activity implements
         // Allow the map to see the devices location, this should ALREADY have permission to get location from GMS_Activity
         mMap.setMyLocationEnabled(true);
 
-        if(mListOfPOIs!=null && StateManager.getInstance().getCurrentLocation()!=null){
+        if(listOfAllPOIs()!=null && StateManager.getInstance().getCurrentLocation()!=null){
             DrawNearbyMarkers();
         }
 
@@ -228,7 +218,7 @@ public class MapsActivity extends GMS_Activity implements
     public boolean onMarkerClick(final Marker marker) {
 
         // Assign the selected POI by marker
-        mSelectedPOI = mListOfPOIs.get((int)marker.getTag());
+        mSelectedPOI = listOfAllPOIs().get((int)marker.getTag());
 
         //Set draw info to selected POI
         mDrawerTitleTV.setText(mSelectedPOI.getName());
@@ -246,7 +236,7 @@ public class MapsActivity extends GMS_Activity implements
 
     private void DrawNearbyMarkers(){
         // Step through all POI's and show markers for close ones (800 meters)
-        for (POI poi : mListOfPOIs) {
+        for (POI poi : listOfAllPOIs()) {
             // if the POI is within 800 meters
             if (poi.getDistance() < 800) {
                 // Add the location's marker to the map
@@ -255,7 +245,7 @@ public class MapsActivity extends GMS_Activity implements
                 Marker tempMarker = mMap.addMarker(new MarkerOptions()
                         .position(poiLatLng)
                         .title(poi.getName()));
-                tempMarker.setTag(mListOfPOIs.indexOf(poi));
+                tempMarker.setTag(listOfAllPOIs().indexOf(poi));
 
                 //log that the marker is displayed
                 Log.d(TAG, "showing marker "+ poi.getName());
@@ -305,6 +295,8 @@ public class MapsActivity extends GMS_Activity implements
             }
         });
     }
+
+
 
 
 

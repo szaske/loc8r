@@ -105,7 +105,6 @@ public class POI {
                 ",\n description='" + description + '\'' +
                 ",\n stampId='" + stampId + '\'' +
                 ",\n stampText='" + stampText + '\'' +
-                ",\n distance=" + String.valueOf(getDistance()) +
                 ",\n isStamped=" + isStamped +
                 '}';
     }
