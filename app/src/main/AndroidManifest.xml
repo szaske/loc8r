@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SeattlePassport">
+
         <!--
          The API key for Google Maps-based APIs is defined as a string resource.
          (See the file "res/values/google_maps_api.xml").
@@ -48,7 +49,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.CreateAccountActivity"></activity>
+        <activity android:name=".activities.CreateAccountActivity" />
+        <activity
+            android:name=".activities.PassportActivity"
+            android:label="@string/title_activity_passport"
+            android:parentActivityName=".activities.MainListActivity"
+            android:theme="@style/Theme.SeattlePassport">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.loc8r.seattle.activities.MainListActivity" />
+        </activity>
     </application>
 
 </manifest>
