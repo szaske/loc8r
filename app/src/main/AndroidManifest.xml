@@ -39,6 +39,11 @@
         <activity android:name=".activities.BaseActivity" />
         <activity android:name=".activities.GMS_Activity" />
         <activity android:name=".activities.MainListActivity" />
+        <activity android:name=".activities.CollectionListActivity">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.loc8r.seattle.activities.MainListActivity" />
+        </activity>
         <activity
             android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps" />
