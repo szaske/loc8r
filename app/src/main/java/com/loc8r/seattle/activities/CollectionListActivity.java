@@ -1,10 +1,12 @@
 package com.loc8r.seattle.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.adapters.POI_Adapter;
@@ -13,6 +15,7 @@ import com.loc8r.seattle.interfaces.OnPOIClickListener;
 import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.CollectionsRequester;
+import com.loc8r.seattle.utils.Constants;
 import com.loc8r.seattle.utils.POIsRequester;
 
 import java.io.IOException;
@@ -24,7 +27,8 @@ public class CollectionListActivity extends GMS_Activity implements POIsRequeste
     private POI_Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    public ArrayList<POI> mListOfPOIs;
+    private ArrayList<POI> mListOfPOIs;
+    private String mSelectedCollection;
     // public ArrayList<Collection> mListOfCollections;
     private POIsRequester mPOIsRequester; //helper class
 
@@ -37,6 +41,13 @@ public class CollectionListActivity extends GMS_Activity implements POIsRequeste
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Get restaurant ID from extras
+
+        try {
+            mSelectedCollection = getIntent().getExtras().getString(Constants.SELECTED_COLLECTION_KEY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         mRecyclerView = (RecyclerView) findViewById(R.id.collectionsRV);
 
@@ -73,7 +84,7 @@ public class CollectionListActivity extends GMS_Activity implements POIsRequeste
     private void requestPOICollections() {
 
         try {
-            mPOIsRequester.GetPoiCollection("Film");
+            mPOIsRequester.GetPoiCollection(mSelectedCollection);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -82,6 +93,13 @@ public class CollectionListActivity extends GMS_Activity implements POIsRequeste
     @Override
     public void OnPOIClick (POI poi) {
         Log.d(TAG, "OnCollectionClick: Clicked on " + poi.getName());
+
+//        // Go to the details page for the selected restaurant
+//        Intent intent = new Intent(this, PassportActivity.class);
+//        intent.putExtra(RestaurantDetailActivity.KEY_RESTAURANT_ID, restaurant.getId());
+//
+//        startActivity(intent);
+//        overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
     }
 
     @Override public void onPOIsReceived(final ArrayList<POI> POIsSet) {
@@ -96,4 +114,16 @@ public class CollectionListActivity extends GMS_Activity implements POIsRequeste
         });
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            overridePendingTransition(R.anim.slide_out_to_right, R.anim.slide_in_from_left);
+            return true;
+        }
+        return false;
+    }
+
 }

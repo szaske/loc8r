@@ -27,6 +27,7 @@ import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
 import com.loc8r.seattle.models.POI;
 // import com.loc8r.seattle.mongodb.MongoDBManager;
+import com.loc8r.seattle.utils.POIsRequester;
 import com.loc8r.seattle.utils.StateManager;
 import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
@@ -35,14 +36,19 @@ import android.view.View;
 
 import org.parceler.Parcels;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class MapsActivity extends GMS_Activity implements
+        POIsRequester.FireBasePOIResponse,
         GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     private GoogleMap mMap;
 
-    private Animation mDrawer_up_animation;
+    private ArrayList<POI> mListOfPOIs;
+    private POIsRequester mPOIsRequester; //helper class
 
     private SlideUp mDrawer;
     private View mDrawerView;
@@ -69,33 +75,38 @@ public class MapsActivity extends GMS_Activity implements
 
         // Drawer Setup
         DrawerSetup();
-    }
 
-    public void CreateAnimation(){
-        // Load the animation from XML
-        mDrawer_up_animation = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.slide_up);
-
-        // set the animation listener
-        mDrawer_up_animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-                if (animation == mDrawer_up_animation) {
-                    Toast.makeText(MapsActivity.this, "Animation Stopped", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
+        mListOfPOIs = new ArrayList<>(); // Create an empty list to hold POIs
+        //This is the object that can fetch more content
+        mPOIsRequester = new POIsRequester(this);
 
     }
+
+//    public void CreateAnimation(){
+//        // Load the animation from XML
+//        mDrawer_up_animation = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.slide_up);
+//
+//        // set the animation listener
+//        mDrawer_up_animation.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//
+//                if (animation == mDrawer_up_animation) {
+//                    Toast.makeText(MapsActivity.this, "Animation Stopped", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+//
+//    }
 
     private int getScreenHeight(){
         DisplayMetrics metrics = new DisplayMetrics();
@@ -190,9 +201,7 @@ public class MapsActivity extends GMS_Activity implements
         // Allow the map to see the devices location, this should ALREADY have permission to get location from GMS_Activity
         mMap.setMyLocationEnabled(true);
 
-        if(listOfAllPOIs()!=null && StateManager.getInstance().getCurrentLocation()!=null){
-            DrawNearbyMarkers();
-        }
+
 
         // Set listeners for marker events.  See the bottom of this class for their behavior.
         mMap.setOnMarkerClickListener(this);
@@ -214,7 +223,7 @@ public class MapsActivity extends GMS_Activity implements
     public boolean onMarkerClick(final Marker marker) {
 
         // Assign the selected POI by marker
-        mSelectedPOI = listOfAllPOIs().get((int)marker.getTag());
+        mSelectedPOI = mListOfPOIs.get((int)marker.getTag());
 
         //Set draw info to selected POI
         mDrawerTitleTV.setText(mSelectedPOI.getName());
@@ -232,7 +241,7 @@ public class MapsActivity extends GMS_Activity implements
 
     private void DrawNearbyMarkers(){
         // Step through all POI's and show markers for close ones (800 meters)
-        for (POI poi : listOfAllPOIs()) {
+        for (POI poi : mListOfPOIs) {
             // if the POI is within 800 meters
             if (poi.getDistance() < 800) {
                 // Add the location's marker to the map
@@ -241,7 +250,7 @@ public class MapsActivity extends GMS_Activity implements
                 Marker tempMarker = mMap.addMarker(new MarkerOptions()
                         .position(poiLatLng)
                         .title(poi.getName()));
-                tempMarker.setTag(listOfAllPOIs().indexOf(poi));
+                tempMarker.setTag(mListOfPOIs.indexOf(poi));
 
                 //log that the marker is displayed
                 Log.d(TAG, "showing marker "+ poi.getName());
@@ -267,6 +276,7 @@ public class MapsActivity extends GMS_Activity implements
 
                     @Override
                     public void run() {
+
                         // Check if this is the first time location was retrieved
                         if(mCurrentLocation==null){
                             Toast.makeText(getApplicationContext(), "Initial location detected", Toast.LENGTH_SHORT).show();
@@ -280,20 +290,32 @@ public class MapsActivity extends GMS_Activity implements
                         // clear all current markers on map
                         mMap.clear();
 
-                        // Step through all POI's and show markers for close ones (800 meters)
-                        DrawNearbyMarkers();
+                        // The initial get of POI's, this may take some time
+                        if (mListOfPOIs.size() == 0) {
+                            try {
+                                mPOIsRequester.GetAllPOIs();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            // Step through all POI's and show markers for close ones (800 meters)
+                            DrawNearbyMarkers();
+                        }
 
                     }
 
                 });
 
-
             }
         });
     }
 
-
-
-
-
+    /**
+     *  Returned POIs Event listener method
+     *
+     * @param POIs
+     */
+    @Override public void onPOIsReceived(ArrayList<POI> POIs) {
+        mListOfPOIs = POIs;
+    }
 }

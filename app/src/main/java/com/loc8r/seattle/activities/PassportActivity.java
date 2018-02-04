@@ -1,10 +1,12 @@
 package com.loc8r.seattle.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.adapters.Collections_Adapter;
@@ -13,6 +15,7 @@ import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.AtoZComparator;
 import com.loc8r.seattle.utils.CollectionsRequester;
+import com.loc8r.seattle.utils.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -83,6 +86,12 @@ public class PassportActivity extends GMS_Activity implements CollectionsRequest
     @Override
     public void OnCollectionClick(Collection collection) {
         Log.d(TAG, "OnCollectionClick: Clicked on " + collection.getName());
+        // Go to the selected Collections page
+        Intent intent = new Intent(this, CollectionListActivity.class);
+        intent.putExtra(Constants.SELECTED_COLLECTION_KEY, collection.getName());
+
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
     }
 
     @Override public void onCollectionsListReceived(final ArrayList<Collection> collectionsSet) {
@@ -97,4 +106,16 @@ public class PassportActivity extends GMS_Activity implements CollectionsRequest
         });
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            overridePendingTransition(R.anim.slide_out_to_right, R.anim.slide_in_from_left);
+            return true;
+        }
+        return false;
+    }
+
 }

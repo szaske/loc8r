@@ -48,6 +48,35 @@ public class POIsRequester {
         db = FirebaseFirestore.getInstance();
     }
 
+    public void GetAllPOIs() throws IOException {
+        Log.d("STZ", "GetAllPOI method started ");
+        db.collection("pois")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("STZ", "Getting POIs task completed successfully, now converting to POI class ");
+                            ArrayList<POI> results = new ArrayList<>();
+                            for (DocumentSnapshot document : task.getResult()) {
+                                POI sentPOI = document.toObject(POI.class);
+                                results.add(sentPOI);
+                                // Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+
+                            // Send results back to host activity
+                            mResponseListener.onPOIsReceived(results);
+                            Log.d("STZ", "onComplete: ");
+
+                        } else {
+                            Log.d(TAG, "Error getting POIs. ", task.getException());
+                        }
+                    }
+                });
+        // [END get_multiple_all]
+    }
+
+
 //    public void GetAllStamps() {
 //        db.collection("users")
 //                .document(user.getUid())
