@@ -30,7 +30,21 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GOOGLE_MAPS_KEY" />
-
+        <activity android:name=".activities.MainListActivity" />
+        <activity
+            android:name=".activities.PassportActivity"
+            android:label="@string/title_activity_passport"
+            android:parentActivityName=".activities.MainListActivity"
+            android:theme="@style/Theme.SeattlePassport">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.loc8r.seattle.activities.MainListActivity" />
+        </activity>
+        <activity android:name=".activities.CollectionListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.loc8r.seattle.activities.PassportActivity" />
+        </activity>
         <activity android:name=".activities.POIDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -38,7 +52,7 @@
         </activity>
         <activity android:name=".activities.BaseActivity" />
         <activity android:name=".activities.GMS_Activity" />
-        <activity android:name=".activities.MainListActivity" />
+
         <activity
             android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps" />
@@ -50,15 +64,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.CreateAccountActivity" />
-        <activity
-            android:name=".activities.PassportActivity"
-            android:label="@string/title_activity_passport"
-            android:parentActivityName=".activities.MainListActivity"
-            android:theme="@style/Theme.SeattlePassport">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.loc8r.seattle.activities.MainListActivity" />
-        </activity>
+
     </application>
 
 </manifest>

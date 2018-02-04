@@ -9,28 +9,28 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.loc8r.seattle.R;
-import com.loc8r.seattle.adapters.Collections_Adapter;
+import com.loc8r.seattle.adapters.POI_Adapter;
 import com.loc8r.seattle.interfaces.OnCollectionClickListener;
+import com.loc8r.seattle.interfaces.OnPOIClickListener;
 import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
-import com.loc8r.seattle.utils.AtoZComparator;
 import com.loc8r.seattle.utils.CollectionsRequester;
 import com.loc8r.seattle.utils.Constants;
+import com.loc8r.seattle.utils.POIsRequester;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
-public class PassportActivity extends GMS_Activity implements CollectionsRequester.FireBaseCollectionsResponse, OnCollectionClickListener{
-    private static final String TAG = PassportActivity.class.getSimpleName();
+public class CollectionListActivity extends GMS_Activity implements POIsRequester.FireBasePOIResponse, OnPOIClickListener {
+    private static final String TAG = CollectionListActivity.class.getSimpleName();
     private RecyclerView mRecyclerView;
-    private Collections_Adapter mAdapter;
+    private POI_Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    public ArrayList<POI> mListOfPOIs;
-    public ArrayList<Collection> mListOfCollections;
-    private CollectionsRequester mCollectionsRequester; //helper class
+    private ArrayList<POI> mListOfPOIs;
+    private String mSelectedCollection;
+    // public ArrayList<Collection> mListOfCollections;
+    private POIsRequester mPOIsRequester; //helper class
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,13 @@ public class PassportActivity extends GMS_Activity implements CollectionsRequest
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Get restaurant ID from extras
+
+        try {
+            mSelectedCollection = getIntent().getExtras().getString(Constants.SELECTED_COLLECTION_KEY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         mRecyclerView = (RecyclerView) findViewById(R.id.collectionsRV);
 
@@ -53,15 +60,15 @@ public class PassportActivity extends GMS_Activity implements CollectionsRequest
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mListOfCollections = new ArrayList<>(); // Create an empty list for the recyclerView
+        mListOfPOIs = new ArrayList<>(); // Create an empty list for the recyclerView
 
-        mAdapter = new Collections_Adapter(mListOfCollections, this);
+        mAdapter = new POI_Adapter(mListOfPOIs, this);
         mRecyclerView.setAdapter(mAdapter);
 
         // mRecyclerView.setAdapter(new Collections_Adapter(POIsRequester.getInstance(getApplicationContext()).mListOfCollections, this));
 
         //This is the object that can fetch more content
-        mCollectionsRequester = new CollectionsRequester(this);
+        mPOIsRequester = new POIsRequester(this);
     }
 
     @Override
@@ -69,37 +76,38 @@ public class PassportActivity extends GMS_Activity implements CollectionsRequest
         super.onStart();
 
         // Better get some content
-        if (mListOfCollections.size() == 0) {
-            requestCollections();
+        if (mListOfPOIs.size() == 0) {
+            requestPOICollections();
         }
     }
 
-    private void requestCollections() {
+    private void requestPOICollections() {
 
         try {
-            mCollectionsRequester.GetAllCollections();
+            mPOIsRequester.GetPoiCollection(mSelectedCollection);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void OnCollectionClick(Collection collection) {
-        Log.d(TAG, "OnCollectionClick: Clicked on " + collection.getName());
-        // Go to the selected Collections page
-        Intent intent = new Intent(this, CollectionListActivity.class);
-        intent.putExtra(Constants.SELECTED_COLLECTION_KEY, collection.getName());
+    public void OnPOIClick (POI poi) {
+        Log.d(TAG, "OnCollectionClick: Clicked on " + poi.getName());
 
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+//        // Go to the details page for the selected restaurant
+//        Intent intent = new Intent(this, PassportActivity.class);
+//        intent.putExtra(RestaurantDetailActivity.KEY_RESTAURANT_ID, restaurant.getId());
+//
+//        startActivity(intent);
+//        overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
     }
 
-    @Override public void onCollectionsListReceived(final ArrayList<Collection> collectionsSet) {
+    @Override public void onPOIsReceived(final ArrayList<POI> POIsSet) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
-                mListOfCollections.addAll(collectionsSet); // This adds a new item to the list
+                mListOfPOIs.addAll(POIsSet); // This adds a new item to the list
 
                 mAdapter.notifyDataSetChanged();  //This tells the adapter to reset and redraw
             }

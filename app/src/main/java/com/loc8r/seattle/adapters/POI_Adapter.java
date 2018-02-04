@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loc8r.seattle.R;
-import com.loc8r.seattle.interfaces.OnCollectionClickListener;
-import com.loc8r.seattle.models.Collection;
+import com.loc8r.seattle.interfaces.OnPOIClickListener;
+import com.loc8r.seattle.models.POI;
 
 import java.util.ArrayList;
 
@@ -17,39 +17,39 @@ import java.util.ArrayList;
  * Created by steve on 1/9/2018.
  */
 
-public class Collections_Adapter extends RecyclerView.Adapter<Collections_Adapter.Collections_View_Holder> {
+public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holder> {
 
 
     // Class variables
-    ArrayList<Collection> mCollectionslist;
-    OnCollectionClickListener listener;
+    ArrayList<POI> mPOIslist;
+    OnPOIClickListener listener;
     //Context context;
 
     // Constructor
-    public Collections_Adapter(ArrayList<Collection> list, OnCollectionClickListener listener) {
-        this.mCollectionslist = list;
+    public POI_Adapter(ArrayList<POI> list, OnPOIClickListener listener) {
+        this.mPOIslist = list;
         this.listener = listener;
         //this.context = context;
     }
 
     @Override
-    public Collections_View_Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public POI_View_Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         //Inflate the layout, initialize the View Holder
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.collections_recycler_item, parent, false);
-        Collections_View_Holder holder = new Collections_View_Holder(v);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.poi_recycler_item, parent, false);
+        POI_View_Holder holder = new POI_View_Holder(v);
         return holder;
 
     }
 
     @Override
-    public void onBindViewHolder(Collections_View_Holder holder, int position) {
+    public void onBindViewHolder(POI_View_Holder holder, int position) {
 
         //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
         //holder.title.setText(mPOIslist.get(position).getTitle());
         //holder.imageView.setImageResource(mPOIslist.get(position).getImageURL());
 
         //Instead lets use the viewholder bind method to assign content
-        holder.bind(mCollectionslist.get(position), listener);
+        holder.bind(mPOIslist.get(position), listener);
 
         //animate(holder);
     }
@@ -57,31 +57,34 @@ public class Collections_Adapter extends RecyclerView.Adapter<Collections_Adapte
     @Override
     public int getItemCount() {
         //returns the number of elements the RecyclerView will display
-        return mCollectionslist.size();
+        return mPOIslist.size();
     }
 
     //
     // The VIEWHOLDER
     //
     //
-    static class Collections_View_Holder extends RecyclerView.ViewHolder {
+    static class POI_View_Holder extends RecyclerView.ViewHolder {
 
         TextView name;
+        TextView stampText;
         //ImageView imageView;
 
-        Collections_View_Holder(View itemView) {
+        POI_View_Holder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.nameTV);
+            name = itemView.findViewById(R.id.poi_nameTV);
+            stampText= itemView.findViewById(R.id.poi_stampTextTV);
             // imageView = (ImageView) itemView.findViewById(R.id.poiGroupBackgroundImageView);
         }
 
-        public void bind(final Collection item, final OnCollectionClickListener listener){
-            name.setText(item.getName());
+        public void bind(final POI poi, final OnPOIClickListener listener){
+            name.setText(poi.getName());
+            stampText.setText(poi.getStampText());
             // Set background image here
             Log.d("ViewHolder-", "bind: method fired");
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View view) {
-                    listener.OnCollectionClick(item);
+                    listener.OnPOIClick(poi);
                 }
             });
         }

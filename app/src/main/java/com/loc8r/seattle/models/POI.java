@@ -21,7 +21,8 @@ public class POI {
     String id;
     String name;
     String img_url;
-    Location location;
+    String latitude;
+    String longitude;
     String category;
     String description;
     String stampId;
@@ -31,10 +32,11 @@ public class POI {
 
     public POI(){}
 
-    public POI(String id, String name, Location location, String description, String img_url, String category, String stampId, String stampText) {
+    public POI(String id, String name, String latitude, String longitude, String description, String img_url, String category, String stampId, String stampText) {
         this.id = id;
         this.name = name;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.description = description;
         this.img_url = img_url;
         this.category = category;
@@ -100,7 +102,6 @@ public class POI {
                 "id=" + id +
                 ",\n img_url='" + img_url + '\'' +
                 ",\n name='" + name + '\'' +
-                ",\n location=" + location +
                 ",\n category='" + category + '\'' +
                 ",\n description='" + description + '\'' +
                 ",\n stampId='" + stampId + '\'' +
@@ -119,8 +120,8 @@ public class POI {
     public int getDistance() {
 
         final int R = 6371; // Radius of the earth
-        double lat2 = location.getLatitude();
-        double lon2 = location.getLongitude();
+        double lat2 = getLatitude();
+        double lon2 = getLongitude();
         double lat1 = StateManager.getInstance().getCurrentLocation().getLatitude();
         double lon1 = StateManager.getInstance().getCurrentLocation().getLongitude();
 
@@ -137,13 +138,6 @@ public class POI {
         return (int) Math.round(Math.sqrt(distance));
     }
 
-//    public LatLng getLatLng(){
-//        LatLng tempLatLng = new LatLng();
-//        tempLatLng.setLongitude(this.getLongitude());
-//        tempLatLng.setLatitude(this.getLatitude());
-//        return tempLatLng;
-//    }
-
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
     public String getImg_url() { return img_url; }
@@ -151,8 +145,8 @@ public class POI {
     public String getStampId() { return stampId; }
     public String getStampText() { return stampText; }
     public String getCategory() { return category; }
-    public Double getLatitude() { return location.getLatitude(); }
-    public Double getLongitude() { return location.getLongitude(); }
+    public Double getLatitude() { return Double.parseDouble(latitude); }
+    public Double getLongitude() { return Double.parseDouble(longitude); }
     public String getDescription() {
         return description;
     }
