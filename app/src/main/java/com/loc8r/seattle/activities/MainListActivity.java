@@ -54,7 +54,7 @@ public class MainListActivity extends GMS_Activity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Settings button pressed ");
-                Intent intent = new Intent(MainListActivity.this, CollectionListActivity.class);
+                Intent intent = new Intent(MainListActivity.this, ManagementActivity.class);
                 startActivity(intent);
             }
         });

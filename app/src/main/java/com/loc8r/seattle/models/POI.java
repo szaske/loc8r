@@ -1,16 +1,9 @@
 package com.loc8r.seattle.models;
 
 
-import android.location.Location;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.loc8r.seattle.utils.StateManager;
 
 import org.parceler.Parcel;
-
-import java.util.ArrayList;
 
 
 /**
@@ -20,81 +13,38 @@ import java.util.ArrayList;
 public class POI {
     String id;
     String name;
-    String img_url;
-    String latitude;
-    String longitude;
-    String category;
+    Double latitude;
+    Double longitude;
     String description;
-    String stampId;
-    String stampText;
+    String img_url;
+    String collection;
+    int collectionPosition;
     //double distance;
+    String stampText;
     boolean isStamped;
 
     public POI(){}
 
-    public POI(String id, String name, String latitude, String longitude, String description, String img_url, String category, String stampId, String stampText) {
+    public POI(String id,
+               String name,
+               Double latitude,
+               Double longitude,
+               String description,
+               String img_url,
+               String collection,
+               int collectionPosition,
+               String stampText) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
         this.img_url = img_url;
-        this.category = category;
-        this.stampId = stampId;
+        this.collection = collection;
+        this.collectionPosition = collectionPosition;
         this.stampText = stampText;
         this.isStamped = false; // Set to not stamped by default
     }
-
-    /**
-    * Helper class to keep all the field names in one place
-    **/
-//    public class Field
-//    {
-//        public static final String ID = "_id";
-//        public static final String NAME = "name";
-//        static final String DESC = "description";
-//        static final String LOC = "location";
-//        static final String COORD = "coordinates";
-//        static final String IMG_URL = "img_url";
-//        static final String DIST = "dist";
-//        static final String CAT = "category";
-//        static final String STAMP_ID = "stampId";
-//        static final String STAMP_TEXT = "stampText";
-//    }
-
-    /**
-    * Parse the POI object from the MongoDB document
-    **/
-//    public static POI fromDocument(Document document)
-//    {
-//        POI poi = new POI();
-//        try
-//        {
-//            poi.id = document.getObjectId(Field.ID);
-//            poi.name = document.getString(Field.NAME);
-//            poi.description = document.getString(Field.DESC);
-//            poi.img_url = document.getString(Field.IMG_URL);
-//            poi.category = document.getString(Field.CAT);
-//            poi.stampText = document.getString(Field.STAMP_TEXT);
-//            poi.stampId = document.getString(Field.STAMP_ID);
-//
-//            Document location = (Document) document.get(Field.LOC);
-//            ArrayList coords = (ArrayList) location.get(Field.COORD);
-//            Location tempLocation = new Location("");
-//            /**
-//            * note: in MongoDB the longitude is at position 0, and the latitude is in position 1
-//            **/
-//            tempLocation.setLongitude((Double) coords.get(0));
-//            tempLocation.setLatitude((Double) coords.get(1));
-//            poi.location = tempLocation;
-//            //poi.distance = getDistance();
-//        }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
-//        return poi;
-//    }
 
     @Override
     public String toString() {
@@ -102,10 +52,8 @@ public class POI {
                 "id=" + id +
                 ",\n img_url='" + img_url + '\'' +
                 ",\n name='" + name + '\'' +
-                ",\n category='" + category + '\'' +
+                ",\n collection='" + collection + '\'' +
                 ",\n description='" + description + '\'' +
-                ",\n stampId='" + stampId + '\'' +
-                ",\n stampText='" + stampText + '\'' +
                 ",\n isStamped=" + isStamped +
                 '}';
     }
@@ -122,8 +70,15 @@ public class POI {
         final int R = 6371; // Radius of the earth
         double lat2 = getLatitude();
         double lon2 = getLongitude();
-        double lat1 = StateManager.getInstance().getCurrentLocation().getLatitude();
-        double lon1 = StateManager.getInstance().getCurrentLocation().getLongitude();
+
+        // Defaults to Space Needle location
+        double lat1 = 47.620510;
+        double lon1 = -122.349312;
+
+        if(StateManager.getInstance().getCurrentLocation()!=null) {
+            lat1 = StateManager.getInstance().getCurrentLocation().getLatitude();
+            lon1 = StateManager.getInstance().getCurrentLocation().getLongitude();
+        }
 
         double latDistance = Math.toRadians(lat2 - lat1);
         double lonDistance = Math.toRadians(lon2 - lon1);
@@ -138,19 +93,42 @@ public class POI {
         return (int) Math.round(Math.sqrt(distance));
     }
 
+    // Getters
     public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
-    public String getImg_url() { return img_url; }
     public String getName() { return name; }
-    public String getStampId() { return stampId; }
+    public Double getLatitude() { return latitude; }
+    public Double getLongitude() { return longitude; }
+    public String getDescription() { return description; }
+    public String getImg_url() { return img_url; }
+    public String getCollection() { return collection; }
+    public int getCollectionPosition() { return collectionPosition; }
     public String getStampText() { return stampText; }
-    public String getCategory() { return category; }
-    public Double getLatitude() { return Double.parseDouble(latitude); }
-    public Double getLongitude() { return Double.parseDouble(longitude); }
-    public String getDescription() {
-        return description;
-    }
     //public double getDistance() { return distance; }
     public boolean isStamped() { return isStamped; }
+
+    // Setters
+    public void setId(String id) { this.id = id; }
     public void setStamped(boolean stamped) { isStamped = stamped; }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public void setImg_url(String img_url) {
+        this.img_url = img_url;
+    }
+    public void setCollection(String collection) {
+        this.collection = collection;
+    }
+    public void setCollectionPosition(int collectionPosition) {
+        this.collectionPosition = collectionPosition;
+    }
+    public void setStampText(String stampText) { this.stampText = stampText; }
 }

@@ -546,7 +546,7 @@
 //
 //        Document query = new Document(Stamp.Field.ID, id)
 //                .append(Stamp.Field.STAMP_ID, poi.getStampId())
-//                .append(Stamp.Field.CAT, poi.getCategory())
+//                .append(Stamp.Field.CAT, poi.getCollection())
 //                .append(Stamp.Field.DATE, date)
 //                .append(Stamp.Field.OWNER_ID, getUserId())
 //                .append(Stamp.Field.POI_ID, poi.getId().toString());
@@ -572,7 +572,7 @@
 //                        Stamp stamp = new Stamp();
 //                        stamp.setId(id);
 //                        stamp.setTimestamp(date);
-//                        stamp.setCategory(poi.getCategory());
+//                        stamp.setCollection(poi.getCollection());
 //                        stamp.setOwnerId(getUserId());
 //                        stamp.setPoiId(poi.getId().toString());
 //                        listener.onSuccess(stamp);
