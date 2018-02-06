@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,13 +16,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
 import com.loc8r.seattle.interfaces.QueryListener;
@@ -31,7 +26,6 @@ import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
 // import com.loc8r.seattle.mongodb.MongoDBManager;
 import com.loc8r.seattle.models.User;
-import com.loc8r.seattle.utils.Constants;
 import com.loc8r.seattle.utils.ProgressDialog;
 import com.squareup.picasso.Picasso;
 
@@ -150,10 +144,9 @@ public class POIDetailActivity extends GMS_Activity {
         String timestamp = simpleDateFormat.format(new Date());
 
         return new Stamp(
-                detailedPoi.getStampId(),
-                detailedPoi.getCategory(),
-                timestamp,
                 detailedPoi.getId(),
+                detailedPoi.getCollection(),
+                timestamp,
                 detailedPoi.getStampText());
     }
 
@@ -200,7 +193,7 @@ public class POIDetailActivity extends GMS_Activity {
                 .collection("users")
                 .document(user.getUid())
                 .collection("stamps")
-                .document(detailedPoi.getStampId());
+                .document(detailedPoi.getId());
 
         //Attempt to get the document/object...if it does not exist then get the stamp
         stampDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -227,7 +220,7 @@ public class POIDetailActivity extends GMS_Activity {
         db.collection("users")
                 .document(uid)
                 .collection("stamps")
-                .document(newStamp.getStampId())
+                .document(newStamp.getPoiId())
                 .set(newStamp)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

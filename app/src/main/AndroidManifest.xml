@@ -30,7 +30,21 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GOOGLE_MAPS_KEY" />
+
+        <activity android:name=".activities.BaseActivity" />
+        <activity android:name=".activities.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activities.CreateAccountActivity" />
+        <activity android:name=".activities.GMS_Activity" />
         <activity android:name=".activities.MainListActivity" />
+        <activity
+            android:name=".activities.MapsActivity"
+            android:label="@string/title_activity_maps" />
         <activity
             android:name=".activities.PassportActivity"
             android:label="@string/title_activity_passport"
@@ -50,21 +64,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.loc8r.seattle.activities.MainListActivity" />
         </activity>
-        <activity android:name=".activities.BaseActivity" />
-        <activity android:name=".activities.GMS_Activity" />
-
         <activity
-            android:name=".activities.MapsActivity"
-            android:label="@string/title_activity_maps" />
-        <activity android:name=".activities.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activities.CreateAccountActivity" />
-
+            android:name=".activities.ManagementActivity"
+            android:label="@string/title_activity_management"
+            android:theme="@style/Theme.SeattlePassport"></activity>
     </application>
 
 </manifest>

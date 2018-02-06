@@ -26,7 +26,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
 import com.loc8r.seattle.models.POI;
-// import com.loc8r.seattle.mongodb.MongoDBManager;
 import com.loc8r.seattle.utils.POIsRequester;
 import com.loc8r.seattle.utils.StateManager;
 import com.mancj.slideup.SlideUp;
@@ -47,7 +46,7 @@ public class MapsActivity extends GMS_Activity implements
     private static final String TAG = MapsActivity.class.getSimpleName();
     private GoogleMap mMap;
 
-    private ArrayList<POI> mListOfPOIs;
+    // private ArrayList<POI> mListOfPOIs;
     private POIsRequester mPOIsRequester; //helper class
 
     private SlideUp mDrawer;
@@ -76,7 +75,7 @@ public class MapsActivity extends GMS_Activity implements
         // Drawer Setup
         DrawerSetup();
 
-        mListOfPOIs = new ArrayList<>(); // Create an empty list to hold POIs
+        //mListOfPOIs = new ArrayList<>(); // Create an empty list to hold POIs
         //This is the object that can fetch more content
         mPOIsRequester = new POIsRequester(this);
 
@@ -201,8 +200,6 @@ public class MapsActivity extends GMS_Activity implements
         // Allow the map to see the devices location, this should ALREADY have permission to get location from GMS_Activity
         mMap.setMyLocationEnabled(true);
 
-
-
         // Set listeners for marker events.  See the bottom of this class for their behavior.
         mMap.setOnMarkerClickListener(this);
     }
@@ -223,7 +220,7 @@ public class MapsActivity extends GMS_Activity implements
     public boolean onMarkerClick(final Marker marker) {
 
         // Assign the selected POI by marker
-        mSelectedPOI = mListOfPOIs.get((int)marker.getTag());
+        mSelectedPOI = StateManager.getInstance().getPOIs().get((int)marker.getTag());
 
         //Set draw info to selected POI
         mDrawerTitleTV.setText(mSelectedPOI.getName());
@@ -241,7 +238,7 @@ public class MapsActivity extends GMS_Activity implements
 
     private void DrawNearbyMarkers(){
         // Step through all POI's and show markers for close ones (800 meters)
-        for (POI poi : mListOfPOIs) {
+        for (POI poi : StateManager.getInstance().getPOIs()) {
             // if the POI is within 800 meters
             if (poi.getDistance() < 800) {
                 // Add the location's marker to the map
@@ -250,7 +247,7 @@ public class MapsActivity extends GMS_Activity implements
                 Marker tempMarker = mMap.addMarker(new MarkerOptions()
                         .position(poiLatLng)
                         .title(poi.getName()));
-                tempMarker.setTag(mListOfPOIs.indexOf(poi));
+                tempMarker.setTag(StateManager.getInstance().getPOIs().indexOf(poi));
 
                 //log that the marker is displayed
                 Log.d(TAG, "showing marker "+ poi.getName());
@@ -290,8 +287,8 @@ public class MapsActivity extends GMS_Activity implements
                         // clear all current markers on map
                         mMap.clear();
 
-                        // The initial get of POI's, this may take some time
-                        if (mListOfPOIs.size() == 0) {
+                        // If we don't have POIs yes, lets get them
+                        if (StateManager.getInstance().getPOIs().size() == 0) {
                             try {
                                 mPOIsRequester.GetAllPOIs();
                             } catch (IOException e) {
@@ -316,6 +313,6 @@ public class MapsActivity extends GMS_Activity implements
      * @param POIs
      */
     @Override public void onPOIsReceived(ArrayList<POI> POIs) {
-        mListOfPOIs = POIs;
+        StateManager.getInstance().setPOIs(POIs);
     }
 }

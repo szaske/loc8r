@@ -33,7 +33,7 @@ public class POIsRequester {
     FirebaseFirestore db;
     FirebaseUser user;
     private FireBasePOIResponse mResponseListener;
-    public ArrayList<POI> listOfPOIs;
+    private ArrayList<POI> listOfPOIs;
     // Static singleton instance
     // public static POIsRequester ourInstance;
 
@@ -60,6 +60,7 @@ public class POIsRequester {
                             ArrayList<POI> results = new ArrayList<>();
                             for (DocumentSnapshot document : task.getResult()) {
                                 POI sentPOI = document.toObject(POI.class);
+                                sentPOI.setId(document.getId());
                                 results.add(sentPOI);
                                 // Log.d(TAG, document.getId() + " => " + document.getData());
                             }
@@ -96,9 +97,9 @@ public class POIsRequester {
 //                });
 //    }
 
-    public void GetPoiCollection(String category) throws IOException {
+    public void GetPoiCollection(String collection) throws IOException {
         Log.d("STZ", "GetAllPOI method started ");
-        db.collection("pois").whereEqualTo("category", category)
+        db.collection("pois").whereEqualTo("collection", collection)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

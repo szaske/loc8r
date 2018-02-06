@@ -55,7 +55,8 @@
     <string name="title_activity_maps">Explorer STZ</string>
 
     <!--Passport Activity Strings-->
-    <string name="title_activity_passport">My Passport</string>
+    <string name="title_activity_passport">Passport Collections</string>
+    <string name="title_activity_management">ManagementActivity</string>
 
 
 </resources>
