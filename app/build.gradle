@@ -14,6 +14,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    sourceSets {
+        main.java.srcDirs += 'src/main/<YOUR DIRECTORY>'
+    }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/DEPENDENCIES'
