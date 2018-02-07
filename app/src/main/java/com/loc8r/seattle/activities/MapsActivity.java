@@ -37,6 +37,8 @@ import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MapsActivity extends GMS_Activity implements
         POIsRequester.FireBasePOIResponse,
@@ -80,32 +82,6 @@ public class MapsActivity extends GMS_Activity implements
         mPOIsRequester = new POIsRequester(this);
 
     }
-
-//    public void CreateAnimation(){
-//        // Load the animation from XML
-//        mDrawer_up_animation = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.slide_up);
-//
-//        // set the animation listener
-//        mDrawer_up_animation.setAnimationListener(new Animation.AnimationListener() {
-//            @Override
-//            public void onAnimationStart(Animation animation) {
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animation animation) {
-//
-//                if (animation == mDrawer_up_animation) {
-//                    Toast.makeText(MapsActivity.this, "Animation Stopped", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animation animation) {
-//
-//            }
-//        });
-//
-//    }
 
     private int getScreenHeight(){
         DisplayMetrics metrics = new DisplayMetrics();
@@ -187,11 +163,6 @@ public class MapsActivity extends GMS_Activity implements
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
      */
     @SuppressLint("MissingPermission") @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -220,7 +191,7 @@ public class MapsActivity extends GMS_Activity implements
     public boolean onMarkerClick(final Marker marker) {
 
         // Assign the selected POI by marker
-        mSelectedPOI = StateManager.getInstance().getPOIs().get((int)marker.getTag());
+        mSelectedPOI = StateManager.getInstance().getPOIs().get(marker.getTag());
 
         //Set draw info to selected POI
         mDrawerTitleTV.setText(mSelectedPOI.getName());
@@ -238,22 +209,24 @@ public class MapsActivity extends GMS_Activity implements
 
     private void DrawNearbyMarkers(){
         // Step through all POI's and show markers for close ones (800 meters)
-        for (POI poi : StateManager.getInstance().getPOIs()) {
-            // if the POI is within 800 meters
-            if (poi.getDistance() < 800) {
+
+        for(Map.Entry<String, POI> entry : StateManager.getInstance().getPOIs().entrySet()) {
+            String key = entry.getKey();
+            POI poi = entry.getValue();
+
+            if ( poi.distanceToUser() < 800) {
                 // Add the location's marker to the map
                 LatLng poiLatLng = new LatLng(poi.getLatitude(), poi.getLongitude());
 
                 Marker tempMarker = mMap.addMarker(new MarkerOptions()
                         .position(poiLatLng)
                         .title(poi.getName()));
-                tempMarker.setTag(StateManager.getInstance().getPOIs().indexOf(poi));
+                tempMarker.setTag(key);
 
                 //log that the marker is displayed
                 Log.d(TAG, "showing marker "+ poi.getName());
             }
         }
-
     }
 
     @Override
@@ -312,7 +285,7 @@ public class MapsActivity extends GMS_Activity implements
      *
      * @param POIs
      */
-    @Override public void onPOIsReceived(ArrayList<POI> POIs) {
+    public void onPOIsReceived(HashMap<String,POI> POIs) {
         StateManager.getInstance().setPOIs(POIs);
     }
 }

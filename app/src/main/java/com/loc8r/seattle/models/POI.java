@@ -1,6 +1,9 @@
 package com.loc8r.seattle.models;
 
 
+import android.location.Location;
+import android.widget.SimpleCursorTreeAdapter;
+
 import com.loc8r.seattle.utils.StateManager;
 
 import org.parceler.Parcel;
@@ -19,9 +22,9 @@ public class POI {
     String img_url;
     String collection;
     int collectionPosition;
-    //double distance;
     String stampText;
-    boolean isStamped;
+    boolean stampChecked; // Has the POI been checked to be stamped?
+    Stamp stamp;
 
     public POI(){}
 
@@ -43,7 +46,7 @@ public class POI {
         this.collection = collection;
         this.collectionPosition = collectionPosition;
         this.stampText = stampText;
-        this.isStamped = false; // Set to not stamped by default
+        this.stampChecked = false;
     }
 
     @Override
@@ -54,43 +57,46 @@ public class POI {
                 ",\n name='" + name + '\'' +
                 ",\n collection='" + collection + '\'' +
                 ",\n description='" + description + '\'' +
-                ",\n isStamped=" + isStamped +
                 '}';
     }
 
     /**
-     * Calculate distance to this POI from the users current latitude and longitude
-     * elevation has been ignored.
-     * Uses Haversine method as its base.
+     *  Calculates the distance between a POI and the user, in meters
      *
-     * @return distance in meters
+     * @return the distance between a POI and the user, in meters or ZERO if the users location is not known.
      */
-    public int getDistance() {
+    public int distanceToUser(){
 
-        final int R = 6371; // Radius of the earth
-        double lat2 = getLatitude();
-        double lon2 = getLongitude();
+        if(StateManager.getInstance().getCurrentLocation()!=null){
 
-        // Defaults to Space Needle location
-        double lat1 = 47.620510;
-        double lon1 = -122.349312;
+            float[] distance = new float[1];
 
-        if(StateManager.getInstance().getCurrentLocation()!=null) {
-            lat1 = StateManager.getInstance().getCurrentLocation().getLatitude();
-            lon1 = StateManager.getInstance().getCurrentLocation().getLongitude();
+            Location.distanceBetween(
+                    StateManager.getInstance().getCurrentLocation().getLatitude(),
+                    StateManager.getInstance().getCurrentLocation().getLongitude(),
+                    latitude,
+                    longitude,
+                    distance);
+            return Math.round(distance[0]);
+        } else {
+            return 0;
         }
+    }
 
-        double latDistance = Math.toRadians(lat2 - lat1);
-        double lonDistance = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = R * c * 1000; // convert to meters
+    /**
+     *  Checks to see if this POI has a stamp
+     *
+     * @return boolean, true if stamp variable is of type Stamp
+     */
+    public boolean isStamped(){
+     return (stamp instanceof Stamp);
+    }
 
-        distance = Math.pow(distance, 2);
-
-        return (int) Math.round(Math.sqrt(distance));
+    public Location location(){
+        Location poiLocation = new Location("Seattle Passport"); //provider name is unnecessary
+        poiLocation.setLatitude(latitude);
+        poiLocation.setLongitude(longitude);
+        return poiLocation;
     }
 
     // Getters
@@ -103,12 +109,10 @@ public class POI {
     public String getCollection() { return collection; }
     public int getCollectionPosition() { return collectionPosition; }
     public String getStampText() { return stampText; }
-    //public double getDistance() { return distance; }
-    public boolean isStamped() { return isStamped; }
+    public Stamp getStamp() { return stamp; }
 
     // Setters
     public void setId(String id) { this.id = id; }
-    public void setStamped(boolean stamped) { isStamped = stamped; }
     public void setName(String name) {
         this.name = name;
     }
@@ -131,4 +135,8 @@ public class POI {
         this.collectionPosition = collectionPosition;
     }
     public void setStampText(String stampText) { this.stampText = stampText; }
+    public void setStamp(Stamp stamp){
+        this.stamp = stamp;
+    }
+
 }

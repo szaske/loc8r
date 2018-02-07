@@ -10,24 +10,26 @@ import android.view.MenuItem;
 
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.adapters.POI_Adapter;
-import com.loc8r.seattle.interfaces.OnCollectionClickListener;
 import com.loc8r.seattle.interfaces.OnPOIClickListener;
-import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
-import com.loc8r.seattle.utils.CollectionsRequester;
 import com.loc8r.seattle.utils.Constants;
 import com.loc8r.seattle.utils.POIsRequester;
 
+import org.parceler.Parcels;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class CollectionListActivity extends GMS_Activity implements POIsRequester.FireBasePOIResponse, OnPOIClickListener {
+public class CollectionListActivity extends GMS_Activity implements
+        POIsRequester.FireBasePOIResponse,
+        OnPOIClickListener {
     private static final String TAG = CollectionListActivity.class.getSimpleName();
     private RecyclerView mRecyclerView;
     private POI_Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private ArrayList<POI> mListOfPOIs;
+    private ArrayList<POI> mListOfPOIsInCollection;
     private String mSelectedCollection;
     // public ArrayList<Collection> mListOfCollections;
     private POIsRequester mPOIsRequester; //helper class
@@ -60,9 +62,9 @@ public class CollectionListActivity extends GMS_Activity implements POIsRequeste
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mListOfPOIs = new ArrayList<>(); // Create an empty list for the recyclerView
+        mListOfPOIsInCollection = new ArrayList<>(); // Create an empty list for the recyclerView
 
-        mAdapter = new POI_Adapter(mListOfPOIs, this);
+        mAdapter = new POI_Adapter(mListOfPOIsInCollection, this);
         mRecyclerView.setAdapter(mAdapter);
 
         // mRecyclerView.setAdapter(new Collections_Adapter(POIsRequester.getInstance(getApplicationContext()).mListOfCollections, this));
@@ -75,8 +77,8 @@ public class CollectionListActivity extends GMS_Activity implements POIsRequeste
     protected void onStart() {
         super.onStart();
 
-        // Better get some content
-        if (mListOfPOIs.size() == 0) {
+        // Better get some content if we don't have it already
+        if (mListOfPOIsInCollection.size() == 0) {
             requestPOICollections();
         }
     }
@@ -94,20 +96,26 @@ public class CollectionListActivity extends GMS_Activity implements POIsRequeste
     public void OnPOIClick (POI poi) {
         Log.d(TAG, "OnCollectionClick: Clicked on " + poi.getName());
 
-//        // Go to the details page for the selected restaurant
-//        Intent intent = new Intent(this, PassportActivity.class);
-//        intent.putExtra(RestaurantDetailActivity.KEY_RESTAURANT_ID, restaurant.getId());
-//
-//        startActivity(intent);
-//        overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+        //let's go to the Details activity
+        Intent i = new Intent(this, POIDetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("poi", Parcels.wrap(poi));
+        i.putExtras(bundle);
+        startActivity(i); // POI is now passed to the new Activity
+
+        overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
     }
 
-    @Override public void onPOIsReceived(final ArrayList<POI> POIsSet) {
+    public void onPOIsReceived(final HashMap<String,POI> POIsSet) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
-                mListOfPOIs.addAll(POIsSet); // This adds a new item to the list
+                //Convert to an Arraylist because we use Arraylist location as key to finding it
+                ArrayList<POI> finalResults = new ArrayList<>();
+                finalResults.addAll(POIsSet.values());
+
+                mListOfPOIsInCollection.addAll(finalResults); // This adds a new item to the list
 
                 mAdapter.notifyDataSetChanged();  //This tells the adapter to reset and redraw
             }

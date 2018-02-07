@@ -7,12 +7,15 @@ import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class StateManager {
     private static final StateManager ourInstance = new StateManager();
     private Location currentLocation; // The users current location
     private ArrayList<Stamp> mStamps;
-    private ArrayList<POI> mPOIs;
+    private HashMap<String,POI> mPOIs;
+    private boolean mPOIsHaveBeenStamped;
+
     public static StateManager getInstance() {
         return ourInstance;
     }
@@ -33,6 +36,14 @@ public class StateManager {
         this.mStamps = stamps;
     }
 
-    public ArrayList<POI> getPOIs() { return mPOIs;}
-    public void setPOIs(ArrayList<POI> pois){ this.mPOIs = pois; }
+    public HashMap<String,POI> getPOIs() { return mPOIs;}
+    public void setPOIs(HashMap<String,POI> pois){ this.mPOIs = pois; }
+
+    public void setPOIsHaveBeenStamped(boolean stampStatus) {
+        this.mPOIsHaveBeenStamped = stampStatus;
+    }
+
+    private boolean POIsStamped(){
+        return mPOIsHaveBeenStamped;
+    }
 }
