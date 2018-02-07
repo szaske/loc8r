@@ -80,6 +80,11 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
         public void bind(final POI poi, final OnPOIClickListener listener){
             name.setText(poi.getName());
             stampText.setText(poi.getStampText());
+            if(poi.isStamped()){
+                name.setBackgroundColor(0xFF00FF00);
+            } else {
+                name.setBackgroundColor(0xFFFFFFFF);
+            }
             // Set background image here
             Log.d("ViewHolder-", "bind: method fired");
             itemView.setOnClickListener(new View.OnClickListener() {

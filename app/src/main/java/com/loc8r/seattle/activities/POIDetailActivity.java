@@ -122,7 +122,7 @@ public class POIDetailActivity extends GMS_Activity {
                 if (null != mCurrentLocation) {
                     String lat = String.valueOf(mCurrentLocation.getLatitude());
                     String lng = String.valueOf(mCurrentLocation.getLongitude());
-                    String dist = String.valueOf(detailedPoi.getDistance());
+                    String dist = String.valueOf(detailedPoi.distanceToUser());
                     String total = "At Time: " + DateFormat.getTimeInstance().format(new Date()) + "\n" +
                             "Latitude: " + lat + "\n" +
                             "Longitude: " + lng + "\n" +
@@ -175,12 +175,6 @@ public class POIDetailActivity extends GMS_Activity {
                 Toast.makeText(getApplicationContext(), R.string.stamp_error, Toast.LENGTH_LONG).show();
             }
         };
-
-        //TODO: Add check so user can only create one STAMP per POI
-        if (true)
-        {
-            // MongoDBManager.getInstance(getApplicationContext()).addStamp(detailedPoi, queryListener);
-        }
     }
 
     @OnClick(R.id.getStampBtn)

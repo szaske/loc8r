@@ -77,6 +77,9 @@ public class Collections_Adapter extends RecyclerView.Adapter<Collections_Adapte
 
         public void bind(final Collection item, final OnCollectionClickListener listener){
             name.setText(item.getName());
+
+            //if POI has stamp, set background to red
+
             // Set background image here
             Log.d("ViewHolder-", "bind: method fired");
             itemView.setOnClickListener(new View.OnClickListener() {

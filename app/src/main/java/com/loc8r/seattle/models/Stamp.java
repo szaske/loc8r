@@ -1,5 +1,7 @@
 package com.loc8r.seattle.models;
 
+import com.loc8r.seattle.utils.StateManager;
+
 import org.parceler.Parcel;
 
 /**

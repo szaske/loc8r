@@ -39,6 +39,7 @@ import com.loc8r.seattle.utils.StateManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GMS_Activity extends BaseActivity implements
         StampsRequester.FireBaseStampResponse,
@@ -99,14 +100,7 @@ public class GMS_Activity extends BaseActivity implements
             mGoogleApiClient.connect();
         }
 
-        if (StateManager.getInstance().getStamps() == null) {
-            try {
-                mStampsRequester.GetUserStamps();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+        // Get POIS first
         if (StateManager.getInstance().getPOIs() == null) {
             try {
                 mPOIsRequester.GetAllPOIs();
@@ -436,6 +430,20 @@ public class GMS_Activity extends BaseActivity implements
         return tempLocation;
     }
 
+    @Override public void onPOIsReceived(HashMap<String,POI> POIs) {
+        StateManager.getInstance().setPOIs(POIs);
+        Log.d(TAG, "onPOIsReceived: Got " + POIs.size() + " POIs");
+
+        // Now get all user stamps
+        if (StateManager.getInstance().getStamps() == null) {
+            try {
+                mStampsRequester.GetUserStamps();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     /**
      *  Retrieves an initial cache of the Stamps list
      *
@@ -444,11 +452,15 @@ public class GMS_Activity extends BaseActivity implements
     @Override public void onStampsReceived(ArrayList<Stamp> Stamps) {
         StateManager.getInstance().setStamps(Stamps);
         Log.d(TAG, "onStampsReceived: Got " + Stamps.size() + " stamps");
-    }
 
-    @Override public void onPOIsReceived(ArrayList<POI> POIs) {
-        StateManager.getInstance().setPOIs(POIs);
-        Log.d(TAG, "onStampsReceived: Got " + POIs.size() + " POIs");
+        //Now Stamp each POI
+        for (Stamp stamp: StateManager.getInstance().getStamps()
+             ) {
+            StateManager.getInstance().getPOIs().get(stamp.getPoiId()).setStamp(stamp);
+        }
+
+        StateManager.getInstance().setPOIsHaveBeenStamped(true);
+
     }
 }
 
