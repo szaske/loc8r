@@ -1,13 +1,12 @@
 package com.loc8r.seattle.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
-
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import android.util.Log;
 import android.view.Gravity;
@@ -58,6 +57,7 @@ public class MapsActivity extends GMS_Activity implements
     private TextView mDrawerDescTV;
     private Button mDrawerDetailButton;
     private Location mCurrentLocation;
+    private Context context;
 
     // The selected POI
     private POI mSelectedPOI;
@@ -79,8 +79,8 @@ public class MapsActivity extends GMS_Activity implements
 
         //mListOfPOIs = new ArrayList<>(); // Create an empty list to hold POIs
         //This is the object that can fetch more content
-        mPOIsRequester = new POIsRequester(this);
-
+        mPOIsRequester = new POIsRequester();
+        context = this; // Set context so we can use inside the runnable below
     }
 
     private int getScreenHeight(){
@@ -232,7 +232,8 @@ public class MapsActivity extends GMS_Activity implements
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected() called with: " + "bundle = [" + bundle + "]");
-                /*
+
+        /**
         * get the last location of the device
         * */
         getContinousLocationUpdates(new LocationListener()
@@ -263,7 +264,7 @@ public class MapsActivity extends GMS_Activity implements
                         // If we don't have POIs yes, lets get them
                         if (StateManager.getInstance().getPOIs().size() == 0) {
                             try {
-                                mPOIsRequester.GetAllPOIs();
+                                mPOIsRequester.GetAllPOIs((Activity) context);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

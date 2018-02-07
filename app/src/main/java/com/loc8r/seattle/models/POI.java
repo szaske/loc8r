@@ -28,6 +28,9 @@ public class POI {
 
     public POI(){}
 
+    public POI(String id){
+        this.id = id;}
+
     public POI(String id,
                String name,
                Double latitude,
