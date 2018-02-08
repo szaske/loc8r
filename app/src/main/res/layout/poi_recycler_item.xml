@@ -2,39 +2,66 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/collectionLayout"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:background="@color/white">
+    android:layout_height="220dp"
+    android:background="@drawable/stamp_background_border"
+    android:padding="2dp">
 
     <ImageView
         android:id="@+id/poi_imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:alpha=".2"
+        android:contentDescription="TODO"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ice_cream_icon" />
+        app:srcCompat="@drawable/bullseye" />
+
+    <TextView
+        android:id="@+id/poi_positionTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="23"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/poi_imageView"
+        app:layout_constraintEnd_toEndOf="@+id/poi_imageView"
+        app:layout_constraintStart_toStartOf="@+id/poi_imageView"
+        app:layout_constraintTop_toTopOf="@+id/poi_imageView" />
 
     <TextView
         android:id="@+id/poi_nameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:text="TextView"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/poi_imageView"
-        app:layout_constraintStart_toEndOf="@+id/poi_imageView"
-        app:layout_constraintTop_toTopOf="@+id/poi_imageView" />
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/poi_imageView"
+        app:layout_constraintEnd_toStartOf="@+id/poi_stampTextTV"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/poi_imageView" />
 
     <TextView
         android:id="@+id/poi_stampTextTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/poi_nameTV"
-        app:layout_constraintTop_toBottomOf="@+id/poi_nameTV" />
+        app:layout_constraintBottom_toBottomOf="@+id/poi_nameTV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/poi_nameTV"
+        app:layout_constraintTop_toTopOf="@+id/poi_nameTV" />
+
 </android.support.constraint.ConstraintLayout>

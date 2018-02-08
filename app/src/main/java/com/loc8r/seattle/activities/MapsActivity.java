@@ -1,13 +1,12 @@
 package com.loc8r.seattle.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
-
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import android.util.Log;
 import android.view.Gravity;
@@ -26,6 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
 import com.loc8r.seattle.models.POI;
+import com.loc8r.seattle.utils.Constants;
 import com.loc8r.seattle.utils.POIsRequester;
 import com.loc8r.seattle.utils.StateManager;
 import com.mancj.slideup.SlideUp;
@@ -58,6 +58,7 @@ public class MapsActivity extends GMS_Activity implements
     private TextView mDrawerDescTV;
     private Button mDrawerDetailButton;
     private Location mCurrentLocation;
+    private Context context;
 
     // The selected POI
     private POI mSelectedPOI;
@@ -79,8 +80,8 @@ public class MapsActivity extends GMS_Activity implements
 
         //mListOfPOIs = new ArrayList<>(); // Create an empty list to hold POIs
         //This is the object that can fetch more content
-        mPOIsRequester = new POIsRequester(this);
-
+        mPOIsRequester = new POIsRequester();
+        context = this; // Set context so we can use inside the runnable below
     }
 
     private int getScreenHeight(){
@@ -191,7 +192,7 @@ public class MapsActivity extends GMS_Activity implements
     public boolean onMarkerClick(final Marker marker) {
 
         // Assign the selected POI by marker
-        mSelectedPOI = StateManager.getInstance().getPOIs().get(marker.getTag());
+        mSelectedPOI = StateManager.getInstance().getPOIs().get((int)marker.getTag());
 
         //Set draw info to selected POI
         mDrawerTitleTV.setText(mSelectedPOI.getName());
@@ -210,18 +211,16 @@ public class MapsActivity extends GMS_Activity implements
     private void DrawNearbyMarkers(){
         // Step through all POI's and show markers for close ones (800 meters)
 
-        for(Map.Entry<String, POI> entry : StateManager.getInstance().getPOIs().entrySet()) {
-            String key = entry.getKey();
-            POI poi = entry.getValue();
+        for(POI poi : StateManager.getInstance().getPOIs()) {
 
-            if ( poi.distanceToUser() < 800) {
+            if ( poi.distanceToUser() < Constants.DISTANCE_TO_SCAN_MARKERS) {
                 // Add the location's marker to the map
                 LatLng poiLatLng = new LatLng(poi.getLatitude(), poi.getLongitude());
 
                 Marker tempMarker = mMap.addMarker(new MarkerOptions()
                         .position(poiLatLng)
                         .title(poi.getName()));
-                tempMarker.setTag(key);
+                tempMarker.setTag(StateManager.getInstance().getPOIs().indexOf(poi)); //Tag is set to POI Index in full SM Arraylist
 
                 //log that the marker is displayed
                 Log.d(TAG, "showing marker "+ poi.getName());
@@ -232,7 +231,8 @@ public class MapsActivity extends GMS_Activity implements
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected() called with: " + "bundle = [" + bundle + "]");
-                /*
+
+        /**
         * get the last location of the device
         * */
         getContinousLocationUpdates(new LocationListener()
@@ -263,7 +263,7 @@ public class MapsActivity extends GMS_Activity implements
                         // If we don't have POIs yes, lets get them
                         if (StateManager.getInstance().getPOIs().size() == 0) {
                             try {
-                                mPOIsRequester.GetAllPOIs();
+                                mPOIsRequester.GetAllPOIs((Activity) context);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -285,7 +285,7 @@ public class MapsActivity extends GMS_Activity implements
      *
      * @param POIs
      */
-    public void onPOIsReceived(HashMap<String,POI> POIs) {
+    public void onPOIsReceived(ArrayList<POI> POIs) {
         StateManager.getInstance().setPOIs(POIs);
     }
 }

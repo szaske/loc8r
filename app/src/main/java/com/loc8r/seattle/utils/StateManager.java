@@ -12,8 +12,8 @@ import java.util.HashMap;
 public class StateManager {
     private static final StateManager ourInstance = new StateManager();
     private Location currentLocation; // The users current location
-    private ArrayList<Stamp> mStamps;
-    private HashMap<String,POI> mPOIs;
+    // private HashMap<String,POI> mPOIs;
+    private ArrayList<POI> mPOIs;
     private boolean mPOIsHaveBeenStamped;
 
     public static StateManager getInstance() {
@@ -21,6 +21,7 @@ public class StateManager {
     }
 
     private StateManager() {
+        mPOIs = new ArrayList<>();
     }
 
     public Location getCurrentLocation() {
@@ -31,13 +32,13 @@ public class StateManager {
         this.currentLocation = currentLocation;
     }
 
-    public ArrayList<Stamp> getStamps() { return mStamps; }
-    public void setStamps(ArrayList<Stamp> stamps) {
-        this.mStamps = stamps;
-    }
+//    public ArrayList<Stamp> getStamps() { return mStamps; }
+//    public void setStamps(ArrayList<Stamp> stamps) {
+//        this.mStamps = stamps;
+//    }
 
-    public HashMap<String,POI> getPOIs() { return mPOIs;}
-    public void setPOIs(HashMap<String,POI> pois){ this.mPOIs = pois; }
+    public ArrayList<POI> getPOIs() { return mPOIs;}
+    public void setPOIs(ArrayList<POI> pois){ this.mPOIs = pois; }
 
     public void setPOIsHaveBeenStamped(boolean stampStatus) {
         this.mPOIsHaveBeenStamped = stampStatus;

@@ -68,18 +68,24 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
 
         TextView name;
         TextView stampText;
+        TextView positionText;
         //ImageView imageView;
 
         POI_View_Holder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.poi_nameTV);
             stampText= itemView.findViewById(R.id.poi_stampTextTV);
+            positionText= itemView.findViewById(R.id.poi_positionTV);
             // imageView = (ImageView) itemView.findViewById(R.id.poiGroupBackgroundImageView);
         }
 
         public void bind(final POI poi, final OnPOIClickListener listener){
+
+            // Set POI information in viewHolder
             name.setText(poi.getName());
             stampText.setText(poi.getStampText());
+            positionText.setText(String.valueOf(poi.getCollectionPosition()));
+
             if(poi.isStamped()){
                 name.setBackgroundColor(0xFF00FF00);
             } else {

@@ -42,8 +42,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GMS_Activity extends BaseActivity implements
-        StampsRequester.FireBaseStampResponse,
-        POIsRequester.FireBasePOIResponse,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
     private static final int LOCATION_REQUEST_CODE = 420;
@@ -52,8 +50,6 @@ public class GMS_Activity extends BaseActivity implements
     private GoogleApiClient mGoogleApiClient;
     private AlertDialog mLocationEnabledDialog;
     private com.google.android.gms.location.LocationListener mPoiLocationListener;
-    private StampsRequester mStampsRequester;
-    private POIsRequester mPOIsRequester;
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -89,9 +85,6 @@ public class GMS_Activity extends BaseActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initGoogleLocationServices();
-
-        mStampsRequester = new StampsRequester(this);
-        mPOIsRequester = new POIsRequester(this);
     }
 
     @Override
@@ -99,16 +92,6 @@ public class GMS_Activity extends BaseActivity implements
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
-
-        // Get POIS first
-        if (StateManager.getInstance().getPOIs() == null) {
-            try {
-                mPOIsRequester.GetAllPOIs();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
 
         super.onStart();
     }
@@ -428,39 +411,6 @@ public class GMS_Activity extends BaseActivity implements
         tempLocation.setLongitude(longitude);
         tempLocation.setLatitude(latitude);
         return tempLocation;
-    }
-
-    @Override public void onPOIsReceived(HashMap<String,POI> POIs) {
-        StateManager.getInstance().setPOIs(POIs);
-        Log.d(TAG, "onPOIsReceived: Got " + POIs.size() + " POIs");
-
-        // Now get all user stamps
-        if (StateManager.getInstance().getStamps() == null) {
-            try {
-                mStampsRequester.GetUserStamps();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     *  Retrieves an initial cache of the Stamps list
-     *
-     * @param Stamps List of Stamps stored under the user collection
-     */
-    @Override public void onStampsReceived(ArrayList<Stamp> Stamps) {
-        StateManager.getInstance().setStamps(Stamps);
-        Log.d(TAG, "onStampsReceived: Got " + Stamps.size() + " stamps");
-
-        //Now Stamp each POI
-        for (Stamp stamp: StateManager.getInstance().getStamps()
-             ) {
-            StateManager.getInstance().getPOIs().get(stamp.getPoiId()).setStamp(stamp);
-        }
-
-        StateManager.getInstance().setPOIsHaveBeenStamped(true);
-
     }
 }
 

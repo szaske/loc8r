@@ -66,4 +66,36 @@ public class StampsRequester {
                 }
             });
     }
+
+    public void GetUserStampsByCollection(String collection) throws IOException {
+        Log.d("STZ", "GetAllPOI method started ");
+        db.collection("users")
+                .document(user.getUid())
+                .collection("stamps")
+                .whereEqualTo("collection",collection)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("STZ", "Getting POIs task completed successfully, now converting to POI class ");
+                            ArrayList<Stamp> results = new ArrayList<>();
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Stamp sentStamp = document.toObject(Stamp.class);
+                                results.add(sentStamp);
+                                // Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+
+                            // Send results back to host activity
+                            mResponseListener.onStampsReceived(results);
+                            Log.d("STZ", "onComplete: ");
+
+                        } else {
+                            Log.d(TAG, "Error getting POIs. ", task.getException());
+                        }
+                    }
+                });
+    }
+
+
 }

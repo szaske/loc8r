@@ -2,18 +2,25 @@ package com.loc8r.seattle.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.adapters.POI_Adapter;
 import com.loc8r.seattle.interfaces.OnPOIClickListener;
 import com.loc8r.seattle.models.POI;
+import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.utils.Constants;
+import com.loc8r.seattle.utils.CurvedView;
 import com.loc8r.seattle.utils.POIsRequester;
+import com.loc8r.seattle.utils.StampsRequester;
 
 import org.parceler.Parcels;
 
@@ -22,7 +29,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CollectionListActivity extends GMS_Activity implements
-        POIsRequester.FireBasePOIResponse,
+        POIsRequester.FireBasePOICollectionResponse,
+        StampsRequester.FireBaseStampResponse,
         OnPOIClickListener {
     private static final String TAG = CollectionListActivity.class.getSimpleName();
     private RecyclerView mRecyclerView;
@@ -30,9 +38,12 @@ public class CollectionListActivity extends GMS_Activity implements
     private RecyclerView.LayoutManager mLayoutManager;
 
     private ArrayList<POI> mListOfPOIsInCollection;
+    public ArrayList<Stamp> mListOfStamps;
     private String mSelectedCollection;
-    // public ArrayList<Collection> mListOfCollections;
+
     private POIsRequester mPOIsRequester; //helper class
+    private StampsRequester mStampsRequester;
+    private ConstraintLayout v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +70,8 @@ public class CollectionListActivity extends GMS_Activity implements
         // of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
+        //mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mListOfPOIsInCollection = new ArrayList<>(); // Create an empty list for the recyclerView
@@ -67,10 +79,9 @@ public class CollectionListActivity extends GMS_Activity implements
         mAdapter = new POI_Adapter(mListOfPOIsInCollection, this);
         mRecyclerView.setAdapter(mAdapter);
 
-        // mRecyclerView.setAdapter(new Collections_Adapter(POIsRequester.getInstance(getApplicationContext()).mListOfCollections, this));
-
         //This is the object that can fetch more content
-        mPOIsRequester = new POIsRequester(this);
+        mPOIsRequester = new POIsRequester();
+        mStampsRequester = new StampsRequester(this);
     }
 
     @Override
@@ -86,7 +97,7 @@ public class CollectionListActivity extends GMS_Activity implements
     private void requestPOICollections() {
 
         try {
-            mPOIsRequester.GetPoiCollection(mSelectedCollection);
+            mPOIsRequester.GetPoiByCollection(this,mSelectedCollection);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -106,23 +117,6 @@ public class CollectionListActivity extends GMS_Activity implements
         overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
     }
 
-    public void onPOIsReceived(final HashMap<String,POI> POIsSet) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                //Convert to an Arraylist because we use Arraylist location as key to finding it
-                ArrayList<POI> finalResults = new ArrayList<>();
-                finalResults.addAll(POIsSet.values());
-
-                mListOfPOIsInCollection.addAll(finalResults); // This adds a new item to the list
-
-                mAdapter.notifyDataSetChanged();  //This tells the adapter to reset and redraw
-            }
-        });
-
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -132,6 +126,44 @@ public class CollectionListActivity extends GMS_Activity implements
             return true;
         }
         return false;
+    }
+
+    @Override public void onPOIsCollectionReceived(final ArrayList<POI> POIsSent, final String collection) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                mListOfPOIsInCollection.clear(); //not sure clear is needed, but being safe
+                mListOfPOIsInCollection.addAll(POIsSent); // This adds a new item to the list
+
+                // Now get Stamps for this collection
+                try {
+                    mStampsRequester.GetUserStampsByCollection(collection);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    public void onStampsReceived(final ArrayList<Stamp> Stamps) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (Stamp stamp: Stamps) {
+                    // Works because I overrode equals in POI model
+                    for (POI poi: mListOfPOIsInCollection) {
+                        if(poi.getId().equals(stamp.getPoiId())){
+                            poi.setStamp(stamp);
+                            break;
+                        }
+                    }
+                }
+                mAdapter.notifyDataSetChanged();  //This tells the recyclerview adapter to reset and redraw
+            }
+        });
+
     }
 
 }
