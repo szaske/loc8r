@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
@@ -83,7 +84,9 @@ public class POIsRequester {
         mPOICollectionResponseListener = (FireBasePOICollectionResponse) listeningActivity;
 
         Log.d("STZ", "Get POI Collection method started ");
-        db.collection("pois").whereEqualTo("collection", collection)
+        db.collection("pois")
+                .whereEqualTo("collection", collection)
+                .orderBy("collectionPosition", Query.Direction.ASCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
