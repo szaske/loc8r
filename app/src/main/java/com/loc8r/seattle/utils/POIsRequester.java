@@ -30,11 +30,11 @@ import java.util.TreeSet;
 public class POIsRequester {
 
     public interface FireBasePOIResponse {
-        void onPOIsReceived(HashMap<String,POI> POIs);
+        void onPOIsReceived(ArrayList<POI> POIs);
     }
 
     public interface FireBasePOICollectionResponse {
-        void onPOIsCollectionReceived(HashMap<String,POI> POIs, String collection);
+        void onPOIsCollectionReceived(ArrayList<POI> POIs, String collection);
     }
 
     private static final String TAG = POIsRequester.class.getSimpleName();
@@ -60,11 +60,11 @@ public class POIsRequester {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             Log.d("STZ", "Getting POIs task completed successfully, now converting to POI class ");
-                            HashMap<String, POI> results = new HashMap<>();
+                            ArrayList<POI> results = new ArrayList<>();
                             for (DocumentSnapshot document : task.getResult()) {
                                 POI sentPOI = document.toObject(POI.class);
                                 sentPOI.setId(document.getId());
-                                results.put(sentPOI.getId(),sentPOI);
+                                results.add(sentPOI);
                                 // Log.d(TAG, document.getId() + " => " + document.getData());
                             }
 
@@ -94,12 +94,11 @@ public class POIsRequester {
                         if (task.isSuccessful()) {
                             Log.d("STZ", "Getting POIs task completed successfully, now converting to POI class ");
 
-                            // ArrayList<POI> results = new ArrayList<>();
-                            HashMap<String, POI> results = new HashMap<>();
+                            ArrayList<POI> results = new ArrayList<>();
                             for (DocumentSnapshot document : task.getResult()) {
                                 POI sentPOI = document.toObject(POI.class);
                                 //sentPOI.setStamp();//Set Stamp if one exists
-                                results.put(sentPOI.getId(),sentPOI);
+                                results.add(sentPOI);
                                 // Log.d(TAG, document.getId() + " => " + document.getData());
                             }
 

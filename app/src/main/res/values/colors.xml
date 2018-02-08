@@ -26,7 +26,7 @@
     <color name="colorAccent_green">#78f645</color>
     <color name="navigationRouteLine_green">#3BC802</color>
     <color name="cardHourAndPhoneTextColor_green">#000000</color>
-    <color name="white">#FFFFFF</color>
+    <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="grey200">#cecece</color>
 </resources>

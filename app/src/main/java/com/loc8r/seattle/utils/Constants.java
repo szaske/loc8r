@@ -14,4 +14,6 @@ public class Constants {
     public static final String PREFERENCES_PREVIOUS_USER_KEY = "previousUser";
     public static final String SELECTED_COLLECTION_KEY = "SELECTED_COLLECTION_KEY";
     public static final String FIREBASE_QUERY_INDEX = "index";
+    public static final int DISTANCE_TO_SCAN_MARKERS = 800;
+
 }
