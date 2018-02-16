@@ -1,20 +1,16 @@
 package com.loc8r.seattle.utils;
 
 import android.location.Location;
-
-import com.google.firebase.auth.FirebaseUser;
+import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
-import com.loc8r.seattle.models.Stamp;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class StateManager {
     private static final StateManager ourInstance = new StateManager();
     private Location currentLocation; // The users current location
-    // private HashMap<String,POI> mPOIs;
     private ArrayList<POI> mPOIs;
-    private boolean mPOIsHaveBeenStamped;
+    private ArrayList<Collection> mCollections;
 
     public static StateManager getInstance() {
         return ourInstance;
@@ -22,6 +18,7 @@ public class StateManager {
 
     private StateManager() {
         mPOIs = new ArrayList<>();
+        mCollections = new ArrayList<>();
     }
 
     public Location getCurrentLocation() {
@@ -32,19 +29,14 @@ public class StateManager {
         this.currentLocation = currentLocation;
     }
 
-//    public ArrayList<Stamp> getStamps() { return mStamps; }
-//    public void setStamps(ArrayList<Stamp> stamps) {
-//        this.mStamps = stamps;
-//    }
-
     public ArrayList<POI> getPOIs() { return mPOIs;}
     public void setPOIs(ArrayList<POI> pois){ this.mPOIs = pois; }
 
-    public void setPOIsHaveBeenStamped(boolean stampStatus) {
-        this.mPOIsHaveBeenStamped = stampStatus;
+    public ArrayList<Collection> getCollections() {
+        return mCollections;
     }
 
-    private boolean POIsStamped(){
-        return mPOIsHaveBeenStamped;
+    public void setCollections(ArrayList<Collection> mCollections) {
+        this.mCollections = mCollections;
     }
 }

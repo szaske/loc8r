@@ -16,6 +16,7 @@ import org.parceler.Parcel;
 public class POI {
     String id;
     String name;
+    int release;
     Double latitude;
     Double longitude;
     String description;
@@ -33,6 +34,7 @@ public class POI {
 
     public POI(String id,
                String name,
+               int release,
                Double latitude,
                Double longitude,
                String description,
@@ -42,6 +44,7 @@ public class POI {
                String stampText) {
         this.id = id;
         this.name = name;
+        this.release = release;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
@@ -105,6 +108,7 @@ public class POI {
     // Getters
     public String getId() { return id; }
     public String getName() { return name; }
+    public int getRelease() { return release; }
     public Double getLatitude() { return latitude; }
     public Double getLongitude() { return longitude; }
     public String getDescription() { return description; }
@@ -119,6 +123,7 @@ public class POI {
     public void setName(String name) {
         this.name = name;
     }
+    public void setRelease(int release) { this.release = release; }
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }

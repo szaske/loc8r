@@ -30,8 +30,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
+import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
+import com.loc8r.seattle.utils.CollectionsRequester;
 import com.loc8r.seattle.utils.Constants;
 import com.loc8r.seattle.utils.POIsRequester;
 import com.loc8r.seattle.utils.StampsRequester;
@@ -47,6 +49,7 @@ public class GMS_Activity extends BaseActivity implements
     private static final int LOCATION_REQUEST_CODE = 420;
     private static final String TAG = GMS_Activity.class.getSimpleName();
 
+    private CollectionsRequester mCollectionRequester;
     private GoogleApiClient mGoogleApiClient;
     private AlertDialog mLocationEnabledDialog;
     private com.google.android.gms.location.LocationListener mPoiLocationListener;
@@ -84,6 +87,7 @@ public class GMS_Activity extends BaseActivity implements
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         initGoogleLocationServices();
     }
 
@@ -405,12 +409,6 @@ public class GMS_Activity extends BaseActivity implements
 
     }
 
-    // Create a location given a Lat & Long
-    public Location CreateLocation(Double latitude, Double longitude){
-        Location tempLocation = new Location("");
-        tempLocation.setLongitude(longitude);
-        tempLocation.setLatitude(latitude);
-        return tempLocation;
-    }
+
 }
 

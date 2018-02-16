@@ -57,6 +57,7 @@
     <!--Passport Activity Strings-->
     <string name="title_activity_passport">Passport Collections</string>
     <string name="title_activity_management">ManagementActivity</string>
+    <string name="title_activity_add_poi">AddPOIActivity</string>
 
 
 </resources>
