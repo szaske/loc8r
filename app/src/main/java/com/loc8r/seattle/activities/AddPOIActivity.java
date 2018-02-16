@@ -62,7 +62,7 @@ public class AddPOIActivity extends GMS_Activity implements
     private Location mCurrentLocation;
     private CollectionsRequester mCollectionRequester;
     private ArrayList<Collection> mCollectionsAll;
-    //private POI newPOI;
+    private POI newPOI;
     private String mCurrentPhotoPath;
     private UploadTask uploadTask;
     private FirebaseFirestore db;
@@ -78,6 +78,36 @@ public class AddPOIActivity extends GMS_Activity implements
     @BindView(R.id.addpoi_lonTV) TextView mLongitudeTV;
     @BindView(R.id.addpoi_collectionsSPIN) Spinner mCollectionsSpinner;
     @BindView(R.id.toolbar) Toolbar toolbar;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_poi);
+
+        // Bind all views at once.
+        ButterKnife.bind(this);
+
+        //Create our to be saved POI
+        newPOI = new POI();
+
+        // Disable this editText as the position is set
+        // programmatically depending on the collection selected
+        mPOICollectionPosition.setKeyListener(null);
+
+        setSupportActionBar(toolbar);
+
+        // Access a Cloud Firestore instance from your Activity
+        db = FirebaseFirestore.getInstance();
+
+        // Not sure.  This enables us to get the data from the imageview so we can resize it to fill the view
+        mImageThumbnail.setDrawingCacheEnabled(true);
+        mImageThumbnail.buildDrawingCache();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mCollectionRequester = new CollectionsRequester(this);
+
+    }
 
     /**
      *  Click Listeners
@@ -100,62 +130,6 @@ public class AddPOIActivity extends GMS_Activity implements
 
     }
 
-//    public POI(String id,
-//               String name,
-//               int release,
-//               Double latitude,
-//               Double longitude,
-//               String description,
-//               String img_url,
-//               String collection,
-//               int collectionPosition,
-//               String stampText
-
-
-
-    private void CreateNewPoi() {
-        // CollectionReference poisCollectionRef = db.collection("pois");
-
-        String name = mPOIName.getText().toString();
-        int release = 999999; // Releases 999999 are beta POIs that are not yet live on the service
-        Double lat = mCurrentLocation.getLatitude();
-        Double lon = mCurrentLocation.getLongitude();
-        String desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-        String imgurl = mPOIImgUrlTV.getText().toString();
-        String col = mCollectionsSpinner.getSelectedItem().toString();
-        int colPos = Integer.parseInt(mPOICollectionPosition.getText().toString());
-        String stampText = col.substring(0, 2) + "_" + name.substring(0, 2);
-
-        // Needs to come after colPos and collection
-        String id = col.substring(0, 2) + String.format("%03d", colPos);
-
-        POI newPOI = new POI(id,
-                name,
-                release,
-                lat,
-                lon,
-                desc,
-                imgurl,
-                col,
-                colPos,
-                stampText);
-
-        db.collection("cities").document(id)
-                .set(newPOI)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                    }
-                });
-    }
-
     @OnClick(R.id.addpoi_capturePhotoBTN)
     void onCapturePhotoButtonClicked() {
         Log.d(TAG, "Capture button pressed ");
@@ -168,50 +142,39 @@ public class AddPOIActivity extends GMS_Activity implements
         uploadPhotoFileToFireStore();
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_poi);
+    /**
+     *  Creates and Saves a POI from UI to Firestore
+     */
+    private void CreateNewPoi() {
+        newPOI.setName(mPOIName.getText().toString());
+        newPOI.setRelease(999999); // Releases 999999 are beta POIs that are not yet live on the service
+        newPOI.setLatitude(mCurrentLocation.getLatitude());
+        newPOI.setLongitude(mCurrentLocation.getLongitude());
+        newPOI.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+        newPOI.setImg_url(mPOIImgUrlTV.getText().toString());
+        newPOI.setCollection(mCollectionsSpinner.getSelectedItem().toString());
+        newPOI.setCollectionPosition(Integer.parseInt(mPOICollectionPosition.getText().toString()));
+        newPOI.setStampText(mCollectionsSpinner.getSelectedItem().toString().substring(0, 3) + "_" + mPOIName.getText().toString().substring(0, 3));
 
-        // Bind all views at once.
-        ButterKnife.bind(this);
+        // Needs to come after colPos and collection
+        final String id = mCollectionsSpinner.getSelectedItem().toString().substring(0, 3) + String.format("%03d", Integer.parseInt(mPOICollectionPosition.getText().toString()));
 
-        // Disable this editText as the position is set
-        // programmatically depending on the collection selected
-        mPOICollectionPosition.setKeyListener(null);
-
-        setSupportActionBar(toolbar);
-
-        // Access a Cloud Firestore instance from your Activity
-        db = FirebaseFirestore.getInstance();
-
-        //
-        CollectionReference poisCollectionRef = db.collection("pois");
-
-//        mCapturePhotoBTN.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-
-        // Not sure.  This enables us to get the data from the imageview so we can resize it to fill the view
-        mImageThumbnail.setDrawingCacheEnabled(true);
-        mImageThumbnail.buildDrawingCache();
-
-//        //Create upload button
-//        mUploadPhotoBTN.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mCollectionRequester = new CollectionsRequester(this);
-
+        db.collection("pois").document(id)
+                .set(newPOI)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "POI:" + id + " successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
     }
+
 
     /**
      *  Event fires after OnCreate
@@ -263,12 +226,24 @@ public class AddPOIActivity extends GMS_Activity implements
      * @throws IOException
      */
     private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "SPTEMP_" + timeStamp + "_";
+
+        // Find the storage folder
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        //Delete any previous pictures
+        // File dir = new File(Environment.getExternalStorageDirectory()+"Dir_name_here");
+        if (storageDir.isDirectory())
+        {
+            String[] children = storageDir.list();
+            for (int i = 0; i < children.length; i++)
+            {
+                new File(storageDir, children[i]).delete();
+            }
+        }
+
+        // Create an image file name
         File image = File.createTempFile(
-                imageFileName,  /* prefix */
+                newPOI.getId(),  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
@@ -331,8 +306,6 @@ public class AddPOIActivity extends GMS_Activity implements
                             for (DocumentSnapshot document : task.getResult()) {
                                 lastPOI = document.toObject(POI.class);
                                 lastPOI.setId(document.getId());
-//                                results.add(sentPOI);
-                                // Log.d(TAG, document.getId() + " => " + document.getData());
                             }
 
                             // Send results back to host activity
@@ -345,10 +318,6 @@ public class AddPOIActivity extends GMS_Activity implements
                         }
                     }
                 });
-        // [END get_multiple_all]
-
-
-        //mPOICollectionPosition.setText("23");
     }
 
     /**
@@ -384,12 +353,12 @@ public class AddPOIActivity extends GMS_Activity implements
                 // images are stored in
                 // mnt/sdcard/Android/data/com.loc8r.seattle/files/pictures
 
-                takePictureIntent.putExtra("crop", "true");
-                takePictureIntent.putExtra("outputX",600);
-                takePictureIntent.putExtra("outputY", 600);
-                takePictureIntent.putExtra("aspectX", 0);
-                takePictureIntent.putExtra("aspectY", 0);
-                takePictureIntent.putExtra("scale", true);
+//                takePictureIntent.putExtra("crop", "true");
+//                takePictureIntent.putExtra("outputX",600);
+//                takePictureIntent.putExtra("outputY", 600);
+//                takePictureIntent.putExtra("aspectX", 0);
+//                takePictureIntent.putExtra("aspectY", 0);
+//                takePictureIntent.putExtra("scale", true);
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
