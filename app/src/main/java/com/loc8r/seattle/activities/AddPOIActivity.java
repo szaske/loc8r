@@ -10,6 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,8 +26,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -40,9 +40,11 @@ import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.CollectionsRequester;
 import com.loc8r.seattle.utils.StateManager;
 
+import org.parceler.Parcel;
+import org.parceler.Parcels;
+
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,7 +63,7 @@ public class AddPOIActivity extends GMS_Activity implements
 
     private Location mCurrentLocation;
     private CollectionsRequester mCollectionRequester;
-    private ArrayList<Collection> mCollectionsAll;
+    //private ArrayList<Collection> mCollectionsAll;
     private POI newPOI;
     private String mCurrentPhotoPath;
     private UploadTask uploadTask;
@@ -70,9 +72,10 @@ public class AddPOIActivity extends GMS_Activity implements
     @BindView(R.id.addpoi_capturePhotoBTN) Button mCapturePhotoBTN;
     @BindView(R.id.addpoi_uploadPhotoBTN) Button mUploadPhotoBTN;
     @BindView(R.id.addpoi_CreatePoiBTN) Button mCreatePoiBTN;
-    @BindView(R.id.addpoi_nameET) EditText mPOIName;
-    @BindView(R.id.addpoi_positionET) EditText mPOICollectionPosition;
-    @BindView(R.id.addpoi_imgUrlET) EditText mPOIImgUrlTV;
+    @BindView(R.id.addpoi_idTV) TextView mPOIidTV;
+    @BindView(R.id.addpoi_nameET) EditText mPOINameET;
+    @BindView(R.id.addpoi_positionET) EditText mPOICollectionPositionET;
+    @BindView(R.id.addpoi_imgUrlET) EditText mPOIImgUrlET;
     @BindView(R.id.addpoi_camThumbnailIV) ImageView mImageThumbnail;
     @BindView(R.id.addpoi_latTV) TextView mLatitudeTV;
     @BindView(R.id.addpoi_lonTV) TextView mLongitudeTV;
@@ -92,9 +95,10 @@ public class AddPOIActivity extends GMS_Activity implements
 
         // Disable this editText as the position is set
         // programmatically depending on the collection selected
-        mPOICollectionPosition.setKeyListener(null);
+        mPOICollectionPositionET.setKeyListener(null);
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Access a Cloud Firestore instance from your Activity
         db = FirebaseFirestore.getInstance();
@@ -103,9 +107,27 @@ public class AddPOIActivity extends GMS_Activity implements
         mImageThumbnail.setDrawingCacheEnabled(true);
         mImageThumbnail.buildDrawingCache();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         mCollectionRequester = new CollectionsRequester(this);
+
+
+
+        // Get collection list if we don't have it already
+        if(StateManager.getInstance().getCollections().size()==0){
+            try {
+                mCollectionRequester.GetAllCollections();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            initializeSpinner();
+        }
+
+        // If this is not the first time, grab state of the various views
+        if (savedInstanceState != null) {
+            //Reset spinner to previous location
+            mCollectionsSpinner.setSelection(savedInstanceState.getInt("mCollectionsSpinner"));
+        }
+
 
     }
 
@@ -118,8 +140,8 @@ public class AddPOIActivity extends GMS_Activity implements
         Log.d(TAG, "onCreatePoiButtonClicked:  Fired");
 
             // Some basic form validation.  Perf is 227 for 500,000 runs
-            if(!"".equals(mPOIName.getText().toString()) &&
-                    !"".equals(mPOIImgUrlTV.getText().toString())){
+            if(!"".equals(mPOINameET.getText().toString()) &&
+                    !"".equals(mPOIImgUrlET.getText().toString())){
                 // Form is correct we can continue
                 CreateNewPoi();
                 Log.d(TAG, "We can create a POI now");
@@ -146,25 +168,25 @@ public class AddPOIActivity extends GMS_Activity implements
      *  Creates and Saves a POI from UI to Firestore
      */
     private void CreateNewPoi() {
-        newPOI.setName(mPOIName.getText().toString());
+        newPOI.setName(mPOINameET.getText().toString());
         newPOI.setRelease(999999); // Releases 999999 are beta POIs that are not yet live on the service
         newPOI.setLatitude(mCurrentLocation.getLatitude());
         newPOI.setLongitude(mCurrentLocation.getLongitude());
         newPOI.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
-        newPOI.setImg_url(mPOIImgUrlTV.getText().toString());
+        newPOI.setImg_url(mPOIImgUrlET.getText().toString());
         newPOI.setCollection(mCollectionsSpinner.getSelectedItem().toString());
-        newPOI.setCollectionPosition(Integer.parseInt(mPOICollectionPosition.getText().toString()));
-        newPOI.setStampText(mCollectionsSpinner.getSelectedItem().toString().substring(0, 3) + "_" + mPOIName.getText().toString().substring(0, 3));
+        newPOI.setCollectionPosition(Integer.parseInt(mPOICollectionPositionET.getText().toString()));
+        newPOI.setStampText(mCollectionsSpinner.getSelectedItem().toString().substring(0, 3) + "_" + mPOINameET.getText().toString().substring(0, 3));
 
         // Needs to come after colPos and collection
-        final String id = mCollectionsSpinner.getSelectedItem().toString().substring(0, 3) + String.format("%03d", Integer.parseInt(mPOICollectionPosition.getText().toString()));
+        newPOI.setId(mCollectionsSpinner.getSelectedItem().toString().substring(0, 3) + String.format("%03d", Integer.parseInt(mPOICollectionPositionET.getText().toString())));
 
-        db.collection("pois").document(id)
+        db.collection("pois").document(newPOI.getId())
                 .set(newPOI)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "POI:" + id + " successfully written!");
+                        Log.d(TAG, "POI:" + newPOI.getId() + " successfully written!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -175,23 +197,6 @@ public class AddPOIActivity extends GMS_Activity implements
                 });
     }
 
-
-    /**
-     *  Event fires after OnCreate
-     *
-     */
-    @Override
-    protected void onStart() {
-
-        if(StateManager.getInstance().getCollections().size()==0){
-            try {
-                mCollectionRequester.GetAllCollections();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        super.onStart();
-    }
 
     // Per https://stackoverflow.com/questions/12725989/how-to-capture-image-thumbnail-and-save-file-in-a-custom-folder-in-android
     // since we're saving the file we don't unfortunately get the thumbnail data back from the intent, so we have to
@@ -242,8 +247,17 @@ public class AddPOIActivity extends GMS_Activity implements
         }
 
         // Create an image file name
+        String imageFileName = "";
+
+        // Give it a name
+        if(!mPOIidTV.getText().toString().equals("")){
+            imageFileName = mPOIidTV.getText().toString();
+        } else {
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            imageFileName = "SPTEMP_" + timeStamp;
+        }
         File image = File.createTempFile(
-                newPOI.getId(),  /* prefix */
+                imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
@@ -261,7 +275,7 @@ public class AddPOIActivity extends GMS_Activity implements
         
         // Add each collection to the spinner arraym
         ArrayList<String> spinnerList = new ArrayList<>();
-        for (Collection collectionName: mCollectionsAll) {
+        for (Collection collectionName: StateManager.getInstance().getCollections()) {
             spinnerList.add(collectionName.getName());
         }
 
@@ -283,15 +297,17 @@ public class AddPOIActivity extends GMS_Activity implements
      * @param pos
      * @param id
      */
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
+    public void onItemSelected(final AdapterView<?> parent, View view,
+                               final int pos, long id) {
         // An item was selected. 
         // You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
         Log.d(TAG, "onItemSelected: The Item selected was " + parent.getItemAtPosition(pos));
 
+        final String collect = parent.getItemAtPosition(pos).toString();
+
         db.collection("pois")
-                .whereEqualTo("collection", parent.getItemAtPosition(pos))
+                .whereEqualTo("collection", collect)
                 .orderBy("collectionPosition", Query.Direction.DESCENDING)
                 .limit(1)
                 .get()
@@ -311,7 +327,10 @@ public class AddPOIActivity extends GMS_Activity implements
                             // Send results back to host activity
                             // mResponseListener.onPOIsReceived(results);
                             Log.d("STZ", "the next entry in collection [" + lastPOI.getCollection() + "] should be #" + (lastPOI.getCollectionPosition()+1));
-                            mPOICollectionPosition.setText(String.valueOf(lastPOI.getCollectionPosition()+1));
+                            mPOICollectionPositionET.setText(String.valueOf(lastPOI.getCollectionPosition()+1));
+
+                            // Set ID shown as well
+                            mPOIidTV.setText(collect.substring(0,3).toUpperCase()+String.format("%03d", lastPOI.getCollectionPosition()+1));
 
                         } else {
                             Log.d(TAG, "Error getting POIs. ", task.getException());
@@ -393,7 +412,7 @@ public class AddPOIActivity extends GMS_Activity implements
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
                 Log.d(TAG, "File uploaded successfully.  URL is: " + downloadUrl);
-                mPOIImgUrlTV.setText(downloadUrl.toString());
+                mPOIImgUrlET.setText(downloadUrl.toString());
 
             }
         });
@@ -434,9 +453,22 @@ public class AddPOIActivity extends GMS_Activity implements
 
 
     @Override public void onCollectionsListReceived(ArrayList<Collection> collections) {
-        mCollectionsAll = collections;
+        StateManager.getInstance().setCollections(collections);
         initializeSpinner();
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+
+        //savedInstanceState.putBoolean("MyBoolean", true);
+        //savedInstanceState.putParcelable("mCollectionsAll", Parcels.wrap(mCollectionsAll));
+        savedInstanceState.putInt("mCollectionsSpinner", mCollectionsSpinner.getSelectedItemPosition());
+        //savedInstanceState.putString("MyString", "Welcome back to Android");
     }
 
 }
