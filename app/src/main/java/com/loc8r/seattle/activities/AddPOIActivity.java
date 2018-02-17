@@ -126,6 +126,14 @@ public class AddPOIActivity extends GMS_Activity implements
         if (savedInstanceState != null) {
             //Reset spinner to previous location
             mCollectionsSpinner.setSelection(savedInstanceState.getInt("mCollectionsSpinner"));
+
+            // reset thumbnail
+            if(savedInstanceState.getString("mCurrentPhotoPath")!=null){
+                mCurrentPhotoPath = savedInstanceState.getString("mCurrentPhotoPath");
+                File imageFile = new File(mCurrentPhotoPath);
+                mImageThumbnail.setImageURI(Uri.fromFile(imageFile));
+            }
+
         }
 
 
@@ -219,8 +227,6 @@ public class AddPOIActivity extends GMS_Activity implements
             //Create a thumbnail
             File imageFile = new File(mCurrentPhotoPath);
             mImageThumbnail.setImageURI(Uri.fromFile(imageFile));
-
-            // uploadCapturedPhoto((Bitmap) extras.get("data"));
         }
     }
 
@@ -468,7 +474,10 @@ public class AddPOIActivity extends GMS_Activity implements
         //savedInstanceState.putBoolean("MyBoolean", true);
         //savedInstanceState.putParcelable("mCollectionsAll", Parcels.wrap(mCollectionsAll));
         savedInstanceState.putInt("mCollectionsSpinner", mCollectionsSpinner.getSelectedItemPosition());
-        //savedInstanceState.putString("MyString", "Welcome back to Android");
+        if(mCurrentPhotoPath!=null){
+            savedInstanceState.putString("mCurrentPhotoPath", mCurrentPhotoPath);
+        }
+
     }
 
 }

@@ -59,30 +59,7 @@ public class MainListActivity extends GMS_Activity {
             }
         });
 
-//        for(POI poi :listOfAllPOIs()){
-//            Log.d(TAG, "onCreate: POI list included"+ poi.toString());
-//        }
-
     }
-
-
-// Removed.  This code can be used as the click event method for a recyclerview
-
-//    private void clicked(ListItem item){
-//        switch (item.getTitle()) {
-//            case "Explore Seattle":
-//                Log.d(TAG, "Explore button pressed ");
-//                Intent intent = new Intent(MainListActivity.this, NearbyPOIActivity.class);
-//                startActivity(intent);
-//                break;
-//            case "My Passport":
-//                Toast.makeText(getApplicationContext(), "Item " + item.getTitle() + " Clicked", Toast.LENGTH_LONG).show();
-//                break;
-//            default:
-//                Toast.makeText(getApplicationContext(), "Item " + item.getTitle() + " Clicked", Toast.LENGTH_LONG).show();
-//                break;
-//        }
-//    }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
