@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">loc8r</string>
+    <string name="app_name">Seattle Passport</string>
 
     <!--Font strings-->
     <string name="font_comfortaa_light" translatable="false">fonts/Comfortaa-Light.ttf</string>
@@ -36,10 +36,11 @@
     <string name="search">Search</string>
     <string name="filter">Filter</string>
     <string name="log_out">Log out</string>
+    <string name="admin">Admin Abilities</string>
     <string name="log_out_message">Are you sure you want to log out of Seattle Passport?</string>
     <string name="cancel">Cancel</string>
 
-    NearbyPOIActivityvity strings -->
+    <!-- NearbyPOIActivity strings -->
     <string name="welcome_back_message">Welcome back,&#160;</string>
 
     <!--Recyclerview strings-->
