@@ -54,56 +54,22 @@ public class MainListActivity extends GMS_Activity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Settings button pressed ");
-                Intent intent = new Intent(MainListActivity.this, ManagementActivity.class);
-                startActivity(intent);
             }
         });
-
-//        for(POI poi :listOfAllPOIs()){
-//            Log.d(TAG, "onCreate: POI list included"+ poi.toString());
-//        }
-
-    }
-
-
-// Removed.  This code can be used as the click event method for a recyclerview
-
-//    private void clicked(ListItem item){
-//        switch (item.getTitle()) {
-//            case "Explore Seattle":
-//                Log.d(TAG, "Explore button pressed ");
-//                Intent intent = new Intent(MainListActivity.this, NearbyPOIActivity.class);
-//                startActivity(intent);
-//                break;
-//            case "My Passport":
-//                Toast.makeText(getApplicationContext(), "Item " + item.getTitle() + " Clicked", Toast.LENGTH_LONG).show();
-//                break;
-//            default:
-//                Toast.makeText(getApplicationContext(), "Item " + item.getTitle() + " Clicked", Toast.LENGTH_LONG).show();
-//                break;
-//        }
-//    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        MenuItem mapItem = menu.findItem(R.id.menu_map);
-
-        return super.onPrepareOptionsMenu(menu);
     }
 
 //    @Override
-//    public boolean onCreateOptionsMenu(Menu menu)
+//    public boolean onPrepareOptionsMenu(Menu menu)
 //    {
-//        super.onCreateOptionsMenu(menu);
-//        getMenuInflater().inflate(R.menu.options_menu, menu);
-//        return true;
+//        MenuItem mapItem = menu.findItem(R.id.menu_map);
+//
+//        return super.onPrepareOptionsMenu(menu);
 //    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
+        inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -112,14 +78,13 @@ public class MainListActivity extends GMS_Activity {
     {
         switch (item.getItemId())
         {
-            case R.id.menu_filter:
-                //showFilterDialog();
-                break;
-            case R.id.menu_map:
-                //openMap();
-                break;
             case R.id.menu_log_out:
                 showLogoutDialog(this);
+                break;
+            case R.id.menu_admin:
+                Log.d(TAG, "Admin item selected");
+                Intent intent = new Intent(MainListActivity.this, ManagementActivity.class);
+                startActivity(intent);
                 break;
         }
 

@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.loc8r.seattle.models.POI;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
@@ -41,7 +43,9 @@ public class TestPOIMakerUtil {
             "Sam's",
             "World Famous",
             "Steve's ",
-            "The Best"
+            "The Best",
+            "Seattle's",
+            "Wallingford"
     };
 
     private static final String[] NAME_SECOND_WORDS = {
@@ -52,7 +56,10 @@ public class TestPOIMakerUtil {
             "Eatery",
             "Drive Thru",
             "Diner",
-            "Mustache"
+            "Mustache",
+            "Drive-in",
+            "Burgers",
+            "Lounge"
     };
 
     private static final String[] COLLECTIONS = {
@@ -77,24 +84,43 @@ public class TestPOIMakerUtil {
 
     private static final String DESC = "2320 NW Market St,Seattle, WA 98107 - This is my filler text. It's designed to go to 400 characters in length. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit";
 
-
     /**
      * Create a random Restaurant POJO.
      */
     public static POI getRandom() {
-        POI poi = new POI();
+
         Random random = new Random();
 
-        poi.setName(getRandomName(random));
-        poi.setLatitude(getRandomLatitude());
-        poi.setLongitude(getRandomLongitude());
-        poi.setDescription(DESC);
-        poi.setImg_url(getRandomString(IMG_URLS,random));
-        poi.setCollection(getRandomString(COLLECTIONS,random));
-        poi.setStampText(poi.getCollection().substring(0,2).toUpperCase() + "_" + poi.getName().substring(0,2).toUpperCase());
+        String nam = getRandomName(random);
+        String col = getRandomString(COLLECTIONS,random);
+
+        POI poi = new POI("0",
+                nam,
+                makeRelease(),
+                getRandomLatitude(),
+                getRandomLongitude(),
+                DESC,
+                getRandomString(IMG_URLS,random),
+                col,
+                0,
+                col.substring(0,2).toUpperCase() + "_" + nam.substring(0,2).toUpperCase());
+        // poi.setName(getRandomName(random));
+        // poi.setRelease(makeRelease());
+        // poi.setLatitude(getRandomLatitude());
+        // poi.setLongitude(getRandomLongitude());
+        // poi.setDescription(DESC);
+        // poi.setImg_url(getRandomString(IMG_URLS,random));
+        // poi.setCollection(getRandomString(COLLECTIONS,random));
+        // poi.setStampText(poi.getCollection().substring(0,2).toUpperCase() + "_" + poi.getName().substring(0,2).toUpperCase());
         //unfortunately not an easy way to set collectionPosition, so setting it in loop instead.
 
         return poi;
+    }
+
+    private static int makeRelease(){
+        //Get the current timestamp
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd");
+        return Integer.valueOf(simpleDateFormat.format(new Date()));
     }
 
     private static String getRandomName(Random random) {

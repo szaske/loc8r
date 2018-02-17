@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.loc8r.seattle.activities.AddPOIActivity"
+    tools:showIn="@layout/activity_add_poi">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="32dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline4Edits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="111dp" />
+
+    <TextView
+        android:id="@+id/header_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="ID:"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/addpoi_idTV"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toTopOf="@+id/addpoi_idTV" />
+
+    <TextView
+        android:id="@+id/addpoi_idTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="STZ001" />
+
+
+    <EditText
+        android:id="@+id/addpoi_nameET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Name"
+        android:imeOptions="actionDone"
+        android:inputType="textPersonName"
+        android:textColorHint="@color/white_50_alpha"
+        app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toBottomOf="@+id/addpoi_idTV" />
+
+    <TextView
+        android:id="@+id/header_nameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:text="NAME:"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toTopOf="@+id/addpoi_nameET" />
+
+    <Spinner
+        android:id="@+id/addpoi_collectionsSPIN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:minWidth="120dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toBottomOf="@+id/addpoi_nameET" />
+
+    <TextView
+        android:id="@+id/header_collectionTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:text="COLLECTION:"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toTopOf="@+id/addpoi_collectionsSPIN" />
+
+    <EditText
+        android:id="@+id/addpoi_positionET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Position"
+        android:inputType="textPersonName"
+        android:textColorHint="@color/white_50_alpha"
+        app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toBottomOf="@+id/addpoi_collectionsSPIN" />
+
+    <TextView
+        android:id="@+id/header_collectionPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:text="POSITION:"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toTopOf="@+id/addpoi_positionET" />
+
+    <TextView
+        android:id="@+id/header_imgUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:text="IMG_URL:"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toTopOf="@+id/addpoi_imgUrlET" />
+
+    <EditText
+        android:id="@+id/addpoi_imgUrlET"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="URL"
+        android:inputType="textPersonName"
+        android:maxWidth="220dp"
+        android:textColorHint="@color/white_50_alpha"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toBottomOf="@+id/addpoi_positionET" />
+
+    <TextView
+        android:id="@+id/header_lat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="LAT:"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/addpoi_latTV"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toTopOf="@+id/addpoi_latTV" />
+
+    <TextView
+        android:id="@+id/addpoi_latTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toBottomOf="@+id/addpoi_imgUrlET"
+        tools:text="47.123456789" />
+
+    <TextView
+        android:id="@+id/header_lon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="LON:"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/addpoi_lonTV"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toTopOf="@+id/addpoi_lonTV" />
+
+    <TextView
+        android:id="@+id/addpoi_lonTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        tools:text="-122.123456789"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toBottomOf="@+id/addpoi_latTV" />
+
+    <Button
+        android:id="@+id/addpoi_capturePhotoBTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Capture Photo"
+        app:layout_constraintStart_toEndOf="@+id/addpoi_camThumbnailIV"
+        app:layout_constraintTop_toTopOf="@+id/addpoi_camThumbnailIV" />
+
+    <Button
+        android:id="@+id/addpoi_uploadPhotoBTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Upload Photo"
+        app:layout_constraintStart_toStartOf="@+id/addpoi_capturePhotoBTN"
+        app:layout_constraintTop_toBottomOf="@+id/addpoi_capturePhotoBTN" />
+
+    <ImageView
+        android:id="@+id/addpoi_camThumbnailIV"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
+        app:layout_constraintTop_toBottomOf="@+id/addpoi_lonTV"
+        app:srcCompat="@drawable/bullseye" />
+
+    <Button
+        android:id="@+id/addpoi_CreatePoiBTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Create POI"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline4Edits" />
+
+</android.support.constraint.ConstraintLayout>

@@ -7,15 +7,31 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
     <application
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SeattlePassport"
-        android:networkSecurityConfig="@xml/network_security_config">
+        android:theme="@style/Theme.SeattlePassport">
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.loc8r.seattle.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path"></meta-data>
+        </provider>
 
         <!--
          The API key for Google Maps-based APIs is defined as a string resource.
@@ -68,7 +84,16 @@
         <activity
             android:name=".activities.ManagementActivity"
             android:label="@string/title_activity_management"
-            android:theme="@style/Theme.SeattlePassport"></activity>
+            android:theme="@style/Theme.SeattlePassport" />
+        <activity
+            android:name=".activities.AddPOIActivity"
+            android:label="@string/title_activity_add_poi"
+            android:parentActivityName=".activities.MainListActivity"
+            android:theme="@style/Theme.SeattlePassport">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.loc8r.seattle.activities.MainListActivity" />
+        </activity>
     </application>
 
 </manifest>

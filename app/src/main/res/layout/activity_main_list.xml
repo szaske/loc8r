@@ -39,7 +39,7 @@
         android:shadowDx="1"
         android:shadowDy="1"
         android:shadowRadius="1.5"
-        android:text="Explore"
+        android:text="Explore Map"
         android:textColor="@color/primaryTextColor"
         android:textSize="20sp"
         app:fontPath="fonts/Roboto-Bold.ttf"
