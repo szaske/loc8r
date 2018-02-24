@@ -9,8 +9,8 @@
     android:paddingLeft="@dimen/map_drawer_horizontal_margin"
     android:paddingRight="@dimen/map_drawer_horizontal_margin"
     android:paddingTop="@dimen/map_drawer_vertical_margin"
-    tools:context="com.loc8r.seattle.activities.MapsActivity"
-    tools:showIn="@layout/activity_maps">
+    tools:context="com.loc8r.seattle.activities.MapActivity"
+    tools:showIn="@layout/activity_map">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/drawerView"

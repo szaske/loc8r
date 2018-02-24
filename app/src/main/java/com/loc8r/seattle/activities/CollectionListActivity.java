@@ -120,9 +120,12 @@ public class CollectionListActivity extends GMS_Activity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        // Check to see if the user pressed the home arrow
         if (item.getItemId() == android.R.id.home) {
             finish();
-            overridePendingTransition(R.anim.slide_out_to_right, R.anim.slide_in_from_left);
+            // First passed parameter is the animation to be used for the incoming activity
+            // the second parameter is the animatoin to be used by the exiting activity
+            overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
             return true;
         }
         return false;

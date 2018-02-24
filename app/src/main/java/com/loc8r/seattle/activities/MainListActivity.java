@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.loc8r.seattle.R;
-import com.loc8r.seattle.models.POI;
 
 public class MainListActivity extends GMS_Activity {
 
@@ -33,8 +32,9 @@ public class MainListActivity extends GMS_Activity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Explore button pressed ");
-                Intent intent = new Intent(MainListActivity.this, MapsActivity.class);
+                Intent intent = new Intent(MainListActivity.this, MapActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.slide_out_to_top);
             }
         });
 
@@ -45,6 +45,7 @@ public class MainListActivity extends GMS_Activity {
                 Log.d(TAG, "Passport button pressed ");
                 Intent intent = new Intent(MainListActivity.this, PassportActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
 
             }
         });
@@ -57,14 +58,6 @@ public class MainListActivity extends GMS_Activity {
             }
         });
     }
-
-//    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu)
-//    {
-//        MenuItem mapItem = menu.findItem(R.id.menu_map);
-//
-//        return super.onPrepareOptionsMenu(menu);
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

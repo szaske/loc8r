@@ -60,7 +60,7 @@
         <activity android:name=".activities.GMS_Activity" />
         <activity android:name=".activities.MainListActivity" />
         <activity
-            android:name=".activities.MapsActivity"
+            android:name=".activities.MapActivity"
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".activities.PassportActivity"
