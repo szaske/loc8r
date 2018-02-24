@@ -22,7 +22,10 @@
         <item name="android:colorBackground">@color/primaryDarkColor</item>
         <item name="colorButtonNormal">@color/secondaryColor</item>
         <item name="colorControlHighlight">@color/accent_material_dark</item>
+        
     </style>
+
+
 
     <style name="DialogTransparentBackgroundTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@android:color/transparent</item>

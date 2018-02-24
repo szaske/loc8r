@@ -8,6 +8,7 @@ import android.location.Location;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Button;
@@ -37,15 +38,17 @@ import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-public class MapsActivity extends GMS_Activity implements
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class MapActivity extends GMS_Activity implements
         POIsRequester.FireBasePOIResponse,
         GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback {
 
-    private static final String TAG = MapsActivity.class.getSimpleName();
+    private static final String TAG = MapActivity.class.getSimpleName();
     private GoogleMap mMap;
 
     // private ArrayList<POI> mListOfPOIs;
@@ -60,20 +63,24 @@ public class MapsActivity extends GMS_Activity implements
     private Location mCurrentLocation;
     private Context context;
 
+    @BindView(R.id.map_fab) FloatingActionButton mFAB;
+
     // The selected POI
     private POI mSelectedPOI;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_map);
+        ButterKnife.bind(this);
 
         // Obtain the SupportMapFragment and loads layout
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        SupportMapFragment mMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
         // Get notified when the map is ready to be used.
-        mapFragment.getMapAsync(this);
+        mMapFragment.getMapAsync(this);
 
         // Drawer Setup
         DrawerSetup();
@@ -84,6 +91,13 @@ public class MapsActivity extends GMS_Activity implements
         context = this; // Set context so we can use inside the runnable below
     }
 
+    @OnClick(R.id.map_fab)
+    public void onFABClick(View view) {
+        Log.d(TAG, "onFABClick: yup it was");
+    }
+    
+    
+    
     private int getScreenHeight(){
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -118,7 +132,7 @@ public class MapsActivity extends GMS_Activity implements
             @Override
             public void onClick(View v) {
                 //let's go to the Details activity
-                Intent i = new Intent(MapsActivity.this, POIDetailActivity.class);
+                Intent i = new Intent(MapActivity.this, POIDetailActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("poi", Parcels.wrap(mSelectedPOI));
                 i.putExtras(bundle);
@@ -242,7 +256,7 @@ public class MapsActivity extends GMS_Activity implements
             {
 
                 // Spawn a new thread to redraw nearby markers
-                MapsActivity.this.runOnUiThread(new Runnable() {
+                MapActivity.this.runOnUiThread(new Runnable() {
 
                     @Override
                     public void run() {
