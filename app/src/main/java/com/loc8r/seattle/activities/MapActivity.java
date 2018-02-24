@@ -4,11 +4,16 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Button;
@@ -20,7 +25,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.loc8r.seattle.R;
@@ -95,13 +103,16 @@ public class MapActivity extends GMS_Activity implements
     public void onFABClick(View view) {
         Log.d(TAG, "onFABClick: yup it was");
     }
-    
-    
-    
-    private int getScreenHeight(){
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        return metrics.heightPixels;
+
+    // Creates a Bitmap marker from vector art
+    // From https://stackoverflow.com/questions/42365658/custom-marker-in-google-maps-in-android-with-vector-asset-icon
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     // A callback method, which is invoked on configuration is changed
@@ -181,13 +192,31 @@ public class MapActivity extends GMS_Activity implements
      */
     @SuppressLint("MissingPermission") @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
+
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = mMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.map_style));
+
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e(TAG, "Can't find style. Error: ", e);
+        }
+
+
 
         // Allow the map to see the devices location, this should ALREADY have permission to get location from GMS_Activity
         mMap.setMyLocationEnabled(true);
 
         // Set listeners for marker events.  See the bottom of this class for their behavior.
         mMap.setOnMarkerClickListener(this);
+
     }
 
     // Create a location given a Lat & Long
@@ -233,6 +262,7 @@ public class MapActivity extends GMS_Activity implements
 
                 Marker tempMarker = mMap.addMarker(new MarkerOptions()
                         .position(poiLatLng)
+                        .icon(bitmapDescriptorFromVector(this, R.drawable.art_marker_small))
                         .title(poi.getName()));
                 tempMarker.setTag(StateManager.getInstance().getPOIs().indexOf(poi)); //Tag is set to POI Index in full SM Arraylist
 
@@ -264,7 +294,7 @@ public class MapActivity extends GMS_Activity implements
                         // Check if this is the first time location was retrieved
                         if(mCurrentLocation==null){
                             Toast.makeText(getApplicationContext(), "Initial location detected", Toast.LENGTH_SHORT).show();
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationToLatLong(location), 16));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationToLatLong(location), 18));
                         }
 
                         // Store returned location in the state Manager and member variable
