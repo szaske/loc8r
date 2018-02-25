@@ -1,5 +1,9 @@
 package com.loc8r.seattle.utils;
 
+import android.graphics.drawable.Drawable;
+
+import java.util.ArrayList;
+
 /**
  * Created by Guest on 10/3/17.
  */
