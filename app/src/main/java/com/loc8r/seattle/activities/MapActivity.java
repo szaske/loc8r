@@ -46,6 +46,8 @@ import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,6 +72,8 @@ public class MapActivity extends GMS_Activity implements
     private Button mDrawerDetailButton;
     private Location mCurrentLocation;
     private Context context;
+
+    private List<Integer> mExistingPoiMarkers;
 
     @BindView(R.id.map_fab) FloatingActionButton mFAB;
 
@@ -97,6 +101,8 @@ public class MapActivity extends GMS_Activity implements
         //This is the object that can fetch more content
         mPOIsRequester = new POIsRequester();
         context = this; // Set context so we can use inside the runnable below
+
+        mExistingPoiMarkers = new ArrayList<>();
     }
 
     @OnClick(R.id.map_fab)
@@ -254,20 +260,30 @@ public class MapActivity extends GMS_Activity implements
     private void DrawNearbyMarkers(){
         // Step through all POI's and show markers for close ones (800 meters)
 
-        for(POI poi : StateManager.getInstance().getPOIs()) {
+        for(int i = 0;i<StateManager.getInstance().getPOIs().size();i++){
 
-            if ( poi.distanceToUser() < Constants.DISTANCE_TO_SCAN_MARKERS) {
-                // Add the location's marker to the map
-                LatLng poiLatLng = new LatLng(poi.getLatitude(), poi.getLongitude());
+            if(!mExistingPoiMarkers.contains(i)) {
+                POI poi = StateManager.getInstance().getPOIs().get(i);
 
-                Marker tempMarker = mMap.addMarker(new MarkerOptions()
-                        .position(poiLatLng)
-                        .icon(bitmapDescriptorFromVector(this, R.drawable.art_marker_small))
-                        .title(poi.getName()));
-                tempMarker.setTag(StateManager.getInstance().getPOIs().indexOf(poi)); //Tag is set to POI Index in full SM Arraylist
+                if (poi.distanceToUser() < Constants.DISTANCE_TO_SCAN_MARKERS) {
 
-                //log that the marker is displayed
-                Log.d(TAG, "showing marker "+ poi.getName());
+                    // Add the location's marker to the map
+                    LatLng poiLatLng = new LatLng(poi.getLatitude(), poi.getLongitude());
+
+                    Marker tempMarker = mMap.addMarker(new MarkerOptions()
+                            .position(poiLatLng)
+                            .icon(bitmapDescriptorFromVector(this, R.drawable.marker_art))
+                            .title(poi.getName()));
+                    tempMarker.setTag(StateManager.getInstance().getPOIs().indexOf(poi)); //Tag is set to POI Index in full SM Arraylist
+
+                    // Keep track of existing POI markers, so we don't need to redraw them
+                    mExistingPoiMarkers.add(StateManager.getInstance().getPOIs().indexOf(poi));
+
+                    //log that the marker is displayed
+                    Log.d(TAG, "showing marker " + poi.getName());
+                }
+            } else {
+                //We might , in the future, consider putting code here to remove markers from the map
             }
         }
     }
@@ -302,7 +318,7 @@ public class MapActivity extends GMS_Activity implements
                         mCurrentLocation = location;
 
                         // clear all current markers on map
-                        mMap.clear();
+                        // mMap.clear();
 
                         // If we don't have POIs yes, lets get them
                         if (StateManager.getInstance().getPOIs().size() == 0) {
