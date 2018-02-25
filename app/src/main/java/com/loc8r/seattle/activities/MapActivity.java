@@ -33,6 +33,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
+import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.Constants;
 import com.loc8r.seattle.utils.POIsRequester;
@@ -215,8 +216,6 @@ public class MapActivity extends GMS_Activity implements
             Log.e(TAG, "Can't find style. Error: ", e);
         }
 
-
-
         // Allow the map to see the devices location, this should ALREADY have permission to get location from GMS_Activity
         mMap.setMyLocationEnabled(true);
 
@@ -262,6 +261,8 @@ public class MapActivity extends GMS_Activity implements
 
         for(int i = 0;i<StateManager.getInstance().getPOIs().size();i++){
 
+            // Check to see if the POI is already shown on the map
+            // If so, then skip it and go to the next
             if(!mExistingPoiMarkers.contains(i)) {
                 POI poi = StateManager.getInstance().getPOIs().get(i);
 
@@ -272,7 +273,7 @@ public class MapActivity extends GMS_Activity implements
 
                     Marker tempMarker = mMap.addMarker(new MarkerOptions()
                             .position(poiLatLng)
-                            .icon(bitmapDescriptorFromVector(this, R.drawable.marker_art))
+                            .icon(bitmapDescriptorFromVector(this, getMarkerIconDrawableID(this,poi.getCollectionString())))
                             .title(poi.getName()));
                     tempMarker.setTag(StateManager.getInstance().getPOIs().indexOf(poi)); //Tag is set to POI Index in full SM Arraylist
 
@@ -286,6 +287,13 @@ public class MapActivity extends GMS_Activity implements
                 //We might , in the future, consider putting code here to remove markers from the map
             }
         }
+    }
+
+    public static int getMarkerIconDrawableID (Context context, String collectionString) {
+        String iconName = "marker_" + collectionString;
+        Resources resources = context.getResources();
+         return resources.getIdentifier(iconName, "drawable",
+                context.getPackageName());
     }
 
     @Override
