@@ -21,6 +21,11 @@
     <string name="location_enabled_dialog_title">Location Needed</string>
     <string name="location_enabled_dialog_msg">In order for the application to work, the device location must be enabled.</string>
 
+    <!--Login Layout Strings-->
+    <string name="sign_up_text">Don\'t have an account? Sign up here!</string>
+    <string name="missing_email_validation_message">Please enter your email</string>
+    <string name="missing_password_validation_message">Password cannot be blank</string>
+
     <!--Sign in Layout Strings-->
     <string name="or">or</string>
     <string name="log_in">log in</string>
@@ -59,6 +64,7 @@
     <string name="title_activity_passport">Passport Collections</string>
     <string name="title_activity_management">ManagementActivity</string>
     <string name="title_activity_add_poi">AddPOIActivity</string>
+
 
 
 </resources>
