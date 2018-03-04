@@ -29,6 +29,12 @@ public class TestUtils {
         return currentActivity[0];
     }
 
+    /**
+     *  Uses the Spoon library to take a screenshot.  Images are saved
+     *  at /mnt/sdcard/app_spoon-screenshots
+     *
+     * @param tag A String used as part of the file name
+     */
     public static void screenShot(String tag) {
         Spoon.screenshot(getCurrentActivity(), tag);
         Log.i("asd", "Screenshot taken: " + tag);

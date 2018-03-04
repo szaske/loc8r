@@ -1,7 +1,9 @@
 package com.loc8r.seattle.activities
 
+import android.content.Context
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.loc8r.seattle.R
 import org.junit.Before
@@ -18,42 +20,46 @@ import org.junit.runner.RunWith
 class LoginActivityTest {
 
     @get:Rule
-    val mActivityTestRule: ActivityTestRule<LoginActivity> = ActivityTestRule(LoginActivity::class.java)
+    val rule: ActivityTestRule<LoginActivity> = ActivityTestRule(LoginActivity::class.java)
 
-    private lateinit var robot: LoginRobot
+    // private lateinit var robot: LoginRobot
 
     @Before
     fun setup() {
         FirebaseAuth.getInstance().signOut()
-        robot = LoginRobot(mActivityTestRule.activity)
-    }
-
-    @Test
-    fun MissingEmailCausesErrorToAppear() {
-        robot
-                .setEmail("")
-                .clickLogin()
-                .screenShot("loginMissingEmailPassword")
-                .matchEmailError("Please enter your email")
+        // var robot = LoginRobot()
     }
 
     @Test
     fun EmailCausesNoErrorToAppear() {
-        robot
-                .setEmail("test@users.com")
+        Log.d("STZ", "running next test")
+        LoginRobot()
+                .setEmail("test@email.com")
                 .clickLogin()
-                .screenShot("loginMissingEmailPassword")
+                .screenShot("EmailShowsNoErrorMessage")
                 .matchNoEmailError("Please enter your email")
     }
 
-//    @Test
-//    fun loginMissingPassword() {
-//        robot
-//                .setEmail("mail@example.com")
-//                .clickLogin()
-//                .screenShot("loginMissingPassword")
-//                .matchErrorText(R.string.missing_password_validation_message)
-//    }
+
+    @Test
+    fun MissingEmailCausesErrorToAppear() {
+        Log.d("STZ", "running test")
+        LoginRobot()
+                .setEmail("")
+                .clickLogin()
+                .screenShot("MissingEmailShowsError")
+                .matchEmailError("Please enter your email")
+    }
+
+
+    @Test
+    fun loginMissingPassword() {
+        LoginRobot()
+                .setEmail("mail@example.com")
+                .clickLogin()
+                .screenShot("loginMissingPassword")
+                .matchPasswordError("Password cannot be blank")
+    }
 
 //    @Test
 //    fun loginWrongPassword() {
