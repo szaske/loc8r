@@ -18,25 +18,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.loc8r.seattle.R;
-import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.utils.Constants;
-import com.loc8r.seattle.utils.StateManager;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
     public static final String TAG = LoginActivity.class.getSimpleName();
-    @BindView(R.id.passwordLoginButton) Button mPasswordLoginButton;
+    @BindView(R.id.bt_Login) Button mPasswordLoginButton;
     @BindView(R.id.emailEditText) EditText mEmailEditText;
     @BindView(R.id.passwordEditText) EditText mPasswordEditText;
-    @BindView(R.id.registerTextView) TextView mRegisterTextView;
+    @BindView(R.id.tv_register) TextView mRegisterTextView;
     private ProgressDialog mAuthProgressDialog;
 
     private FirebaseAuth mAuth;
@@ -123,11 +116,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
         if (email.equals("")) {
-            mEmailEditText.setError("Please enter your email");
+            mEmailEditText.setError(getString(R.string.missing_email_validation_message));
             return;
         }
         if (password.equals("")) {
-            mPasswordEditText.setError("Password cannot be blank");
+            mPasswordEditText.setError(getString(R.string.missing_password_validation_message));
             return;
         }
 
