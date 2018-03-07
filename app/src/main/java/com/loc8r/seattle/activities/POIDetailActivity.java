@@ -219,6 +219,11 @@ public class POIDetailActivity extends GMS_Activity {
         });
     }
 
+    @OnClick(R.id.bt_back_arrow)
+    public void onBackArrowClick(){
+        finish();
+    }
+
     private void AddStampToDB(){
         Log.d(TAG, "onClick: fired");
         String uid = user.getUid();
