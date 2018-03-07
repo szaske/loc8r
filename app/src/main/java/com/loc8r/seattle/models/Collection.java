@@ -9,7 +9,7 @@ import org.parceler.Parcel;
 @Parcel
 public class Collection {
     int id;
-    String name;
+    String name; // Limited to 19 characters
 
     public Collection(){}
 
