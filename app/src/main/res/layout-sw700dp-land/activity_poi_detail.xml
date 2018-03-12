@@ -10,12 +10,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/imageSection"
             android:layout_width="match_parent"
-            android:layout_height="260dp"
+            android:layout_height="380dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:orientation="vertical">
 
             <android.support.constraint.ConstraintLayout
@@ -81,6 +85,8 @@
             android:id="@+id/infoSection"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:padding="12dp">
 
             <android.support.constraint.ConstraintLayout
@@ -193,6 +199,8 @@
                 android:id="@+id/secondColumn"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -206,12 +214,12 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="0dp"
                     android:adjustViewBounds="true"
-                    android:padding="8dp"
-                    android:scaleType="fitXY"
-                    app:layout_constraintEnd_toEndOf="@+id/bt_getStamp"
-                    app:layout_constraintStart_toStartOf="@+id/bt_getStamp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/bullseye" />
+                    android:elevation="8dp"
+                    android:outlineProvider="background"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
                     android:id="@+id/bt_getStamp"
@@ -221,6 +229,29 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/iv_stamp_placeholder" />
+
+                <com.loc8r.seattle.utils.StampView
+                    android:id="@+id/stampView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:adjustViewBounds="true"
+                    android:elevation="4dp"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/bt_getStamp" />
+
+                <Button
+                    android:id="@+id/button3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/stampView" />
 
             </android.support.constraint.ConstraintLayout>
 

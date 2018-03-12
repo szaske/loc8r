@@ -1,15 +1,22 @@
 package com.loc8r.seattle.activities;
 
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.app.Dialog;
+import android.graphics.Rect;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,6 +37,8 @@ import com.loc8r.seattle.models.Stamp;
 // import com.loc8r.seattle.mongodb.MongoDBManager;
 import com.loc8r.seattle.models.User;
 import com.loc8r.seattle.utils.ProgressDialog;
+import com.loc8r.seattle.utils.StampDrawable;
+import com.loc8r.seattle.utils.StampView;
 import com.loc8r.seattle.utils.StateManager;
 import com.squareup.picasso.Picasso;
 
@@ -54,6 +63,7 @@ public class POIDetailActivity extends GMS_Activity {
     @BindView(R.id.tv_distance) TextView mTV_PoiDistance;
     @BindView(R.id.tv_collection) TextView mTV_PoiCollection;
 
+    @BindView(R.id.stampView) StampView mStampView;
 //    @BindView(R.id.getStampBtn) Button mStampBtn;
 
 
@@ -115,6 +125,13 @@ public class POIDetailActivity extends GMS_Activity {
 //        int height = 60;
 //        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width,height);
 //        mI.setLayoutParams(params)
+
+
+        mIV_StampPlaceholder.setImageDrawable(new StampDrawable(this, "JOHN STANFORD - BIRDS"));
+
+        mStampView.setStampTitleText("Steve Zaske - Birds");
+        mStampView.setStampTimeStampText("DEC 21, 1968");
+        mStampView.invalidate();
 
         mTV_PoiName.setText(detailedPoi.getName());
         mTV_PoiDescription.setText(detailedPoi.getDescription());
@@ -194,6 +211,58 @@ public class POIDetailActivity extends GMS_Activity {
 
     @OnClick(R.id.bt_getStamp)
     public void onStampButtonClick() {
+
+        //Create animation
+        /**
+         * ValueAnimator to rotate the stamp
+         */
+
+        // Create animation value holders
+        PropertyValuesHolder RotPropertyHolder = PropertyValuesHolder.ofFloat("Rot", -45,0 );
+        PropertyValuesHolder ZoomPropertyHolder = PropertyValuesHolder.ofFloat("Zoom", 30f,4f );
+        PropertyValuesHolder XPropertyHolder = PropertyValuesHolder.ofFloat("X", -100f,0f );
+        PropertyValuesHolder ElevationPropertyHolder = PropertyValuesHolder.ofFloat("elevation", 30f,4f );
+        PropertyValuesHolder TransparencyPropertyHolder = PropertyValuesHolder.ofFloat("Alpha", 0f,1f );
+
+
+        //Create the animator
+        ValueAnimator mTranslationAnimator = ValueAnimator.ofPropertyValuesHolder(RotPropertyHolder,ZoomPropertyHolder,TransparencyPropertyHolder, ElevationPropertyHolder, XPropertyHolder);
+
+        // Create the update listener
+        mTranslationAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                // mIV_StampPlaceholder.setTranslationX((float)animation.getAnimatedValue("TranslationX"));
+                // mIV_StampPlaceholder.setAlpha((float)animation.getAnimatedValue("Alpha"));
+                // mIV_StampPlaceholder.setElevation((float) animation.getAnimatedValue("elevation"));
+
+                // Animate the drawable
+                mIV_StampPlaceholder.setRotation((float)animation.getAnimatedValue("Rot"));
+                mIV_StampPlaceholder.setTranslationZ((float) animation.getAnimatedValue("Zoom"));
+                mIV_StampPlaceholder.setTranslationX((float) animation.getAnimatedValue("X"));
+                mIV_StampPlaceholder.requestLayout();
+
+                // Animate the custom view
+                mStampView.setRotation((float)animation.getAnimatedValue("Rot"));
+                mStampView.setTranslationZ((float) animation.getAnimatedValue("Zoom"));
+                mStampView.setTranslationX((float) animation.getAnimatedValue("X"));
+                mStampView.requestLayout();
+
+
+
+
+
+
+            }
+        });
+
+        //Create a time inter
+        Interpolator customInterpolator = PathInterpolatorCompat.create(0.790f, 0.000f, 1.000f, 1.000f);
+
+        //Start the animation
+        mTranslationAnimator.setInterpolator(customInterpolator);
+        mTranslationAnimator.setDuration(1550);
+        mTranslationAnimator.start();
 
         //TODO Add a check to determine if we're within a constant amount of meters from the POI.  If close enough then enable the button
 
