@@ -1,0 +1,291 @@
+[33mcommit fcc60d3e78cc61db8eb189a9af1e2eec66ecdfe7[m
+Author: szaske <github@zaske.com>
+Date:   Mon Mar 12 00:28:07 2018 -0700
+
+    Added customer StampView with animation
+
+[33mcommit be71188601f50a1b7a6d9f28c0f05d9e048979ef[m
+Author: szaske <github@zaske.com>
+Date:   Wed Mar 7 10:22:26 2018 -0800
+
+    Creating layouts for various sizes in detail view
+
+[33mcommit 1962d5db58cdb94dd7d04844d592c73ab78f80d0[m
+Author: szaske <github@zaske.com>
+Date:   Wed Mar 7 08:15:51 2018 -0800
+
+    Add back button to Details view
+
+[33mcommit 3d389843dc375a99f509b5b179e3381e8cd5841b[m
+Author: szaske <github@zaske.com>
+Date:   Wed Mar 7 01:37:05 2018 -0800
+
+    Improving Details view layout
+
+[33mcommit 51136d0fed87547ec7e8ff508eaae228c454b377[m
+Merge: 40fb5e0 39c91bd
+Author: Steve Zaske <github@zaske.com>
+Date:   Mon Mar 5 01:49:08 2018 -0800
+
+    Merge pull request #21 from szaske/Zaske-espresso
+    
+    Zaske espresso
+
+[33mcommit 39c91bd0f03a37a86a157a560678bdd384960fa3[m
+Author: szaske <github@zaske.com>
+Date:   Mon Mar 5 01:47:50 2018 -0800
+
+    Updated Readme.md
+
+[33mcommit b250ab9073e9485cacbf30ea5ce6e9c6c810f54e[m
+Author: szaske <github@zaske.com>
+Date:   Sun Mar 4 11:07:21 2018 -0800
+
+    Add automatec UI tests with Espresso and Spoon
+
+[33mcommit 68be099cb7f9846f9e74d470028b665c7bfaf221[m
+Author: szaske <github@zaske.com>
+Date:   Fri Mar 2 11:46:32 2018 -0800
+
+    Adding UI tests using the Robot design pattern
+
+[33mcommit 40fb5e044f0ab51685461661210217884e3b39b5[m
+Merge: c361034 66276b7
+Author: Steve Zaske <github@zaske.com>
+Date:   Sun Feb 25 09:13:03 2018 -0800
+
+    Merge pull request #20 from szaske/Zaske-markers
+    
+    Zaske markers
+
+[33mcommit 66276b7fbe36a6a1ba08436b1a6a8189b73abde4[m
+Author: szaske <github@zaske.com>
+Date:   Sat Feb 24 23:10:10 2018 -0800
+
+    Adding more custom map markers
+
+[33mcommit f62bb338d6a6b2b89af1283c3930b3cecd3a63a6[m
+Author: szaske <github@zaske.com>
+Date:   Sat Feb 24 20:36:24 2018 -0800
+
+    Fixed map marker blinking
+
+[33mcommit c3610343dd5d4b0502a785c6da3955725a4ceb50[m
+Author: szaske <github@zaske.com>
+Date:   Sat Feb 24 14:54:50 2018 -0800
+
+    Add custom markers on maps
+
+[33mcommit a2ac967c6eff1238fae72749b3a3ce886457fc44[m
+Merge: 7b80bc2 f88cc4b
+Author: Steve Zaske <github@zaske.com>
+Date:   Sat Feb 24 10:11:48 2018 -0800
+
+    Merge pull request #19 from szaske/Zaske-animation
+    
+    proper activity transitions for passport UI
+
+[33mcommit f88cc4b7e479f60eaff01e0c6717db5a4e01f557[m
+Author: szaske <github@zaske.com>
+Date:   Sat Feb 24 10:03:24 2018 -0800
+
+    proper activity transitions for passport UI
+
+[33mcommit 7b80bc2f8cb1b891d736eaba95b48fc230b4f4fe[m
+Merge: e505159 1960e72
+Author: Steve Zaske <github@zaske.com>
+Date:   Sat Feb 17 01:00:38 2018 -0800
+
+    Merge pull request #18 from szaske/Zaske-newpoi
+    
+    Zaske newpoi
+
+[33mcommit 1960e725c3be417b6760bf06298537c78871dbe9[m
+Author: szaske <github@zaske.com>
+Date:   Sat Feb 17 00:56:58 2018 -0800
+
+    move admin access to options menu
+
+[33mcommit b38372fea48244e95c7c238973d3968e14e6be4b[m
+Author: szaske <github@zaske.com>
+Date:   Sat Feb 17 00:27:30 2018 -0800
+
+    Admin page properly supports orientation change
+
+[33mcommit ff3e6171d0f4b3e37adff01fdcbc05d564d480a3[m
+Author: szaske <github@zaske.com>
+Date:   Fri Feb 16 17:09:41 2018 -0800
+
+    Save spinner state on orientation change
+
+[33mcommit ff589b546f47fe9123382a71db82a528942c7a7b[m
+Author: szaske <github@zaske.com>
+Date:   Fri Feb 16 15:38:09 2018 -0800
+
+    Deleting all temp image capture files
+
+[33mcommit f9966326eac45b3de5d243f8afce4142eac4ba99[m
+Author: szaske <github@zaske.com>
+Date:   Fri Feb 16 14:42:25 2018 -0800
+
+    Add ability to save POI to the DB
+
+[33mcommit e505159e10194240d25447029531f883648da355[m
+Merge: b362be4 649ed0e
+Author: Steve Zaske <github@zaske.com>
+Date:   Thu Feb 8 13:09:24 2018 -0800
+
+    Merge pull request #17 from szaske/Zaske-hashmap
+    
+    Zaske hashmap
+
+[33mcommit 649ed0ec88f4d0313ed5b6d721079aa5821c5252[m
+Author: szaske <github@zaske.com>
+Date:   Thu Feb 8 13:07:58 2018 -0800
+
+    removed Hashmap and returned to storing POI in Arraylist
+
+[33mcommit 46e78696de299fa5e45d731a88100f9ef47449eb[m
+Author: szaske <github@zaske.com>
+Date:   Wed Feb 7 23:31:22 2018 -0800
+
+    Hashmap at it's best
+
+[33mcommit 1958d0f46432da53dcdf2f8d1cc9b9de2e6c5997[m
+Author: szaske <github@zaske.com>
+Date:   Wed Feb 7 14:59:18 2018 -0800
+
+    properly stamping pois in list
+
+[33mcommit b362be47d3c4b853e5bf12dbf56787c8375b0ec8[m
+Merge: 281ca5e 5de6e77
+Author: krisbugbee <35504332+krisbugbee@users.noreply.github.com>
+Date:   Tue Feb 6 20:55:54 2018 -0800
+
+    Merge pull request #15 from szaske/proxydebugging
+    
+    Changes to support SSL proxying; trusting user certificates
+
+[33mcommit 5de6e770d8ccab4156eeaab83178446395149c67[m
+Author: Kris Bugbee <kbugbee@gmail.com>
+Date:   Tue Feb 6 20:54:47 2018 -0800
+
+    Changes to support SSL proxying; trusting user certificates
+
+[33mcommit 281ca5e23d8d4ab2a748d48fe4637e46449b8e5b[m
+Merge: 6e77a2c 0b8e562
+Author: Steve Zaske <github@zaske.com>
+Date:   Tue Feb 6 20:53:16 2018 -0800
+
+    Merge pull request #14 from szaske/Zaske-stamps
+    
+    Matching POIs and Stamps
+
+[33mcommit 0b8e56214e2695bf4bc1eb3146460735936431b2[m
+Author: szaske <github@zaske.com>
+Date:   Tue Feb 6 20:52:11 2018 -0800
+
+    Matching POIs and Stamps
+
+[33mcommit 6e77a2cabcd1528d5906a399059f9c51d8b8ccc0[m
+Merge: 643c34b e79baad
+Author: Steve Zaske <github@zaske.com>
+Date:   Mon Feb 5 16:16:05 2018 -0800
+
+    Merge pull request #13 from szaske/Zaske-state
+    
+    update POI model
+
+[33mcommit e79baad058b789efdcb9776034b7978012cc8151[m
+Author: szaske <github@zaske.com>
+Date:   Mon Feb 5 16:15:18 2018 -0800
+
+    update POI model
+
+[33mcommit 643c34bdcdeb4fc5f13224146eb1454df2946c5c[m
+Merge: 4a4680c c27acbe
+Author: Steve Zaske <github@zaske.com>
+Date:   Sat Feb 3 23:45:02 2018 -0800
+
+    Merge pull request #12 from szaske/Zaske-collections
+    
+    Zaske collections
+
+[33mcommit c27acbe1fa6cd8afd1c53784b27fd2a43dd0f712[m
+Author: szaske <github@zaske.com>
+Date:   Sat Feb 3 23:43:48 2018 -0800
+
+    Maps activity now works with POI data from FireStore
+
+[33mcommit e3fa309495dbe3bb232cae870da06eaff946772b[m
+Author: szaske <github@zaske.com>
+Date:   Fri Feb 2 17:36:19 2018 -0800
+
+    Ability to request and receive a POI collection set
+
+[33mcommit db1448235cdb5b326c20adf45a7992e2b26b3251[m
+Author: szaske <github@zaske.com>
+Date:   Fri Feb 2 15:56:04 2018 -0800
+
+    Add ability to download collection list from Firestore
+
+[33mcommit 4a4680cf319e26a8b869d139a3c96123f679e202[m
+Merge: 66df22a d327def
+Author: Steve Zaske <github@zaske.com>
+Date:   Fri Feb 2 08:55:20 2018 -0800
+
+    Merge pull request #11 from szaske/Zaske-Base
+    
+    Zaske base
+
+[33mcommit d327defe2dbb3704b3544a1fc06db015651db03d[m
+Author: Steve Zaske <github@zaske.com>
+Date:   Fri Feb 2 08:47:14 2018 -0800
+
+    Retrieving POIs from FireStore
+
+[33mcommit f9c7a6bb89e52d41a4e58cdb50d42cea0bd9aec1[m
+Author: Steve Zaske <github@zaske.com>
+Date:   Thu Feb 1 19:48:24 2018 -0800
+
+    Added list of collections
+
+[33mcommit 2edfd708e00eca75bca9e632a8d09c6fbdf5085b[m
+Author: Steve Zaske <github@zaske.com>
+Date:   Thu Feb 1 13:56:21 2018 -0800
+
+    Removing MongoDB library
+
+[33mcommit 66df22a13fe007f92685574e046791e167175c12[m
+Merge: 5188a1e 16cf87b
+Author: Steve Zaske <github@zaske.com>
+Date:   Thu Feb 1 08:11:19 2018 -0800
+
+    Merge pull request #10 from szaske/Zaske-firebase
+    
+    Saving stamps to fireStore
+
+[33mcommit 16cf87b532e4bd72b716a5492f6efa1d865ca523[m
+Author: szaske <github@zaske.com>
+Date:   Thu Feb 1 08:10:10 2018 -0800
+
+    Saving stamps to fireStore
+
+[33mcommit 5188a1e808f2d7de254dd59fbfac5342f25bc2d0[m
+Merge: b8aa3b2 3dde64c
+Author: Steve Zaske <github@zaske.com>
+Date:   Tue Jan 30 23:58:26 2018 -0800
+
+    Merge pull request #9 from szaske/Zaske-auth
+    
+    Zaske auth
+
+[33mcommit 3dde64c5178d36f38cde59279474c0636bdce342[m
+Author: szaske <github@zaske.com>
+Date:   Tue Jan 30 15:48:14 2018 -0800
+
+    Moved to email auth on Firebase
+
+[33mcommit 45fec5bf4b7fda82d9e9d302bddd98010ea34bfd[m
+Author: szaske <github@zaske.com>
+Date:   Mon J

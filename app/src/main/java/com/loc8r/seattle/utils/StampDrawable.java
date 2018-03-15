@@ -17,6 +17,14 @@ import android.util.Log;
 
 import com.loc8r.seattle.R;
 
+
+/**
+ *   To be deleted.  Created a StampView instead of a drawable
+ *   because a view can have a drop shadow.  Leaving the code here
+ *   in case i want to return to a drawable for another reason
+ */
+
+
 public class StampDrawable extends Drawable {
     private static final int DEFAULT_COLOR = Color.BLACK;
     private static final Float STROKEWIDTH_PERCENTAGE = .12f;

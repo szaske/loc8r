@@ -208,28 +208,6 @@
                 app:layout_constraintStart_toEndOf="@+id/firstColumn"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/iv_stamp_placeholder"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="0dp"
-                    android:adjustViewBounds="true"
-                    android:elevation="8dp"
-                    android:outlineProvider="background"
-                    android:scaleType="fitCenter"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <Button
-                    android:id="@+id/bt_getStamp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/get_stamp_button"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_stamp_placeholder" />
-
                 <com.loc8r.seattle.utils.StampView
                     android:id="@+id/stampView"
                     android:layout_width="match_parent"
@@ -243,15 +221,16 @@
                     app:layout_constraintTop_toBottomOf="@+id/bt_getStamp" />
 
                 <Button
-                    android:id="@+id/button3"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/bt_getStamp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:text="Button"
+                    android:text="@string/get_stamp_button"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/stampView" />
+                    app:layout_constraintTop_toBottomOf="@+id/iv_stamp_placeholder" />
+
+
+
 
             </android.support.constraint.ConstraintLayout>
 

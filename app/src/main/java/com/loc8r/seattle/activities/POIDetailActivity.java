@@ -57,7 +57,6 @@ public class POIDetailActivity extends GMS_Activity {
     // Variables
     private static final String TAG = GMS_Activity.class.getSimpleName();
     @BindView(R.id.iv_poiImage) ImageView mIV_PoiImage;
-    @BindView(R.id.iv_stamp_placeholder) ImageView mIV_StampPlaceholder;
     @BindView(R.id.tv_poi_name) TextView mTV_PoiName;
     @BindView(R.id.tv_poi_description) TextView mTV_PoiDescription;
     @BindView(R.id.tv_distance) TextView mTV_PoiDistance;
@@ -126,8 +125,6 @@ public class POIDetailActivity extends GMS_Activity {
 //        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width,height);
 //        mI.setLayoutParams(params)
 
-
-        mIV_StampPlaceholder.setImageDrawable(new StampDrawable(this, "JOHN STANFORD - BIRDS"));
 
         mStampView.setStampTitleText("Steve Zaske - Birds");
         mStampView.setStampTimeStampText("DEC 21, 1968");
@@ -222,29 +219,31 @@ public class POIDetailActivity extends GMS_Activity {
         PropertyValuesHolder ZoomPropertyHolder = PropertyValuesHolder.ofFloat("Zoom", 30f,4f );
         PropertyValuesHolder XPropertyHolder = PropertyValuesHolder.ofFloat("X", -100f,0f );
         PropertyValuesHolder ElevationPropertyHolder = PropertyValuesHolder.ofFloat("elevation", 30f,4f );
+        PropertyValuesHolder ScalePropertyHolder = PropertyValuesHolder.ofFloat("scale", 2.5f,1f );
         PropertyValuesHolder TransparencyPropertyHolder = PropertyValuesHolder.ofFloat("Alpha", 0f,1f );
 
 
         //Create the animator
-        ValueAnimator mTranslationAnimator = ValueAnimator.ofPropertyValuesHolder(RotPropertyHolder,ZoomPropertyHolder,TransparencyPropertyHolder, ElevationPropertyHolder, XPropertyHolder);
+        ValueAnimator mTranslationAnimator = ValueAnimator.ofPropertyValuesHolder(RotPropertyHolder,
+                ZoomPropertyHolder,
+                TransparencyPropertyHolder,
+                ElevationPropertyHolder,
+                ScalePropertyHolder,
+                XPropertyHolder);
 
         // Create the update listener
         mTranslationAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                // mIV_StampPlaceholder.setTranslationX((float)animation.getAnimatedValue("TranslationX"));
-                // mIV_StampPlaceholder.setAlpha((float)animation.getAnimatedValue("Alpha"));
-                // mIV_StampPlaceholder.setElevation((float) animation.getAnimatedValue("elevation"));
-
-                // Animate the drawable
-                mIV_StampPlaceholder.setRotation((float)animation.getAnimatedValue("Rot"));
-                mIV_StampPlaceholder.setTranslationZ((float) animation.getAnimatedValue("Zoom"));
-                mIV_StampPlaceholder.setTranslationX((float) animation.getAnimatedValue("X"));
-                mIV_StampPlaceholder.requestLayout();
 
                 // Animate the custom view
+                mStampView.setAlpha((float)animation.getAnimatedValue("Alpha"));
                 mStampView.setRotation((float)animation.getAnimatedValue("Rot"));
                 mStampView.setTranslationZ((float) animation.getAnimatedValue("Zoom"));
+                mStampView.setScaleX((float) animation.getAnimatedValue("scale"));
+                mStampView.setScaleY((float) animation.getAnimatedValue("scale"));
+                // mStampView.setElevation((float) animation.getAnimatedValue("Zoom"));
+
                 mStampView.setTranslationX((float) animation.getAnimatedValue("X"));
                 mStampView.requestLayout();
 
@@ -261,7 +260,7 @@ public class POIDetailActivity extends GMS_Activity {
 
         //Start the animation
         mTranslationAnimator.setInterpolator(customInterpolator);
-        mTranslationAnimator.setDuration(1550);
+        mTranslationAnimator.setDuration(650);
         mTranslationAnimator.start();
 
         //TODO Add a check to determine if we're within a constant amount of meters from the POI.  If close enough then enable the button

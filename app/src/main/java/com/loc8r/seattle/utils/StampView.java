@@ -58,7 +58,7 @@ public class StampView extends View {
         CircPaint = new Paint();
         CircPaint.setColor(Color.GREEN);
         CircPaint.setStyle(Paint.Style.STROKE);
-
+        CircPaint.setAntiAlias(true);
 
         // Configure Inner circle
         //mInnerCircleRect = getBounds();
@@ -221,8 +221,9 @@ public class StampView extends View {
         //Draw the drop shadow
         Bitmap originalBitmap = drawableToBitmap(mIcon);
         Bitmap shadowImage = originalBitmap.extractAlpha(mShadowPaint, mShadowOffsetXY);
-        Bitmap shadowImage32 = shadowImage.copy(Bitmap.Config.ARGB_8888, true);
-        canvas.drawBitmap(shadowImage32,innerBounds.left,innerBounds.top,mShadowPaint);
+        // Bitmap shadowImage32 = shadowImage.copy(Bitmap.Config.ARGB_8888, true);
+        canvas.drawBitmap(shadowImage,innerBounds.left,innerBounds.top,mShadowPaint);
+        // canvas.drawBitmap(shadowImage32,innerBounds.left,innerBounds.top,mShadowPaint);
 
 //
 //        Log.d("STZ", "draw: Bounds are L:" + String.valueOf(bounds.left) + " - T:" + String.valueOf(bounds.top)+ " - R:" + String.valueOf(bounds.right)+ " - B:" + String.valueOf(bounds.bottom));
