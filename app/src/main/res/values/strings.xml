@@ -65,6 +65,10 @@
     <string name="title_activity_management">ManagementActivity</string>
     <string name="title_activity_add_poi">AddPOIActivity</string>
 
+    <!--Details Activity Strings-->
+    <string name="poi_description_placeholder_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+    <string name="collection_header">Collection:</string>
+    <string name="distance_header">Distance:</string>
 
 
 </resources>

@@ -1,7 +1,7 @@
 Seattle Passport 
 ===================
 
-A simple boilerplate application which demonstrates the downloading, persisting and syncing of data - displayed with a common layout used amongst applications.
+An Android application for exploring the city of Seattle, WA.
 
 The project using the following libraries:
 
