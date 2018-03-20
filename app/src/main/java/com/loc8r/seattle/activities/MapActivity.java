@@ -1,7 +1,6 @@
 package com.loc8r.seattle.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -19,7 +18,6 @@ import android.view.Gravity;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.util.DisplayMetrics;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,7 +31,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
-import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.Constants;
 import com.loc8r.seattle.utils.POIsRequester;
@@ -45,9 +42,7 @@ import android.view.View;
 
 import org.parceler.Parcels;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -71,16 +66,17 @@ public class MapActivity extends GMS_Activity implements
     private TextView mDrawerTitleTV;
     private TextView mDrawerDescTV;
     private Button mDrawerDetailButton;
-    private Location mCurrentLocation;
+    // private Location mCurrentLocation;
     private Context context;
 
     private List<Integer> mExistingPoiMarkers;
+
+    private Boolean haveNotDoneInitialZoomIn;
 
     @BindView(R.id.map_fab) FloatingActionButton mFAB;
 
     // The selected POI
     private POI mSelectedPOI;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +100,8 @@ public class MapActivity extends GMS_Activity implements
         context = this; // Set context so we can use inside the runnable below
 
         mExistingPoiMarkers = new ArrayList<>();
+
+
     }
 
     @OnClick(R.id.map_fab)
@@ -222,6 +220,9 @@ public class MapActivity extends GMS_Activity implements
         // Set listeners for marker events.  See the bottom of this class for their behavior.
         mMap.setOnMarkerClickListener(this);
 
+        // Have we zoomed in on the initial load? no.
+        haveNotDoneInitialZoomIn = true;
+
     }
 
     // Create a location given a Lat & Long
@@ -315,30 +316,19 @@ public class MapActivity extends GMS_Activity implements
                     @Override
                     public void run() {
 
-                        // Check if this is the first time location was retrieved
-                        if(mCurrentLocation==null){
-                            Toast.makeText(getApplicationContext(), "Initial location detected", Toast.LENGTH_SHORT).show();
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationToLatLong(location), 18));
-                        }
 
                         // Store returned location in the state Manager and member variable
                         StateManager.getInstance().setCurrentLocation(location);
-                        mCurrentLocation = location;
 
-                        // clear all current markers on map
-                        // mMap.clear();
-
-                        // If we don't have POIs yes, lets get them
-                        if (StateManager.getInstance().getPOIs().size() == 0 && !StateManager.getInstance().isGettingPOIs()) {
-                            try {
-                                mPOIsRequester.GetAllPOIs((Activity) context);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            // Step through all POI's and show markers for close ones (800 meters)
-                            DrawNearbyMarkers();
+                        // Check if this is the first time location was retrieved
+                        // if so, zoom into our location
+                        if(haveNotDoneInitialZoomIn){
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationToLatLong(location), 18));
+                            haveNotDoneInitialZoomIn=false;
                         }
+
+//                      // Draw Markers
+                        DrawNearbyMarkers();
 
                     }
 
@@ -355,5 +345,11 @@ public class MapActivity extends GMS_Activity implements
      */
     public void onPOIsReceived(ArrayList<POI> POIs) {
         StateManager.getInstance().setPOIs(POIs);
+    }
+
+    public void onPOIsAndStampsInStateManager() {
+        // Data is all in, draw markers
+        Log.d(TAG, "onPOIsAndStampsInStateManager: ***** THE METHOD WAS CALLED, the subclass saw action in the SuperClass");
+        DrawNearbyMarkers();
     }
 }

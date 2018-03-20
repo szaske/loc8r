@@ -139,6 +139,10 @@ public class AddPOIActivity extends GMS_Activity implements
 
     }
 
+    @Override public void onPOIsAndStampsInStateManager() {
+
+    }
+
     /**
      *  Click Listeners
      */
