@@ -3,6 +3,7 @@ package com.loc8r.seattle.utils;
 import android.location.Location;
 import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
+import com.loc8r.seattle.models.Stamp;
 
 import java.util.ArrayList;
 
@@ -11,6 +12,9 @@ public class StateManager {
     private Location currentLocation; // The users current location
     private ArrayList<POI> mPOIs;
     private ArrayList<Collection> mCollections;
+    private ArrayList<Stamp> mStamps;
+    private Boolean gettingPOIs;
+    private Boolean gettingStamps;
 
     public static StateManager getInstance() {
         return ourInstance;
@@ -18,7 +22,10 @@ public class StateManager {
 
     private StateManager() {
         mPOIs = new ArrayList<>();
+        mStamps = new ArrayList<>();
         mCollections = new ArrayList<>();
+        gettingPOIs = false;
+        gettingStamps = false;
     }
 
     public Location getCurrentLocation() {
@@ -38,5 +45,29 @@ public class StateManager {
 
     public void setCollections(ArrayList<Collection> mCollections) {
         this.mCollections = mCollections;
+    }
+
+    public ArrayList<Stamp> getStamps() {
+        return mStamps;
+    }
+
+    public void setStamps(ArrayList<Stamp> mStamps) {
+        this.mStamps = mStamps;
+    }
+
+    public Boolean isGettingPOIs() {
+        return gettingPOIs;
+    }
+
+    public void setGettingPOIs(Boolean gettingPOIs) {
+        this.gettingPOIs = gettingPOIs;
+    }
+
+    public Boolean isGettingStamps() {
+        return gettingStamps;
+    }
+
+    public void setGettingStamps(Boolean gettingStamps) {
+        this.gettingStamps = gettingStamps;
     }
 }

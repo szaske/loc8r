@@ -329,7 +329,7 @@ public class MapActivity extends GMS_Activity implements
                         // mMap.clear();
 
                         // If we don't have POIs yes, lets get them
-                        if (StateManager.getInstance().getPOIs().size() == 0) {
+                        if (StateManager.getInstance().getPOIs().size() == 0 && !StateManager.getInstance().isGettingPOIs()) {
                             try {
                                 mPOIsRequester.GetAllPOIs((Activity) context);
                             } catch (IOException e) {
