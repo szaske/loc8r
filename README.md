@@ -3,19 +3,15 @@ Seattle Passport
 
 An Android application for exploring the city of Seattle, WA.
 
-The project using the following libraries:
+This project uses the following libraries:
 
-- Functional tests with [Espresso](http://google.github.io/android-testing-support-library/docs/espresso)
-- [OkHttp](https://github.com/square/okhttp)
-- [Spoon](https://github.com/square/spoon)
-
+- [Firebase](https://firebase.google.com/)
+- [Picasso](http://square.github.io/picasso/)
+- [Parceler](https://github.com/johncarl81/parceler)
 - [Butterknife](https://github.com/JakeWharton/butterknife)
-
-
-Requirements
-------------
-
- - ???
+- [SlideUP](https://github.com/mancj/SlideUp-Android)
+- Functional tests with [Espresso](http://google.github.io/android-testing-support-library/docs/espresso)
+- [Spoon](https://github.com/square/spoon)
 
 Building
 --------
