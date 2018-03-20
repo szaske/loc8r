@@ -79,7 +79,7 @@ public class CollectionListActivity extends GMS_Activity implements
         mAdapter = new POI_Adapter(mListOfPOIsInCollection, this);
         mRecyclerView.setAdapter(mAdapter);
 
-        //This is the object that can fetch more content
+        // Requester objects to get the list of POI's in the list & the related stamps
         mPOIsRequester = new POIsRequester();
         mStampsRequester = new StampsRequester(this);
     }
