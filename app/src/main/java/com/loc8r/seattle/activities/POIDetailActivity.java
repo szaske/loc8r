@@ -3,6 +3,7 @@ package com.loc8r.seattle.activities;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
+import android.content.Context;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -117,8 +118,15 @@ public class POIDetailActivity extends LocationBase_Activity {
 //        mI.setLayoutParams(params)
 
 
+        //Create a the Passport Stamp view
         mStampView.setStampTitleText("Steve Zaske - Birds");
         mStampView.setStampTimeStampText("DEC 21, 1968");
+        Context context = getApplicationContext();
+        mStampView.setStampIcon(context, context.getResources()
+                .getIdentifier(detailedPoi.getIconName(),
+                        "drawable",
+                        getApplicationContext().getPackageName()));
+        mStampView.setStamped(detailedPoi.isStamped());
         mStampView.invalidate();
 
         mTV_PoiName.setText(detailedPoi.getName());
@@ -132,7 +140,6 @@ public class POIDetailActivity extends LocationBase_Activity {
         user = FirebaseAuth.getInstance().getCurrentUser();
 
     }
-
 
     // TODO Determine if I need to cancel location update onPause or onStop.
     @Override
@@ -200,59 +207,7 @@ public class POIDetailActivity extends LocationBase_Activity {
     @OnClick(R.id.bt_getStamp)
     public void onStampButtonClick() {
 
-        //Create animation
-        /**
-         * ValueAnimator to rotate the stamp
-         */
 
-        // Create animation value holders
-        PropertyValuesHolder RotPropertyHolder = PropertyValuesHolder.ofFloat("Rot", -45,0 );
-        PropertyValuesHolder ZoomPropertyHolder = PropertyValuesHolder.ofFloat("Zoom", 30f,4f );
-        PropertyValuesHolder XPropertyHolder = PropertyValuesHolder.ofFloat("X", -100f,0f );
-        PropertyValuesHolder ElevationPropertyHolder = PropertyValuesHolder.ofFloat("elevation", 30f,4f );
-        PropertyValuesHolder ScalePropertyHolder = PropertyValuesHolder.ofFloat("scale", 2.5f,1f );
-        PropertyValuesHolder TransparencyPropertyHolder = PropertyValuesHolder.ofFloat("Alpha", 0f,1f );
-
-
-        //Create the animator
-        ValueAnimator mTranslationAnimator = ValueAnimator.ofPropertyValuesHolder(RotPropertyHolder,
-                ZoomPropertyHolder,
-                TransparencyPropertyHolder,
-                ElevationPropertyHolder,
-                ScalePropertyHolder,
-                XPropertyHolder);
-
-        // Create the update listener
-        mTranslationAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-
-                // Animate the custom view
-                mStampView.setAlpha((float)animation.getAnimatedValue("Alpha"));
-                mStampView.setRotation((float)animation.getAnimatedValue("Rot"));
-                mStampView.setTranslationZ((float) animation.getAnimatedValue("Zoom"));
-                mStampView.setScaleX((float) animation.getAnimatedValue("scale"));
-                mStampView.setScaleY((float) animation.getAnimatedValue("scale"));
-                // mStampView.setElevation((float) animation.getAnimatedValue("Zoom"));
-
-                mStampView.setTranslationX((float) animation.getAnimatedValue("X"));
-                mStampView.requestLayout();
-
-
-
-
-
-
-            }
-        });
-
-        //Create a time inter
-        Interpolator customInterpolator = PathInterpolatorCompat.create(0.790f, 0.000f, 1.000f, 1.000f);
-
-        //Start the animation
-        mTranslationAnimator.setInterpolator(customInterpolator);
-        mTranslationAnimator.setDuration(650);
-        mTranslationAnimator.start();
 
         //TODO Add a check to determine if we're within a constant amount of meters from the POI.  If close enough then enable the button
 
@@ -299,6 +254,58 @@ public class POIDetailActivity extends LocationBase_Activity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Stamp added");
+
+                        /**
+                         * Show fancy stamp animation
+                         */
+
+                        // Create animation value holders
+                        PropertyValuesHolder RotPropertyHolder = PropertyValuesHolder.ofFloat("Rot", -45,0 );
+                        PropertyValuesHolder ZoomPropertyHolder = PropertyValuesHolder.ofFloat("Zoom", 30f,4f );
+                        PropertyValuesHolder XPropertyHolder = PropertyValuesHolder.ofFloat("X", -100f,0f );
+                        PropertyValuesHolder ElevationPropertyHolder = PropertyValuesHolder.ofFloat("elevation", 30f,4f );
+                        PropertyValuesHolder ScalePropertyHolder = PropertyValuesHolder.ofFloat("scale", 2.5f,1f );
+                        PropertyValuesHolder TransparencyPropertyHolder = PropertyValuesHolder.ofFloat("Alpha", 0f,1f );
+
+
+                        //Create the animator
+                        ValueAnimator mTranslationAnimator = ValueAnimator.ofPropertyValuesHolder(RotPropertyHolder,
+                                ZoomPropertyHolder,
+                                TransparencyPropertyHolder,
+                                ElevationPropertyHolder,
+                                ScalePropertyHolder,
+                                XPropertyHolder);
+
+                        // Create the update listener
+                        mTranslationAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+
+                                // Animate the custom view
+                                mStampView.setAlpha((float)animation.getAnimatedValue("Alpha"));
+                                mStampView.setRotation((float)animation.getAnimatedValue("Rot"));
+                                mStampView.setTranslationZ((float) animation.getAnimatedValue("Zoom"));
+                                mStampView.setScaleX((float) animation.getAnimatedValue("scale"));
+                                mStampView.setScaleY((float) animation.getAnimatedValue("scale"));
+                                // mStampView.setElevation((float) animation.getAnimatedValue("Zoom"));
+
+                                mStampView.setTranslationX((float) animation.getAnimatedValue("X"));
+                                mStampView.requestLayout();
+
+                            }
+                        });
+
+                        //Create a time inter
+                        Interpolator customInterpolator = PathInterpolatorCompat.create(0.790f, 0.000f, 1.000f, 1.000f);
+
+                        //Start the animation
+                        mTranslationAnimator.setInterpolator(customInterpolator);
+                        mTranslationAnimator.setDuration(650);
+                        mTranslationAnimator.start();
+
+                        addStampToStateManager();
+
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -309,6 +316,13 @@ public class POIDetailActivity extends LocationBase_Activity {
                 });
 
         Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     *  Update our local data to show the new stamp
+     */
+    private void addStampToStateManager() {
+        //Find the POI in the list
     }
 
 }
