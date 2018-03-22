@@ -22,6 +22,9 @@ public class Collection {
     // Getters
     public int getId() { return id; }
     public String getName() { return name; }
+    public  String getIconName(){
+        return "icon_" + name.substring(0,3).toLowerCase();
+    }
 
     // Setters
     public void setId(int id) {

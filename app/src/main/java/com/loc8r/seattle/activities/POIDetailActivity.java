@@ -3,22 +3,15 @@ package com.loc8r.seattle.activities;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
-import android.graphics.Rect;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.animation.PathInterpolatorCompat;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,14 +30,12 @@ import com.loc8r.seattle.models.Stamp;
 // import com.loc8r.seattle.mongodb.MongoDBManager;
 import com.loc8r.seattle.models.User;
 import com.loc8r.seattle.utils.ProgressDialog;
-import com.loc8r.seattle.utils.StampDrawable;
 import com.loc8r.seattle.utils.StampView;
 import com.loc8r.seattle.utils.StateManager;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -52,10 +43,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class POIDetailActivity extends GMS_Activity {
+public class POIDetailActivity extends LocationBase_Activity {
 
     // Variables
-    private static final String TAG = GMS_Activity.class.getSimpleName();
+    private static final String TAG = LocationBase_Activity.class.getSimpleName();
     @BindView(R.id.iv_poiImage) ImageView mIV_PoiImage;
     @BindView(R.id.tv_poi_name) TextView mTV_PoiName;
     @BindView(R.id.tv_poi_description) TextView mTV_PoiDescription;

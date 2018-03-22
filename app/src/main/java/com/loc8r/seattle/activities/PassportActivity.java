@@ -13,16 +13,13 @@ import com.loc8r.seattle.adapters.Collections_Adapter;
 import com.loc8r.seattle.interfaces.OnCollectionClickListener;
 import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
-import com.loc8r.seattle.utils.AtoZComparator;
 import com.loc8r.seattle.utils.CollectionsRequester;
 import com.loc8r.seattle.utils.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
-public class PassportActivity extends GMS_Activity implements CollectionsRequester.FireBaseCollectionsResponse, OnCollectionClickListener{
+public class PassportActivity extends LocationBase_Activity implements CollectionsRequester.FireBaseCollectionsResponse, OnCollectionClickListener{
     private static final String TAG = PassportActivity.class.getSimpleName();
     private RecyclerView mRecyclerView;
     private Collections_Adapter mAdapter;

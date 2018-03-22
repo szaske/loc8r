@@ -4,13 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.adapters.POI_Adapter;
@@ -18,7 +15,6 @@ import com.loc8r.seattle.interfaces.OnPOIClickListener;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.utils.Constants;
-import com.loc8r.seattle.utils.CurvedView;
 import com.loc8r.seattle.utils.POIsRequester;
 import com.loc8r.seattle.utils.StampsRequester;
 
@@ -26,9 +22,8 @@ import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class CollectionListActivity extends GMS_Activity implements
+public class CollectionListActivity extends LocationBase_Activity implements
         POIsRequester.FireBasePOICollectionResponse,
         StampsRequester.FireBaseStampResponse,
         OnPOIClickListener {
