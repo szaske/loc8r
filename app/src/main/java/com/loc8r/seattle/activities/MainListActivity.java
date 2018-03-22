@@ -11,16 +11,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.loc8r.seattle.R;
-import com.loc8r.seattle.models.POI;
-import com.loc8r.seattle.models.Stamp;
-import com.loc8r.seattle.utils.POIsRequester;
-import com.loc8r.seattle.utils.StampsRequester;
-import com.loc8r.seattle.utils.StateManager;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-public class MainListActivity extends GMS_Activity
+public class MainListActivity extends LocationBase_Activity
 {
 
     private static final String TAG = MainListActivity.class.getSimpleName();

@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -49,7 +48,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MapActivity extends GMS_Activity implements
+public class MapActivity extends LocationBase_Activity implements
         POIsRequester.FireBasePOIResponse,
         GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback {
@@ -214,7 +213,7 @@ public class MapActivity extends GMS_Activity implements
             Log.e(TAG, "Can't find style. Error: ", e);
         }
 
-        // Allow the map to see the devices location, this should ALREADY have permission to get location from GMS_Activity
+        // Allow the map to see the devices location, this should ALREADY have permission to get location from LocationBase_Activity
         mMap.setMyLocationEnabled(true);
 
         // Set listeners for marker events.  See the bottom of this class for their behavior.

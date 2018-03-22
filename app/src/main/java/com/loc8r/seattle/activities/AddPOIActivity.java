@@ -10,8 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -40,9 +38,6 @@ import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.CollectionsRequester;
 import com.loc8r.seattle.utils.StateManager;
 
-import org.parceler.Parcel;
-import org.parceler.Parcels;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -53,7 +48,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddPOIActivity extends GMS_Activity implements
+public class AddPOIActivity extends LocationBase_Activity implements
         CollectionsRequester.FireBaseCollectionsResponse,
         AdapterView.OnItemSelectedListener {
 

@@ -1,10 +1,13 @@
 package com.loc8r.seattle.adapters;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loc8r.seattle.R;
@@ -67,20 +70,33 @@ public class Collections_Adapter extends RecyclerView.Adapter<Collections_Adapte
     static class Collections_View_Holder extends RecyclerView.ViewHolder {
 
         TextView name;
-        //ImageView imageView;
+        ImageView collectionIcon;
+        Context context;
 
         Collections_View_Holder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.nameTV);
-            // imageView = (ImageView) itemView.findViewById(R.id.poiGroupBackgroundImageView);
+            collectionIcon = itemView.findViewById(R.id.iv_collection_icon);
+            context = itemView.getContext();
         }
 
         public void bind(final Collection item, final OnCollectionClickListener listener){
             name.setText(item.getName());
 
-            //if POI has stamp, set background to red
+            // Get and display the correct icon for each collection
+
+            int iconResource = context.getResources().getIdentifier(item.getIconName(), "drawable", context.getPackageName());
+
+            if ( iconResource != 0 ) {  // the resource exists...
+                Drawable image = context.getResources().getDrawable(iconResource);
+                collectionIcon.setImageDrawable(image);
+            }
+            else {  // checkExistence == 0  // the resource does NOT exist!!
+                collectionIcon.setImageResource(R.drawable.stamp_placeholder);
+            }
 
             // Set background image here
+
             Log.d("ViewHolder-", "bind: method fired");
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View view) {

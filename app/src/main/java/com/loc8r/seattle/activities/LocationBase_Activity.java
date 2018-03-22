@@ -1,7 +1,6 @@
 package com.loc8r.seattle.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,7 +30,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.LocationListener;
-import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.utils.CollectionsRequester;
@@ -42,16 +40,15 @@ import com.loc8r.seattle.utils.StateManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-abstract class GMS_Activity extends BaseActivity implements
+abstract class LocationBase_Activity extends BaseActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         POIsRequester.FireBasePOIResponse,
         StampsRequester.FireBaseStampResponse
 {
     private static final int LOCATION_REQUEST_CODE = 420;
-    private static final String TAG = GMS_Activity.class.getSimpleName();
+    private static final String TAG = LocationBase_Activity.class.getSimpleName();
 
     private CollectionsRequester mCollectionRequester;
     private GoogleApiClient mGoogleApiClient;
@@ -258,7 +255,7 @@ abstract class GMS_Activity extends BaseActivity implements
                     public void onClick(DialogInterface dialog, int which)
                     {
                         dialog.dismiss();
-                        ActivityCompat.requestPermissions(GMS_Activity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_CODE);
+                        ActivityCompat.requestPermissions(LocationBase_Activity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_CODE);
                     }
                 })
                 .setNegativeButton(R.string.exit, new DialogInterface.OnClickListener()
