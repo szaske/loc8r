@@ -346,9 +346,4 @@ public class MapActivity extends LocationBase_Activity implements
         StateManager.getInstance().setPOIs(POIs);
     }
 
-    public void onPOIsAndStampsInStateManager() {
-        // Data is all in, draw markers
-        Log.d(TAG, "onPOIsAndStampsInStateManager: ***** THE METHOD WAS CALLED, the subclass saw action in the SuperClass");
-        DrawNearbyMarkers();
-    }
 }

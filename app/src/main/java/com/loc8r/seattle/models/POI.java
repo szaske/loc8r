@@ -122,6 +122,9 @@ public class POI {
     public int getCollectionPosition() { return collectionPosition; }
     public String getStampText() { return stampText; }
     public Stamp getStamp() { return stamp; }
+    public  String getIconName(){
+        return "icon_" + collection.substring(0,3).toLowerCase();
+    }
 
     // Setters
     public void setId(String id) { this.id = id; }
