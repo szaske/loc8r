@@ -77,20 +77,8 @@ public class StampView extends View {
         // configure an Top Arc, used for curved top text
         mTopArc = new Path();
 
-        PathMeasure test = new PathMeasure(mTopArc,false);
-        Log.d("STZ", "The Top Arc length: " + String.valueOf(test.getLength()));
-        Log.d("STZ", "Text:" + mStampTitleText + " length: " + String.valueOf(mTextPaint.measureText(mStampTitleText)));
-
         // configure the lower arc
-        arcPaint = new Paint();
-        arcPaint.setColor(Color.RED);
-        arcPaint.setStrokeWidth(10);
-        arcPaint.setStyle(Paint.Style.STROKE);
         mLowerArc = new Path();
-
-//        // Add a default collection icon to the view
-//        Resources res =  context.getResources();
-//        mIcon = res.getDrawable(R.drawable.stamp_placeholder);
 
         // Configuration dealing with the drop shadow
         BlurMaskFilter blurFilter = new BlurMaskFilter(13, BlurMaskFilter.Blur.OUTER);
@@ -105,7 +93,6 @@ public class StampView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-
             setOutlineProvider(new FancyOutline(w, h));
     }
 
@@ -176,7 +163,7 @@ public class StampView extends View {
             Float StrokeWidth = bounds.width() * STROKEWIDTH_PERCENTAGE;
 
             // The text arc is drawn 1 half the Strokewitdth inside of the bounds,
-            // so that the stroke with does not get clipped by the view edge.
+            // so that the stroke width does not get clipped by the view edge.
             // Float textArcRadius = (bounds.width()/2)-StrokeWidth/2;
             Float textArcRadius = (bounds.width()-StrokeWidth)/2;
 
@@ -184,10 +171,11 @@ public class StampView extends View {
             CircPaint.setStrokeWidth(StrokeWidth);
             canvas.drawCircle(bounds.centerX(),bounds.centerY(),textArcRadius,CircPaint);
 
+
             // Draw the top text
             mTopArc.addArc(bounds.left,bounds.top,bounds.right,bounds.bottom, -180, 180);
             mTextPaint.setTextSize(targetFontSize);
-            canvas.drawTextOnPath(mStampTitleText, mTopArc, 20, targetFontSize, mTextPaint);
+            canvas.drawTextOnPath(mStampTitleText.toUpperCase(), mTopArc, 0, targetFontSize, mTextPaint);
 
             // Draw bottom text
             mLowerArc.addArc(bounds.left,bounds.top,bounds.right,bounds.bottom, -180, -180);
@@ -237,17 +225,6 @@ public class StampView extends View {
         }
 
     }
-
-//    private void getStampText(Context context, AttributeSet attrs) {
-//        TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.StampView, 0, 0);
-//
-//        try {
-//            mStampTitleText = typedArray.getString(R.styleable.StampView_stampTitle);
-//            mStampTimeStampText = typedArray.getString(R.styleable.StampView_stampTimeStamp);
-//        } finally {
-//            typedArray.recycle();
-//        }
-//    }
 
     /**
      *  Public Stamp title setter
