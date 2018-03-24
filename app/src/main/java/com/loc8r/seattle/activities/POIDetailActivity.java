@@ -39,6 +39,7 @@ import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -131,6 +132,7 @@ public class POIDetailActivity extends LocationBase_Activity {
     private void initStampCreation() {
 
         // We create a Stamp no matter what, as the user might get one right now anyway
+        // This section of code is for items that we always create
         Context context = getApplicationContext();
 
         mStampView.setStampTitleText(detailedPoi.getStampText());
@@ -140,22 +142,35 @@ public class POIDetailActivity extends LocationBase_Activity {
                         "drawable",
                         getApplicationContext().getPackageName()));
 
-
         if(detailedPoi.isStamped()){ // We have a stamp
-
             mStampBtn.setVisibility(View.GONE);
             mStampView.setStampTimeStampText(timeStampStringConversion(detailedPoi.getStamp().getTimestamp()));
-            mStampView.setStamped(true);
-            // git mStampView.invalidate(); // force a redraw
+            mStampView.setStamped(true); //setStamped automatically invalidates the view, so none is needed.
 
         } else {
-            //We don't have a stamp
+            // Create a default timestamp
+            SimpleDateFormat defaultDateFormat = new SimpleDateFormat("MMM dd, yyyy");
+            String defaultTimestamp = defaultDateFormat.format(new Date());
+            mStampView.setStampTimeStampText(defaultTimestamp);
         }
-
     }
 
     private String timeStampStringConversion(String dbTimeStampString) {
-        return "DEC 21, 1968";
+
+        SimpleDateFormat oldFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+        SimpleDateFormat newFormat = new SimpleDateFormat("MMM dd, yyyy");
+
+        Date date = null;
+
+        try {
+            date = oldFormat.parse(dbTimeStampString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //Convert to a new nice looking format
+        return newFormat.format(date);
+
     }
 
     // TODO Determine if I need to cancel location update onPause or onStop.
