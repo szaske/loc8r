@@ -10,8 +10,10 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Interpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +57,7 @@ public class POIDetailActivity extends LocationBase_Activity {
     @BindView(R.id.tv_collection) TextView mTV_PoiCollection;
 
     @BindView(R.id.stampView) StampView mStampView;
-//    @BindView(R.id.getStampBtn) Button mStampBtn;
+    @BindView(R.id.bt_getStamp) Button mStampBtn;
 
 
     // TODO Should I move currentLocation to the State Manager?
@@ -109,25 +111,10 @@ public class POIDetailActivity extends LocationBase_Activity {
             }
         });
 
-
         Log.d(TAG, "Detail view " + detailedPoi.getName());
 
-//        int width = 60;
-//        int height = 60;
-//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width,height);
-//        mI.setLayoutParams(params)
-
-
         //Create a the Passport Stamp view
-        mStampView.setStampTitleText("Steve Zaske - Birds");
-        mStampView.setStampTimeStampText("DEC 21, 1968");
-        Context context = getApplicationContext();
-        mStampView.setStampIcon(context, context.getResources()
-                .getIdentifier(detailedPoi.getIconName(),
-                        "drawable",
-                        getApplicationContext().getPackageName()));
-        mStampView.setStamped(detailedPoi.isStamped());
-        mStampView.invalidate();
+        initStampCreation();
 
         mTV_PoiName.setText(detailedPoi.getName());
         mTV_PoiDescription.setText(detailedPoi.getDescription());
@@ -139,6 +126,36 @@ public class POIDetailActivity extends LocationBase_Activity {
         //        //Get the Firebase user
         user = FirebaseAuth.getInstance().getCurrentUser();
 
+    }
+
+    private void initStampCreation() {
+
+        // We create a Stamp no matter what, as the user might get one right now anyway
+        Context context = getApplicationContext();
+
+        mStampView.setStampTitleText(detailedPoi.getStampText());
+
+        mStampView.setStampIcon(context, context.getResources()
+                .getIdentifier(detailedPoi.getIconName(),
+                        "drawable",
+                        getApplicationContext().getPackageName()));
+
+
+        if(detailedPoi.isStamped()){ // We have a stamp
+
+            mStampBtn.setVisibility(View.GONE);
+            mStampView.setStampTimeStampText(timeStampStringConversion(detailedPoi.getStamp().getTimestamp()));
+            mStampView.setStamped(true);
+            // git mStampView.invalidate(); // force a redraw
+
+        } else {
+            //We don't have a stamp
+        }
+
+    }
+
+    private String timeStampStringConversion(String dbTimeStampString) {
+        return "DEC 21, 1968";
     }
 
     // TODO Determine if I need to cancel location update onPause or onStop.
@@ -207,28 +224,41 @@ public class POIDetailActivity extends LocationBase_Activity {
     @OnClick(R.id.bt_getStamp)
     public void onStampButtonClick() {
 
-
-
         //TODO Add a check to determine if we're within a constant amount of meters from the POI.  If close enough then enable the button
 
-        //Create a doc reference to this specific stamp
-        DocumentReference stampDocRef = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("stamps")
-                .document(detailedPoi.getId());
+        // Hide button;
+        mStampBtn.setVisibility(View.GONE);
 
-        //Attempt to get the document/object...if it does not exist then get the stamp
-        stampDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                //City city = documentSnapshot.toObject(City.class);
-                if(documentSnapshot.exists()){
-                    Log.d(TAG, "the stamp already EXISTS, aborting save");
-                } else {
-                    Log.d(TAG, "onSuccess: NO Stamp found, lets make one");
-                    AddStampToDB();
-                }
+            public void run() {
+
+                final Stamp newStamp = CreateStamp(); // Create a new stamp
+
+                // See what happens with animation in separate thread.
+                animateGettingStamp();
+
+                //Create a doc reference to this specific stamp
+                DocumentReference stampDocRef = db
+                        .collection("users")
+                        .document(user.getUid())
+                        .collection("stamps")
+                        .document(detailedPoi.getId());
+
+                //Attempt to get the document/object...if it does not exist then get the stamp
+                stampDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        //City city = documentSnapshot.toObject(City.class);
+                        if(documentSnapshot.exists()){
+                            Log.d(TAG, "the stamp already EXISTS, aborting save");
+                        } else {
+                            Log.d(TAG, "onSuccess: NO Stamp found, lets make one");
+
+                            AddStampToDB(newStamp);
+                        }
+                    }
+                });
             }
         });
     }
@@ -238,13 +268,66 @@ public class POIDetailActivity extends LocationBase_Activity {
         finish();
     }
 
-    private void AddStampToDB(){
+    private void animateGettingStamp(){
+
+        // Change StampView to show stamp
+        mStampView.setElevation(4f);
+        mStampView.setStamped(true);
+        // mStampView.invalidate(); // force a redraw
+
+        // Create animation value holders
+        PropertyValuesHolder RotPropertyHolder = PropertyValuesHolder.ofFloat("Rot", -45,0 );
+        PropertyValuesHolder ZoomPropertyHolder = PropertyValuesHolder.ofFloat("Zoom", 30f,4f );
+        PropertyValuesHolder XPropertyHolder = PropertyValuesHolder.ofFloat("X", -100f,0f );
+        PropertyValuesHolder ElevationPropertyHolder = PropertyValuesHolder.ofFloat("elevation", 30f,4f );
+        PropertyValuesHolder ScalePropertyHolder = PropertyValuesHolder.ofFloat("scale", 2.5f,1f );
+        PropertyValuesHolder TransparencyPropertyHolder = PropertyValuesHolder.ofFloat("Alpha", 0f,1f );
+
+
+        //Create the animator
+        ValueAnimator mTranslationAnimator = ValueAnimator.ofPropertyValuesHolder(RotPropertyHolder,
+                ZoomPropertyHolder,
+                TransparencyPropertyHolder,
+                ElevationPropertyHolder,
+                ScalePropertyHolder,
+                XPropertyHolder);
+
+        // Create the update listener
+        mTranslationAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+
+                // Animate the custom view
+                mStampView.setAlpha((float)animation.getAnimatedValue("Alpha"));
+                mStampView.setRotation((float)animation.getAnimatedValue("Rot"));
+                mStampView.setTranslationZ((float) animation.getAnimatedValue("Zoom"));
+                mStampView.setScaleX((float) animation.getAnimatedValue("scale"));
+                mStampView.setScaleY((float) animation.getAnimatedValue("scale"));
+                // mStampView.setElevation((float) animation.getAnimatedValue("Zoom"));
+
+                mStampView.setTranslationX((float) animation.getAnimatedValue("X"));
+                mStampView.requestLayout();
+
+            }
+        });
+
+        //Create a time inter
+        Interpolator customInterpolator = PathInterpolatorCompat.create(0.790f, 0.000f, 1.000f, 1.000f);
+
+        //Start the animation
+        mTranslationAnimator.setInterpolator(customInterpolator);
+        mTranslationAnimator.setDuration(650);
+        mTranslationAnimator.start();
+
+    }
+
+
+    private void AddStampToDB(final Stamp newStamp){
         Log.d(TAG, "onClick: fired");
         String uid = user.getUid();
         User ESUser = new User();
-        Stamp newStamp = CreateStamp(); // Create a new stamp
 
-        // Create the user with a stamps collection
+        // Update Firebase adding Stamp to the user stamps collection
         db.collection("users")
                 .document(uid)
                 .collection("stamps")
@@ -254,57 +337,7 @@ public class POIDetailActivity extends LocationBase_Activity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Stamp added");
-
-                        /**
-                         * Show fancy stamp animation
-                         */
-
-                        // Create animation value holders
-                        PropertyValuesHolder RotPropertyHolder = PropertyValuesHolder.ofFloat("Rot", -45,0 );
-                        PropertyValuesHolder ZoomPropertyHolder = PropertyValuesHolder.ofFloat("Zoom", 30f,4f );
-                        PropertyValuesHolder XPropertyHolder = PropertyValuesHolder.ofFloat("X", -100f,0f );
-                        PropertyValuesHolder ElevationPropertyHolder = PropertyValuesHolder.ofFloat("elevation", 30f,4f );
-                        PropertyValuesHolder ScalePropertyHolder = PropertyValuesHolder.ofFloat("scale", 2.5f,1f );
-                        PropertyValuesHolder TransparencyPropertyHolder = PropertyValuesHolder.ofFloat("Alpha", 0f,1f );
-
-
-                        //Create the animator
-                        ValueAnimator mTranslationAnimator = ValueAnimator.ofPropertyValuesHolder(RotPropertyHolder,
-                                ZoomPropertyHolder,
-                                TransparencyPropertyHolder,
-                                ElevationPropertyHolder,
-                                ScalePropertyHolder,
-                                XPropertyHolder);
-
-                        // Create the update listener
-                        mTranslationAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator animation) {
-
-                                // Animate the custom view
-                                mStampView.setAlpha((float)animation.getAnimatedValue("Alpha"));
-                                mStampView.setRotation((float)animation.getAnimatedValue("Rot"));
-                                mStampView.setTranslationZ((float) animation.getAnimatedValue("Zoom"));
-                                mStampView.setScaleX((float) animation.getAnimatedValue("scale"));
-                                mStampView.setScaleY((float) animation.getAnimatedValue("scale"));
-                                // mStampView.setElevation((float) animation.getAnimatedValue("Zoom"));
-
-                                mStampView.setTranslationX((float) animation.getAnimatedValue("X"));
-                                mStampView.requestLayout();
-
-                            }
-                        });
-
-                        //Create a time inter
-                        Interpolator customInterpolator = PathInterpolatorCompat.create(0.790f, 0.000f, 1.000f, 1.000f);
-
-                        //Start the animation
-                        mTranslationAnimator.setInterpolator(customInterpolator);
-                        mTranslationAnimator.setDuration(650);
-                        mTranslationAnimator.start();
-
-                        addStampToStateManager();
-
+                        addStampToStateManager(newStamp);
 
                     }
                 })
@@ -321,8 +354,20 @@ public class POIDetailActivity extends LocationBase_Activity {
     /**
      *  Update our local data to show the new stamp
      */
-    private void addStampToStateManager() {
+    private void addStampToStateManager(Stamp stamp) {
         //Find the POI in the list
+        POI updatedPOI = findPOIinStateManager(detailedPoi.getId());
+        updatedPOI.setStamp(stamp);
+
+    }
+
+    private POI findPOIinStateManager(String id) {
+        for(POI poi : StateManager.getInstance().getPOIs()) {
+            if(poi.getId().equals(id)) {
+                return poi;
+            }
+        }
+        return null;
     }
 
 }

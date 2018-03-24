@@ -17,14 +17,15 @@ import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.utils.Constants;
 import com.loc8r.seattle.utils.POIsRequester;
 import com.loc8r.seattle.utils.StampsRequester;
+import com.loc8r.seattle.utils.StateManager;
 
 import org.parceler.Parcels;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class CollectionListActivity extends LocationBase_Activity implements
-        POIsRequester.FireBasePOICollectionResponse,
+public class CollectionListActivity extends BaseActivity implements
         StampsRequester.FireBaseStampResponse,
         OnPOIClickListener {
     private static final String TAG = CollectionListActivity.class.getSimpleName();
@@ -75,7 +76,7 @@ public class CollectionListActivity extends LocationBase_Activity implements
         mRecyclerView.setAdapter(mAdapter);
 
         // Requester objects to get the list of POI's in the list & the related stamps
-        mPOIsRequester = new POIsRequester();
+        // mPOIsRequester = new POIsRequester();
         mStampsRequester = new StampsRequester(this);
     }
 
@@ -83,20 +84,50 @@ public class CollectionListActivity extends LocationBase_Activity implements
     protected void onStart() {
         super.onStart();
 
-        // Better get some content if we don't have it already
-        if (mListOfPOIsInCollection.size() == 0) {
-            requestPOICollections();
-        }
+
     }
 
-    private void requestPOICollections() {
+    @Override protected void onResume() {
+        super.onResume();
 
-        try {
-            mPOIsRequester.GetPoiByCollection(this,mSelectedCollection);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                    ArrayList<POI> newPOIs = getPOIsByCollectionFromStateManager(mSelectedCollection);
+
+                    // See https://stackoverflow.com/questions/15422120/notifydatasetchange-not-working-from-custom-adapter
+                    mListOfPOIsInCollection.clear();
+                    mListOfPOIsInCollection.addAll(newPOIs);
+
+                // Now get Stamps for this collection
+                try {
+                    mStampsRequester.GetUserStampsByCollection(mSelectedCollection);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
+
+    private ArrayList<POI> getPOIsByCollectionFromStateManager(String collection) {
+        ArrayList<POI> results = new ArrayList<>();
+        for(POI poi: StateManager.getInstance().getPOIs()){
+            if(poi.getCollection().equals(collection)){
+                results.add(poi);
+            }
+        }
+        return results;
+    }
+
+//    private void requestPOICollections() {
+//
+//        try {
+//            // mPOIsRequester.GetPoiByCollection(this,mSelectedCollection);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public void OnPOIClick (POI poi) {
@@ -126,24 +157,19 @@ public class CollectionListActivity extends LocationBase_Activity implements
         return false;
     }
 
-    @Override public void onPOIsCollectionReceived(final ArrayList<POI> POIsSent, final String collection) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                mListOfPOIsInCollection.clear(); //not sure clear is needed, but being safe
-                mListOfPOIsInCollection.addAll(POIsSent); // This adds a new item to the list
-
-                // Now get Stamps for this collection
-                try {
-                    mStampsRequester.GetUserStampsByCollection(collection);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-    }
+//    @Override public void onPOIsCollectionReceived(final ArrayList<POI> POIsSent, final String collection) {
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                mListOfPOIsInCollection.clear(); //not sure clear is needed, but being safe
+//                mListOfPOIsInCollection.addAll(POIsSent); // This adds a new item to the list
+//
+//
+//
+//            }
+//        });
+//    }
 
     public void onStampsReceived(final ArrayList<Stamp> Stamps) {
         runOnUiThread(new Runnable() {

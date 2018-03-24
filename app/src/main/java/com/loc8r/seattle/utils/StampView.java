@@ -45,7 +45,7 @@ public class StampView extends View {
     private int mHeight;
     int[] mShadowOffsetXY;
     private Path mTopArc, mLowerArc;
-    private Drawable mIcon;
+    private Drawable mIcon, stampPlaceholder;
     private Rect bounds, mOuterCircleRect, mInnerCircleRect;
 
     public StampView(Context context, @Nullable AttributeSet attrs) {
@@ -58,32 +58,23 @@ public class StampView extends View {
             mStampTimeStampText = "";
         }
 
-
-
         // Configure Outer Circle
         CircPaint = new Paint();
         CircPaint.setColor(Color.GREEN);
         CircPaint.setStyle(Paint.Style.STROKE);
         CircPaint.setAntiAlias(true);
 
-        // Configure Inner circle
-        //mInnerCircleRect = getBounds();
-        //mInnerCircleRect.inset(STROKEWIDTH_PERCENTAGE,STROKEWIDTH_PERCENTAGE);
-
-        // remember passed parameters (for some reason)
+        // Configure the default text
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
         mTextPaint.setTextSize(100);
         mTextPaint.setTextScaleX(1.0f);
         mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
         mTextPaint.setLetterSpacing(0.1f);
-
-
         mTextPaint.setColor(DEFAULT_COLOR);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
         mTextPaint.setStyle(Paint.Style.FILL);
 
-        // configure an Top Arc
+        // configure an Top Arc, used for curved top text
         mTopArc = new Path();
 
         PathMeasure test = new PathMeasure(mTopArc,false);
@@ -106,6 +97,10 @@ public class StampView extends View {
         mShadowPaint = new Paint();
         mShadowPaint.setMaskFilter(blurFilter);
         mShadowOffsetXY = new int[14];
+
+        //Configure the placeholder
+        stampPlaceholder = getResources().getDrawable(R.drawable.stamp_placeholder);
+
     }
 
     @Override
@@ -236,6 +231,9 @@ public class StampView extends View {
 
         } else {
             // Draw a placeholder instead
+            stampPlaceholder.setBounds(bounds);
+            stampPlaceholder.draw(canvas);
+
         }
 
     }
@@ -278,8 +276,9 @@ public class StampView extends View {
 
     }
 
-    public void setStamped(boolean bool) { this.stamped = bool; }
-    public boolean isStamped() { return this.stamped; }
+    public void setStamped(boolean bool) {
+        this.stamped = bool;
+        this.invalidate();}
 
     public static Bitmap drawableToBitmap (Drawable drawable) {
 
