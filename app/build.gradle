@@ -1,3 +1,10 @@
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 0
+def versionBuild = 0 // bump for dogfood builds, public betas, etc.
+
+
+
 buildscript {
     repositories {
         jcenter()
@@ -30,13 +37,13 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
     defaultConfig {
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         applicationId "com.loc8r.seattle"
         minSdkVersion 21
         targetSdkVersion 26
         //Added to resolve Gradle compile error 'app:transformClassesWithDexForDebug'
         multiDexEnabled true
-        versionCode 1
-        versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

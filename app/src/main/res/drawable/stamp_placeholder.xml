@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!--padding-->
-    <item android:left="6dp"
-        android:right="6dp"
-        android:bottom="6dp"
-        android:top="6dp">
-
-        <shape
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
             android:shape="oval">
 
-            <solid
-                android:color="#1a000000"/>
+            <!--<solid-->
+                <!--android:color="#12000000"/>-->
+
+            <gradient
+                android:type="radial"
+                android:gradientRadius="55dp"
+                android:startColor="#26000000"
+                android:endColor="#00000000"
+                android:centerX="0.53"
+                android:centerY="0.53"
+
+                />
+
 
             <!--minus the padding-->
             <size
-                android:width="52dp"
-                android:height="52dp"/>
+                android:width="60dp"
+                android:height="60dp"/>
             <stroke
-                android:color="#df000000"
-                android:dashWidth="1dp"
-                android:dashGap="1.7dp"
-                android:width="1dp"/>
+                android:color="#d1000000"
+                android:dashWidth="4dp"
+                android:dashGap="5dp"
+                android:width="2dp"/>
 
             <padding
                 android:bottom="10dp"
@@ -36,8 +39,3 @@
                 android:topRightRadius="6dp" />
 
         </shape>
-    </item>
-</layer-list>
-
-
-

@@ -13,7 +13,7 @@ import org.parceler.Parcel;
  * A POJO Class for a POI (Point Of Interest)
  */
 @Parcel
-public class POI {
+public class POI  {
     String id;
     String name;
     int release;
@@ -70,7 +70,6 @@ public class POI {
         return collection.toLowerCase().substring(0,3);
     }
 
-
     /**
      *  Calculates the distance between a POI and the user, in meters
      *
@@ -126,6 +125,7 @@ public class POI {
         return "icon_" + collection.substring(0,3).toLowerCase();
     }
 
+
     // Setters
     public void setId(String id) { this.id = id; }
     public void setName(String name) {
@@ -151,8 +151,6 @@ public class POI {
         this.collectionPosition = collectionPosition;
     }
     public void setStampText(String stampText) { this.stampText = stampText; }
-    public void setStamp(Stamp stamp){
-        this.stamp = stamp;
-    }
+    public void setStamp(Stamp stamp){ this.stamp = stamp; }
 
 }

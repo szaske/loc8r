@@ -200,19 +200,6 @@
                 app:layout_constraintStart_toEndOf="@+id/firstColumn"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/iv_stamp_placeholder"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="0dp"
-                    android:adjustViewBounds="true"
-                    android:padding="8dp"
-                    android:scaleType="fitXY"
-                    app:layout_constraintEnd_toEndOf="@+id/bt_getStamp"
-                    app:layout_constraintStart_toStartOf="@+id/bt_getStamp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/bullseye" />
-
                 <Button
                     android:id="@+id/bt_getStamp"
                     android:layout_width="match_parent"
@@ -221,6 +208,17 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/iv_stamp_placeholder" />
+
+                <com.loc8r.seattle.utils.StampView
+                    android:id="@+id/stampView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/bt_getStamp" />
 
             </android.support.constraint.ConstraintLayout>
 
