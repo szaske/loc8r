@@ -15,6 +15,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 public class BaseActivity extends AppCompatActivity {
 
+
     // Variables
     //private static final String TAG = BaseActivity.class.getSimpleName();
 

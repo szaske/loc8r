@@ -68,11 +68,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
 
-                    //Get all stamps for this user.  This may not actually be called if the data in the cloud is not dirty.
-                    // Need to figure this out
-                    // getAllStamps();
-
-
                     Intent intent = new Intent(LoginActivity.this, MainListActivity.class);
 
                     // NEW TASK FLAG - makes the activity we're going to be on the stack history

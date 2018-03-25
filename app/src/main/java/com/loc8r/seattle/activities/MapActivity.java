@@ -57,7 +57,7 @@ public class MapActivity extends LocationBase_Activity implements
     private GoogleMap mMap;
 
     // private ArrayList<POI> mListOfPOIs;
-    private POIsRequester mPOIsRequester; //helper class
+    //private POIsRequester mPOIsRequester; //helper class
 
     private SlideUp mDrawer;
     private View mDrawerView;
@@ -95,7 +95,7 @@ public class MapActivity extends LocationBase_Activity implements
 
         //mListOfPOIs = new ArrayList<>(); // Create an empty list to hold POIs
         //This is the object that can fetch more content
-        mPOIsRequester = new POIsRequester();
+        //mPOIsRequester = new POIsRequester();
         context = this; // Set context so we can use inside the runnable below
 
         mExistingPoiMarkers = new ArrayList<>();

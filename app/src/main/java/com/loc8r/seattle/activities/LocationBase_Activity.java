@@ -41,11 +41,9 @@ import com.loc8r.seattle.utils.StateManager;
 import java.io.IOException;
 import java.util.ArrayList;
 
-abstract class LocationBase_Activity extends BaseActivity implements
+public class LocationBase_Activity extends BaseActivity implements
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        POIsRequester.FireBasePOIResponse,
-        StampsRequester.FireBaseStampResponse
+        GoogleApiClient.OnConnectionFailedListener
 {
     private static final int LOCATION_REQUEST_CODE = 420;
     private static final String TAG = LocationBase_Activity.class.getSimpleName();
@@ -55,8 +53,7 @@ abstract class LocationBase_Activity extends BaseActivity implements
     private AlertDialog mLocationEnabledDialog;
     private com.google.android.gms.location.LocationListener mPoiLocationListener;
 
-    private POIsRequester mPOIsRequester; //helper class
-    private StampsRequester mStampsRequester;
+
 
 
     @Override
@@ -95,9 +92,7 @@ abstract class LocationBase_Activity extends BaseActivity implements
 
         initGoogleLocationServices();
 
-        // Requester objects to get the list of POI's in the list & the related stamps
-        mPOIsRequester = new POIsRequester();
-        mStampsRequester = new StampsRequester(this);
+
     }
 
     @Override
@@ -105,12 +100,6 @@ abstract class LocationBase_Activity extends BaseActivity implements
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
-
-        // Better get some content if we don't have it already
-        if (StateManager.getInstance().getPOIs().size() == 0 && !StateManager.getInstance().isGettingPOIs()) {
-            fetchAllToStateManager();
-        }
-
         super.onStart();
     }
 
@@ -425,56 +414,7 @@ abstract class LocationBase_Activity extends BaseActivity implements
 
     }
 
-    private void fetchAllToStateManager() {
-        StateManager.getInstance().setGettingPOIs(true); // tracking the process
 
-        try {
-            mPOIsRequester.GetAllPOIs(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override public void onPOIsReceived (final ArrayList<POI> POIsSent) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                StateManager.getInstance().setPOIs(POIsSent);
-                StateManager.getInstance().setGettingPOIs(false);
-
-                // Now get Stamps for this collection
-                StateManager.getInstance().setGettingStamps(true);
-                try {
-                    mStampsRequester.GetUserStamps();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    public void onStampsReceived(final ArrayList<Stamp> Stamps) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                for (Stamp stamp: Stamps) {
-                    // Works because I overrode equals in POI model
-                    for (POI poi: StateManager.getInstance().getPOIs()) {
-                        if(poi.getId().equals(stamp.getPoiId())){
-                            poi.setStamp(stamp);
-                            break;
-                        }
-                    }
-                }
-
-                StateManager.getInstance().setGettingStamps(false);
-                Log.d(TAG, "We got it all FOLKS!");
-                onPOIsAndStampsInStateManager();
-            }
-        });
-
-    }
 
     // callback to sub-classes when POIs and Stamps have been added to StateManager
     public void onPOIsAndStampsInStateManager(){

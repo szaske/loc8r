@@ -2,6 +2,7 @@ package com.loc8r.seattle.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.adapters.POI_Adapter;
 import com.loc8r.seattle.interfaces.OnPOIClickListener;
@@ -37,8 +45,11 @@ public class CollectionListActivity extends BaseActivity implements
     public ArrayList<Stamp> mListOfStamps;
     private String mSelectedCollection;
 
-    private POIsRequester mPOIsRequester; //helper class
-    private StampsRequester mStampsRequester;
+    //private POIsRequester mPOIsRequester; //helper class
+    // private StampsRequester mStampsRequester;
+    FirebaseFirestore db;
+    FirebaseUser user;
+
     private ConstraintLayout v;
 
     @Override
@@ -50,7 +61,6 @@ public class CollectionListActivity extends BaseActivity implements
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Get restaurant ID from extras
 
         try {
             mSelectedCollection = getIntent().getExtras().getString(Constants.SELECTED_COLLECTION_KEY);
@@ -77,7 +87,9 @@ public class CollectionListActivity extends BaseActivity implements
 
         // Requester objects to get the list of POI's in the list & the related stamps
         // mPOIsRequester = new POIsRequester();
-        mStampsRequester = new StampsRequester(this);
+        //mStampsRequester = new StampsRequester(this);
+        db = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -101,13 +113,43 @@ public class CollectionListActivity extends BaseActivity implements
 
                 // Now get Stamps for this collection
                 try {
-                    mStampsRequester.GetUserStampsByCollection(mSelectedCollection);
+                    GetUserStampsByCollection(mSelectedCollection);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
             }
         });
+    }
+
+    public void GetUserStampsByCollection(String collection) throws IOException {
+        Log.d("STZ", "GetAllPOI method started ");
+        db.collection("users")
+                .document(user.getUid())
+                .collection("stamps")
+                .whereEqualTo("collection",collection)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("STZ", "Getting POIs task completed successfully, now converting to POI class ");
+                            ArrayList<Stamp> results = new ArrayList<>();
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Stamp sentStamp = document.toObject(Stamp.class);
+                                results.add(sentStamp);
+                                // Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+
+                            // Send results back to host activity
+                            onStampsReceived(results);
+                            Log.d("STZ", "onComplete: ");
+
+                        } else {
+                            Log.d(TAG, "Error getting POIs. ", task.getException());
+                        }
+                    }
+                });
     }
 
     private ArrayList<POI> getPOIsByCollectionFromStateManager(String collection) {

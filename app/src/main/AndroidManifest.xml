@@ -56,15 +56,15 @@
 
         <activity android:name=".activities.BaseActivity" />
         <activity android:name=".activities.LoginActivity">
+
+        </activity>
+        <activity android:name=".activities.CreateAccountActivity" />
+        <activity android:name=".activities.MainListActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.CreateAccountActivity" />
-        <activity android:name=".activities.GMS_Activity" />
-        <activity android:name=".activities.MainListActivity" />
         <activity
             android:name=".activities.MapActivity"
             android:label="@string/title_activity_maps" />
