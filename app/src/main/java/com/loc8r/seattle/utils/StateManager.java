@@ -24,7 +24,7 @@ public class StateManager {
     private StateManager() {
         mPOIs = new ArrayList<>();
         mStamps = new ArrayList<>();
-        // mCollections = new ArrayList<>();
+        mCollections = new ArrayList<>();
         gettingPOIs = false;
         gettingStamps = false;
     }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.OnCollectionClickListener;
 import com.loc8r.seattle.models.Collection;
+import com.loc8r.seattle.utils.StampView;
 
 import java.util.ArrayList;
 
@@ -71,6 +72,7 @@ public class Collections_Adapter extends RecyclerView.Adapter<Collections_Adapte
 
         TextView name;
         ImageView collectionIcon;
+        StampView stampView;
         Context context;
 
         Collections_View_Holder(View itemView) {

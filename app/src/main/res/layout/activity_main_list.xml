@@ -2,29 +2,46 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_menu_bg"
     android:theme="@style/Theme.SeattlePassport"
-
     tools:context="com.loc8r.seattle.activities.MainListActivity">
+
+    <ImageView
+        android:id="@+id/iv_background_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/main_menu_bg" />
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
+    <View
+        android:id="@+id/scrimTop"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/scrim_top"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
     <TextView
-        android:id="@+id/tvTitle"
+        android:id="@+id/tv_main_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
+        android:lineSpacingMultiplier=".8"
         android:text="@string/poi_list_title"
+        android:textAlignment="center"
         android:textAppearance="@style/MainMenu_Title"
-        android:textStyle="bold"
         android:textColor="@color/secondaryColor"
-        app:fontPath="@string/font_comfortaa_light"
+        android:textStyle="bold"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
@@ -33,7 +50,7 @@
         android:id="@+id/explore_Button"
         android:layout_width="280dp"
         android:layout_height="100dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/main_menu_button"
         android:shadowColor="#000000"
         android:shadowDx="1"
@@ -43,15 +60,15 @@
         android:textColor="@color/primaryTextColor"
         android:textSize="20sp"
         app:fontPath="fonts/Roboto-Bold.ttf"
+        app:layout_constraintBottom_toTopOf="@+id/my_passport_Button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/my_passport_Button"
         android:layout_width="280dp"
         android:layout_height="100dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/main_menu_button"
         android:shadowColor="#000000"
         android:shadowDx="1"
@@ -61,23 +78,7 @@
         android:textColor="@color/primaryTextColor"
         android:textSize="20sp"
         app:fontPath="fonts/Roboto-Bold.ttf"
-        app:layout_constraintStart_toStartOf="@+id/explore_Button"
-        app:layout_constraintTop_toBottomOf="@+id/explore_Button" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/explore_Button" />
 
-    <Button
-        android:id="@+id/settings_Button"
-        android:layout_width="280dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/main_menu_button"
-        android:shadowColor="#000000"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="1.5"
-        android:text="Settings"
-        android:textColor="@color/primaryTextColor"
-        android:textSize="20sp"
-        app:fontPath="fonts/Roboto-Bold.ttf"
-        app:layout_constraintStart_toStartOf="@+id/my_passport_Button"
-        app:layout_constraintTop_toBottomOf="@+id/my_passport_Button" />
 </android.support.constraint.ConstraintLayout>

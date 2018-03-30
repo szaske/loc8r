@@ -4,7 +4,6 @@ def versionPatch = 0
 def versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
 
-
 buildscript {
     repositories {
         jcenter()
@@ -111,7 +110,6 @@ dependencies {
     compile 'com.firebaseui:firebase-ui-auth:3.2.2'
     // Required only if Facebook login support is required
     compile('com.facebook.android:facebook-android-sdk:4.27.0')
-
 
     // Testing Dependencies
     compile 'com.jraska:falcon:1.0.4'

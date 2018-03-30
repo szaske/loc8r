@@ -32,9 +32,19 @@
                         android:id="@+id/iv_poiImage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/main_menu_bg" />
 
                 </LinearLayout>
+
+                <View
+                    android:id="@+id/scrimTop"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/scrim_top"
+                    app:layout_constraintTop_toTopOf="@+id/imageHolder" />
 
                 <View
                     android:id="@+id/scrimBottom"
@@ -200,27 +210,32 @@
                 app:layout_constraintStart_toEndOf="@+id/firstColumn"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/iv_stamp_placeholder"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="0dp"
-                    android:adjustViewBounds="true"
-                    android:padding="8dp"
-                    android:scaleType="fitXY"
-                    app:layout_constraintEnd_toEndOf="@+id/bt_getStamp"
-                    app:layout_constraintStart_toStartOf="@+id/bt_getStamp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/bullseye" />
-
                 <Button
                     android:id="@+id/bt_getStamp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/get_stamp_button"
+                    app:layout_constraintBottom_toBottomOf="@+id/stampView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_stamp_placeholder" />
+                    app:layout_constraintTop_toTopOf="@+id/stampView" />
+
+                <com.loc8r.seattle.utils.StampView
+                    android:id="@+id/stampView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:adjustViewBounds="true"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
 

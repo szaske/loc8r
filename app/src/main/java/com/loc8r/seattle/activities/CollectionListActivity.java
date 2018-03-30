@@ -2,6 +2,7 @@ package com.loc8r.seattle.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,20 +19,25 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.loc8r.seattle.R;
+import com.loc8r.seattle.activities.base.BaseActivity;
 import com.loc8r.seattle.adapters.POI_Adapter;
 import com.loc8r.seattle.interfaces.OnPOIClickListener;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.utils.Constants;
-import com.loc8r.seattle.utils.POIsRequester;
+import com.loc8r.seattle.utils.StampView;
 import com.loc8r.seattle.utils.StampsRequester;
 import com.loc8r.seattle.utils.StateManager;
 
 import org.parceler.Parcels;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class CollectionListActivity extends BaseActivity implements
         StampsRequester.FireBaseStampResponse,
@@ -42,20 +48,45 @@ public class CollectionListActivity extends BaseActivity implements
     private RecyclerView.LayoutManager mLayoutManager;
 
     private ArrayList<POI> mListOfPOIsInCollection;
-    public ArrayList<Stamp> mListOfStamps;
     private String mSelectedCollection;
 
-    //private POIsRequester mPOIsRequester; //helper class
-    // private StampsRequester mStampsRequester;
     FirebaseFirestore db;
     FirebaseUser user;
 
-    private ConstraintLayout v;
+    // State variables
+    private static final String LIST_STATE_KEY = "collectionLayoutManagerState";
+    private static final String COLLECTION_ARRAYLIST_STATE_KEY = "collectionPOIList";
+    private Parcelable mListState = null;
+    private Parcelable mCollectionList = null;
+
+
+    protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+
+        // Save layoutManager state
+        mListState = mLayoutManager.onSaveInstanceState();
+        state.putParcelable(LIST_STATE_KEY, mListState);
+
+        mCollectionList = Parcels.wrap(mListOfPOIsInCollection);
+        state.putParcelable(COLLECTION_ARRAYLIST_STATE_KEY,mCollectionList);
+    }
+
+    protected void onRestoreInstanceState(Bundle state) {
+        super.onRestoreInstanceState(state);
+
+        // Retrieve list state and list/item positions
+        if(state != null) {
+            mListState = state.getParcelable(LIST_STATE_KEY);
+            //mCollectionList = state.getParcelable(COLLECTION_ARRAYLIST_STATE_KEY);
+            mListOfPOIsInCollection = Parcels.unwrap(state.getParcelable(COLLECTION_ARRAYLIST_STATE_KEY));
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passport);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -85,9 +116,6 @@ public class CollectionListActivity extends BaseActivity implements
         mAdapter = new POI_Adapter(mListOfPOIsInCollection, this);
         mRecyclerView.setAdapter(mAdapter);
 
-        // Requester objects to get the list of POI's in the list & the related stamps
-        // mPOIsRequester = new POIsRequester();
-        //mStampsRequester = new StampsRequester(this);
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
     }
@@ -96,20 +124,24 @@ public class CollectionListActivity extends BaseActivity implements
     protected void onStart() {
         super.onStart();
 
-
-    }
-
-    @Override protected void onResume() {
-        super.onResume();
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                    ArrayList<POI> newPOIs = getPOIsByCollectionFromStateManager(mSelectedCollection);
+                ArrayList<POI> newPOIs = getPOIsByCollectionFromStateManager(mSelectedCollection);
 
-                    // See https://stackoverflow.com/questions/15422120/notifydatasetchange-not-working-from-custom-adapter
-                    mListOfPOIsInCollection.clear();
-                    mListOfPOIsInCollection.addAll(newPOIs);
+                // Sort the POIs
+                // See https://stackoverflow.com/questions/4066538/sort-an-arraylist-based-on-an-object-field
+                Collections.sort(newPOIs, new Comparator<POI>(){
+                    public int compare(POI o1, POI o2){
+                        if(o1.getCollectionPosition() == o2.getCollectionPosition())
+                            return 0;
+                        return o1.getCollectionPosition() < o2.getCollectionPosition() ? -1 : 1;
+                    }
+                });
+
+                // See https://stackoverflow.com/questions/15422120/notifydatasetchange-not-working-from-custom-adapter
+                mListOfPOIsInCollection.clear();
+                mListOfPOIsInCollection.addAll(newPOIs);
 
                 // Now get Stamps for this collection
                 try {
@@ -120,6 +152,22 @@ public class CollectionListActivity extends BaseActivity implements
 
             }
         });
+    }
+
+//    @Override
+//    public void onPause() {
+//        // Save ListView state @ onPause
+//        Log.d(TAG, "saving listview state @ onPause");
+//        mCollectionListState = listView.onSaveInstanceState();
+//        super.onPause();
+//    }
+
+    @Override protected void onResume() {
+        super.onResume();
+
+        if (mListState != null) {
+            mLayoutManager.onRestoreInstanceState(mListState);
+        }
     }
 
     public void GetUserStampsByCollection(String collection) throws IOException {

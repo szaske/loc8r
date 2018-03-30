@@ -4,17 +4,22 @@ import android.graphics.Bitmap;
 import com.squareup.picasso.Transformation;
 
 /**
- * Created by steve on 3/5/2018.
+ *  Aspect ratio is always determined as width/height
  */
 
 public class FocusedCropTransform implements Transformation {
 
-    private final int maxWidth;
-    private final int maxHeight;
+    private final int neededWidth;
+    private final int neededHeight;
 
-    public FocusedCropTransform(int maxWidth, int maxHeight) {
-        this.maxWidth = maxWidth;
-        this.maxHeight = maxHeight;
+    private final int focalpointX;
+    private final int focalpointY;
+
+    public FocusedCropTransform(int neededWidth, int neededHeight, int focalpointX, int focalpointY) {
+        this.neededWidth = neededWidth;
+        this.neededHeight = neededHeight;
+        this.focalpointX = focalpointX;
+        this.focalpointY = focalpointY;
     }
 
     /**
@@ -27,25 +32,80 @@ public class FocusedCropTransform implements Transformation {
      */
     @Override
     public Bitmap transform(Bitmap source) {
-        int targetWidth, targetHeight;
-        double aspectRatio;
+        int resultsWidth, resultsHeight;
 
-        if (source.getWidth() > source.getHeight()) {
-            targetWidth = maxWidth;
-            aspectRatio = (double) source.getHeight() / (double) source.getWidth();
-            targetHeight = (int) (targetWidth * aspectRatio);
+        int newStartX = 0;
+        int newStartY = 0;
+        double sourceAspectRatio = (double) source.getWidth() / (double) source.getHeight();
+        double neededAspectRatio = (double) neededWidth / (double) neededHeight;
+
+        if (sourceAspectRatio > neededAspectRatio) {
+            resultsHeight = source.getHeight();
+            resultsWidth = (int) Math.floor(resultsHeight*neededAspectRatio);
+
         } else {
-            targetHeight = maxHeight;
-            aspectRatio = (double) source.getWidth() / (double) source.getHeight();
-            targetWidth = (int) (targetHeight * aspectRatio);
+            resultsWidth = source.getWidth();
+            resultsHeight = (int) Math.floor(resultsWidth/neededAspectRatio);
         }
 
-        Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
+        //Now lets slide the inner image within the source to create an image focused on the focalpoint X plane
+        int potentialX = Math.round(focalpointX - (resultsWidth/2));
+        if(potentialX <= 0){  // checks to insure we cannot break left side of source
+            newStartX = 0;
+        } else {
+            if (potentialX+resultsWidth>source.getWidth()){ // check to see if we break the sources max width
+                newStartX = source.getWidth()- resultsWidth;
+            } else {
+                //we can slide the wdith to both the left and right without breaking the bounds of the source image
+                newStartX = potentialX;
+            }
+        }
+
+        //Now lets slide the inner image within the source to create an image focused on the focalpoint Y plane
+        int potentialY = Math.round(focalpointY - (resultsHeight/2));
+        if(potentialY <= 0){  // checks to insure we cannot break left side of source
+            newStartY = 0;
+        } else {
+            if (potentialY+resultsHeight>source.getHeight()){ // check to see if we break the sources max width
+                newStartY = source.getHeight() - resultsHeight;
+            } else {
+                //we can slide the wdith to both the left and right without breaking the bounds of the source image
+                newStartY = potentialY;
+            }
+        }
+
+        Bitmap result = Bitmap.createBitmap(source,newStartX,newStartY,resultsWidth,resultsHeight);
         if (result != source) {
             source.recycle();
         }
         return result;
     }
+
+
+    // Old transform
+//    public Bitmap transform(Bitmap source) {
+//        int targetWidth, targetHeight;
+//        double sourceAspectRatio = (double) source.getWidth() / (double) source.getHeight();
+//        double neededAspectRatio = (double) neededWidth / (double) neededHeight;
+//
+//        if (source.getWidth() > source.getHeight()) {
+//            targetWidth = maxWidth;
+//            aspectRatio = (double) source.getHeight() / (double) source.getWidth();
+//            targetHeight = (int) (targetWidth * aspectRatio);
+//        } else {
+//            targetHeight = maxHeight;
+//            aspectRatio = (double) source.getWidth() / (double) source.getHeight();
+//            targetWidth = (int) (targetHeight * aspectRatio);
+//        }
+//
+//        Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
+//        if (result != source) {
+//            source.recycle();
+//        }
+//        return result;
+//    }
+
+
 
     /**
      * Returns a unique key for the transformation, used for caching purposes. If the transformation
@@ -55,7 +115,7 @@ public class FocusedCropTransform implements Transformation {
      */
     @Override
     public String key() {
-        return maxWidth + "x" + maxHeight;
+        return neededWidth + "x" + neededHeight;
     }
 
 }

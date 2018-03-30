@@ -1,4 +1,4 @@
-package com.loc8r.seattle.activities;
+package com.loc8r.seattle.activities.base;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;

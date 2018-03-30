@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.OnPOIClickListener;
 import com.loc8r.seattle.models.POI;
+import com.loc8r.seattle.utils.StampView;
 
 import java.util.ArrayList;
 
@@ -23,13 +24,11 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
     // Class variables
     ArrayList<POI> mPOIslist;
     OnPOIClickListener listener;
-    //Context context;
 
     // Constructor
     public POI_Adapter(ArrayList<POI> list, OnPOIClickListener listener) {
         this.mPOIslist = list;
         this.listener = listener;
-        //this.context = context;
     }
 
     @Override
@@ -46,12 +45,9 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
 
         //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
         //holder.title.setText(mPOIslist.get(position).getTitle());
-        //holder.imageView.setImageResource(mPOIslist.get(position).getImageURL());
 
         //Instead lets use the viewholder bind method to assign content
         holder.bind(mPOIslist.get(position), listener);
-
-        //animate(holder);
     }
 
     @Override
@@ -66,32 +62,39 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
     //
     static class POI_View_Holder extends RecyclerView.ViewHolder {
 
-        TextView name;
-        TextView stampText;
-        TextView positionText;
-        //ImageView imageView;
+        // Variables for the ViewHolder
+        private TextView name;
+        private TextView positionText;
+        private StampView stampView;
 
         POI_View_Holder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.poi_nameTV);
-            stampText= itemView.findViewById(R.id.poi_stampTextTV);
             positionText= itemView.findViewById(R.id.poi_positionTV);
-            // imageView = (ImageView) itemView.findViewById(R.id.poiGroupBackgroundImageView);
+            stampView = itemView.findViewById(R.id.poi_StampView);
+
+//            stampView.setSaveEnabled(true); // force state saving
+//            stampView.setId(getPosition());
         }
 
         public void bind(final POI poi, final OnPOIClickListener listener){
 
             // Set POI information in viewHolder
             name.setText(poi.getName());
-            stampText.setText(poi.getStampText());
             positionText.setText(String.valueOf(poi.getCollectionPosition()));
 
             if(poi.isStamped()){
-                name.setBackgroundColor(0xFF00FF00);
+                stampView.setStamped(true);
+                stampView.setElevation(4);
+                stampView.setTranslationZ(4);
+                stampView.setClipToOutline(true);
+                // stampView.invalidate();
+                stampView.constructStampViewFromPOI(poi);
             } else {
-                name.setBackgroundColor(0xFFFFFFFF);
+                stampView.setStamped(false);
+                stampView.setElevation(0);
+                stampView.setTranslationZ(0);
             }
-            // Set background image here
             Log.d("ViewHolder-", "bind: method fired");
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View view) {

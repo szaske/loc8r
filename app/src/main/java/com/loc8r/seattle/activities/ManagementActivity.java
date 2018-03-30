@@ -3,8 +3,6 @@ package com.loc8r.seattle.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,7 +19,6 @@ import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.TestPOIMakerUtil;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ManagementActivity extends AppCompatActivity {
@@ -30,6 +27,7 @@ public class ManagementActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
     private Button mAddPOIsButton;
     private Button mAddSinglePOI;
+    private Button mPOIPlaceholder;
     private Map<String, Integer> mCollectionCounterMap;
 
     @Override
@@ -57,6 +55,16 @@ public class ManagementActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d(TAG, "Add POI button pressed ");
                 Intent intent = new Intent(ManagementActivity.this, AddPOIActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mPOIPlaceholder = findViewById(R.id.bn_POIPlaceholder);
+        mPOIPlaceholder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Add POI button pressed ");
+                Intent intent = new Intent(ManagementActivity.this, CreatePOIPlaceholderActivity.class);
                 startActivity(intent);
             }
         });

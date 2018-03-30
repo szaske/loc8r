@@ -1,4 +1,4 @@
-package com.loc8r.seattle.activities;
+package com.loc8r.seattle.activities.base;
 
 import android.Manifest;
 import android.content.Context;
@@ -23,25 +23,16 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.loc8r.seattle.R;
+import com.loc8r.seattle.activities.LoginActivity;
 import com.loc8r.seattle.interfaces.LocationListener;
-import com.loc8r.seattle.models.POI;
-import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.utils.CollectionsRequester;
 import com.loc8r.seattle.utils.Constants;
-import com.loc8r.seattle.utils.POIsRequester;
-import com.loc8r.seattle.utils.StampsRequester;
-import com.loc8r.seattle.utils.StateManager;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-public class LocationBase_Activity extends BaseActivity implements
+public class LocationBase_Activity extends FirebaseBaseActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener
 {
@@ -160,53 +151,53 @@ public class LocationBase_Activity extends BaseActivity implements
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mPoiLocationListener);
     }
 
-    protected void getLastLocation(@NonNull LocationListener listener)
-    {
-        Location location = null;
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        {
-            location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        }
+//    protected void getLastLocation(@NonNull LocationListener listener)
+//    {
+//        Location location = null;
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+//        {
+//            location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+//        }
+//
+//        if (location == null)
+//        {
+//            startLocationUpdates(listener);
+//        }
+//        else
+//        {
+//            listener.onLocationReceived(location);
+//        }
+//    }
 
-        if (location == null)
-        {
-            startLocationUpdates(listener);
-        }
-        else
-        {
-            listener.onLocationReceived(location);
-        }
-    }
-
-    protected void startLocationUpdates(@NonNull final LocationListener listener)
-    {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        {
-
-            if (!mGoogleApiClient.isConnected())
-            {
-                mGoogleApiClient.connect();
-                return;
-            }
-
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, new LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                    , new LocationCallback()
-                    {
-                        @Override
-                        public void onLocationResult(LocationResult locationResult)
-                        {
-                            super.onLocationResult(locationResult);
-                            Location lastLocation = locationResult.getLastLocation();
-                            if (lastLocation != null)
-                            {
-                                // LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-                                listener.onLocationReceived(lastLocation);
-                            }
-                            Log.d(TAG, "onLocationResult: You're location is" + String.valueOf(locationResult));
-                        }
-                    }, getMainLooper());
-        }
-    }
+//    protected void startLocationUpdates(@NonNull final LocationListener listener)
+//    {
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+//        {
+//
+//            if (!mGoogleApiClient.isConnected())
+//            {
+//                mGoogleApiClient.connect();
+//                return;
+//            }
+//
+//            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, new LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+//                    , new LocationCallback()
+//                    {
+//                        @Override
+//                        public void onLocationResult(LocationResult locationResult)
+//                        {
+//                            super.onLocationResult(locationResult);
+//                            Location lastLocation = locationResult.getLastLocation();
+//                            if (lastLocation != null)
+//                            {
+//                                // LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+//                                listener.onLocationReceived(lastLocation);
+//                            }
+//                            Log.d(TAG, "onLocationResult: You're location is" + String.valueOf(locationResult));
+//                        }
+//                    }, getMainLooper());
+//        }
+//    }
 
 
     @Override
@@ -414,12 +405,6 @@ public class LocationBase_Activity extends BaseActivity implements
 
     }
 
-
-
-    // callback to sub-classes when POIs and Stamps have been added to StateManager
-    public void onPOIsAndStampsInStateManager(){
-
-    }
 
 }
 

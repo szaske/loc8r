@@ -15,6 +15,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.loc8r.seattle.R;
+import com.loc8r.seattle.activities.base.LocationBase_Activity;
 import com.loc8r.seattle.adapters.Collections_Adapter;
 import com.loc8r.seattle.interfaces.OnCollectionClickListener;
 import com.loc8r.seattle.models.Collection;

@@ -19,6 +19,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.loc8r.seattle.R;
+import com.loc8r.seattle.activities.base.BaseActivity;
 import com.loc8r.seattle.utils.Constants;
 
 import butterknife.BindView;
