@@ -18,26 +18,17 @@ import android.widget.TextView;
 
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.activities.base.FirebaseBaseActivity;
+import com.loc8r.seattle.activities.base.LocationBase_Activity;
 import com.loc8r.seattle.utils.FocusedCropTransform;
 import com.squareup.picasso.Picasso;
 
-public class MainListActivity extends FirebaseBaseActivity
+public class MainListActivity extends LocationBase_Activity
 {
 
-//    private static final int RC_SIGN_IN = 123;
     private static final String TAG = MainListActivity.class.getSimpleName();
     private Button mExploreButton;
     private Button mPassportButton;
-    private Button mSettingsButton;
-
     private TextView mTitle;
-    // FirebaseFirestore db;
-    // FirebaseAuth mAuth;
-    // FirebaseUser user;
-
-    //private POIsRequester mPOIsRequester; //helper class
-    // private StampsRequester mStampsRequester;
-
     private ImageView mBackgroundImage;
 
     @Override
@@ -95,10 +86,6 @@ public class MainListActivity extends FirebaseBaseActivity
             }
         });
 
-
-
-
-
         Typeface mainTypeface = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/norwester.otf");
         mTitle = findViewById(R.id.tv_main_title);
         mTitle.setTypeface(mainTypeface);
@@ -115,12 +102,6 @@ public class MainListActivity extends FirebaseBaseActivity
     @Override
     protected void onStart() {
         super.onStart();
-
-        // Start sign in if necessary
-//        if (!isUserSignedIn()) {
-//            startSignIn();
-//        }
-
     }
 
     @Override

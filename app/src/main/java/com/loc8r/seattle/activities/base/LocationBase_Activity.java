@@ -82,8 +82,6 @@ public class LocationBase_Activity extends FirebaseBaseActivity implements
         super.onCreate(savedInstanceState);
 
         initGoogleLocationServices();
-
-
     }
 
     @Override
