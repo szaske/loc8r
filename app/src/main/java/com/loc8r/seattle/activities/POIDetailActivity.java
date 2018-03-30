@@ -4,16 +4,19 @@ import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Rect;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.Log;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Interpolator;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,7 +64,7 @@ public class POIDetailActivity extends LocationBase_Activity {
 
     @BindView(R.id.stampView) StampView mStampView;
     @BindView(R.id.bt_getStamp) Button mStampBtn;
-
+    @BindView(R.id.bt_back_arrow) ImageButton mBackArrow;
 
     // TODO Should I move currentLocation to the State Manager?
     // private Location mCurrentLocation;
@@ -82,6 +85,8 @@ public class POIDetailActivity extends LocationBase_Activity {
         ButterKnife.bind(this);
         detailedPoi = Parcels.unwrap(getIntent().getParcelableExtra("poi"));
 
+        //testing enlarged touch delegate
+        changeTouchableAreaOfView(mBackArrow,220);
 
 //        setSupportActionBar(mToolbar);
 //        if (getSupportActionBar() != null)
@@ -141,24 +146,6 @@ public class POIDetailActivity extends LocationBase_Activity {
             mStampBtn.setVisibility(View.GONE);
         }
     }
-
-//    private String timeStampStringConversion(String dbTimeStampString) {
-//
-//        SimpleDateFormat oldFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
-//        SimpleDateFormat newFormat = new SimpleDateFormat("MMM dd, yyyy");
-//
-//        Date date = null;
-//
-//        try {
-//            date = oldFormat.parse(dbTimeStampString);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//        //Convert to a new nice looking format
-//        return newFormat.format(date);
-//
-//    }
 
     // TODO Determine if I need to cancel location update onPause or onStop.
     @Override
@@ -372,4 +359,32 @@ public class POIDetailActivity extends LocationBase_Activity {
         return null;
     }
 
+    private void changeTouchableAreaOfView(final View view, final int extraSpace) {
+
+        final View parent = (View) view.getParent();
+
+        parent.post(new Runnable() {
+            public void run() {
+                // Post in the parent's message queue to make sure the parent
+                // lays out its children before we call getHitRect()
+                Rect delegateArea = new Rect();
+                View delegate = view;
+                delegate.getHitRect(delegateArea);
+                delegateArea.top -= extraSpace;
+                delegateArea.bottom += extraSpace;
+                delegateArea.left -= extraSpace;
+                delegateArea.right += extraSpace;
+                TouchDelegate expandedArea = new TouchDelegate(delegateArea,
+                        delegate);
+                // give the delegate to an ancestor of the view we're
+                // delegating the
+                // area to
+                if (View.class.isInstance(delegate.getParent())) {
+                    ((View) delegate.getParent())
+                            .setTouchDelegate(expandedArea);
+                }
+            }
+        });
+
+    }
 }

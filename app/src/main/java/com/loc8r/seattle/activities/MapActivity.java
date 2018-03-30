@@ -3,9 +3,12 @@ package com.loc8r.seattle.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.annotation.Nullable;
@@ -15,7 +18,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.TouchDelegate;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,6 +33,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.loc8r.seattle.Manifest;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.activities.base.LocationBase_Activity;
 import com.loc8r.seattle.interfaces.LocationListener;
@@ -70,8 +76,9 @@ public class MapActivity extends LocationBase_Activity implements
     private List<Integer> mExistingPoiMarkers;
 
     private Boolean haveNotDoneInitialZoomIn;
+    SupportMapFragment mMapFragment;
 
-    @BindView(R.id.map_fab) FloatingActionButton mFAB;
+    @BindView(R.id.bt_map_back_arrow) ImageButton mBackArrow;
 
     // The selected POI
     private POI mSelectedPOI;
@@ -83,11 +90,8 @@ public class MapActivity extends LocationBase_Activity implements
         ButterKnife.bind(this);
 
         // Obtain the SupportMapFragment and loads layout
-        SupportMapFragment mMapFragment = (SupportMapFragment) getSupportFragmentManager()
+        mMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-
-        // Get notified when the map is ready to be used.
-        mMapFragment.getMapAsync(this);
 
         // Drawer Setup
         DrawerSetup();
@@ -99,13 +103,16 @@ public class MapActivity extends LocationBase_Activity implements
 
         mExistingPoiMarkers = new ArrayList<>();
 
+        //testing enlarged touch delegate
+        changeTouchableAreaOfView(mBackArrow,220);
 
     }
 
-    @OnClick(R.id.map_fab)
-    public void onFABClick(View view) {
-        Log.d(TAG, "onFABClick: yup it was");
+    @OnClick(R.id.bt_map_back_arrow)
+    public void onBackArrowClick(){
+        finish();
     }
+
 
     // Creates a Bitmap marker from vector art
     // From https://stackoverflow.com/questions/42365658/custom-marker-in-google-maps-in-android-with-vector-asset-icon
@@ -295,9 +302,16 @@ public class MapActivity extends LocationBase_Activity implements
                 context.getPackageName());
     }
 
+    /**
+     *  Fires when we're properly connected to Google services and have all permissions
+     */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected() called with: " + "bundle = [" + bundle + "]");
+
+
+        mMapFragment.getMapAsync(this);
+
 
         /**
         * get the last location of the device
@@ -343,6 +357,35 @@ public class MapActivity extends LocationBase_Activity implements
      */
     public void onPOIsReceived(ArrayList<POI> POIs) {
         StateManager.getInstance().setPOIs(POIs);
+    }
+
+    private void changeTouchableAreaOfView(final View view, final int extraSpace) {
+
+        final View parent = (View) view.getParent();
+
+        parent.post(new Runnable() {
+            public void run() {
+                // Post in the parent's message queue to make sure the parent
+                // lays out its children before we call getHitRect()
+                Rect delegateArea = new Rect();
+                View delegate = view;
+                delegate.getHitRect(delegateArea);
+                delegateArea.top -= extraSpace;
+                delegateArea.bottom += extraSpace;
+                delegateArea.left -= extraSpace;
+                delegateArea.right += extraSpace;
+                TouchDelegate expandedArea = new TouchDelegate(delegateArea,
+                        delegate);
+                // give the delegate to an ancestor of the view we're
+                // delegating the
+                // area to
+                if (View.class.isInstance(delegate.getParent())) {
+                    ((View) delegate.getParent())
+                            .setTouchDelegate(expandedArea);
+                }
+            }
+        });
+
     }
 
 }

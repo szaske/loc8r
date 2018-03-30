@@ -10,12 +10,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/imageSection"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="240dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:orientation="vertical">
 
             <android.support.constraint.ConstraintLayout
@@ -41,16 +45,15 @@
                 <View
                     android:id="@+id/scrimTop"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="100dp"
                     android:layout_gravity="bottom"
                     android:background="@drawable/scrim_top"
                     app:layout_constraintTop_toTopOf="@+id/imageHolder" />
 
-
                 <View
                     android:id="@+id/scrimBottom"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="100dp"
                     android:layout_gravity="bottom"
                     android:background="@drawable/scrim_bottom"
                     app:layout_constraintBottom_toBottomOf="@+id/imageHolder" />
@@ -73,16 +76,28 @@
                     app:layout_constraintStart_toStartOf="parent"
                     tools:text="Point Title" />
 
-                <ImageButton
-                    android:id="@+id/bt_back_arrow"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/button_click_area"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:background="?android:selectableItemBackground"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/imageHolder"
-                    app:srcCompat="@drawable/ic_arrow_back_white_36px" />
+                    app:layout_constraintStart_toStartOf="@+id/scrimTop"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageButton
+                        android:id="@+id/bt_back_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:background="?android:selectableItemBackground"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_arrow_back_white_36px"
+                        tools:layout_conversion_absoluteHeight="40dp"
+                        tools:layout_conversion_absoluteWidth="40dp" />
+                </android.support.constraint.ConstraintLayout>
 
             </android.support.constraint.ConstraintLayout>
 
@@ -92,6 +107,8 @@
             android:id="@+id/infoSection"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:padding="12dp">
 
             <android.support.constraint.ConstraintLayout
@@ -202,14 +219,17 @@
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/secondColumn"
-                android:layout_width="150dp"
+                android:layout_width="170dp"
+                android:background="@drawable/stamp_location_background"
                 android:layout_height="wrap_content"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
+                android:layout_marginEnd="16dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/firstColumn"
                 app:layout_constraintTop_toTopOf="parent">
+
 
                 <Button
                     android:id="@+id/bt_getStamp"
@@ -229,14 +249,13 @@
                     android:id="@+id/stampView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:adjustViewBounds="true"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
+                    android:elevation="3dp"
                     android:scaleType="fitCenter"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
 
             </android.support.constraint.ConstraintLayout>
 
