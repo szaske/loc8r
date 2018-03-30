@@ -22,9 +22,8 @@
         <item name="android:colorBackground">@color/primaryDarkColor</item>
         <item name="colorButtonNormal">@color/secondaryColor</item>
         <item name="colorControlHighlight">@color/accent_material_dark</item>
-        
-    </style>
 
+    </style>
 
 
     <style name="DialogTransparentBackgroundTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -73,8 +72,7 @@
     <!--Official Theme Section-->
 
     <style name="MainMenu_Title">
-        <item name="android:textSize">66sp</item>
-
+        <item name="android:textSize">86sp</item>
         <item name="titleTextColor">@color/secondaryColor</item>
     </style>
 

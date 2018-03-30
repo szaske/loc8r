@@ -21,6 +21,7 @@ public class POI  {
     Double longitude;
     String description;
     String img_url;
+    int imgFocalpointX, imgFocalpointY;
     String collection;
     int collectionPosition;
     String stampText;
@@ -39,6 +40,8 @@ public class POI  {
                Double longitude,
                String description,
                String img_url,
+               int imgFocalpointX,
+               int imgFocalpointY,
                String collection,
                int collectionPosition,
                String stampText) {
@@ -52,6 +55,8 @@ public class POI  {
         this.collection = collection;
         this.collectionPosition = collectionPosition;
         this.stampText = stampText;
+        this.imgFocalpointX = imgFocalpointX;
+        this.imgFocalpointY = imgFocalpointY;
         this.stampChecked = false;
     }
 
@@ -117,14 +122,15 @@ public class POI  {
     public Double getLongitude() { return longitude; }
     public String getDescription() { return description; }
     public String getImg_url() { return img_url; }
+    public int getImgFocalpointX() { return imgFocalpointX; }
+    public int getImgFocalpointY() { return imgFocalpointY; }
     public String getCollection() { return collection; }
     public int getCollectionPosition() { return collectionPosition; }
     public String getStampText() { return stampText; }
     public Stamp getStamp() { return stamp; }
-    public  String getIconName(){
+    public String getIconName(){
         return "icon_" + collection.substring(0,3).toLowerCase();
     }
-
 
     // Setters
     public void setId(String id) { this.id = id; }
@@ -144,12 +150,12 @@ public class POI  {
     public void setImg_url(String img_url) {
         this.img_url = img_url;
     }
+    public void setImgFocalpointX(int imgFocalpointX) { this.imgFocalpointX = imgFocalpointX; }
+    public void setImgFocalpointY(int imgFocalpointY) { this.imgFocalpointY = imgFocalpointY; }
     public void setCollection(String collection) {
         this.collection = collection;
     }
-    public void setCollectionPosition(int collectionPosition) {
-        this.collectionPosition = collectionPosition;
-    }
+    public void setCollectionPosition(int collectionPosition) { this.collectionPosition = collectionPosition; }
     public void setStampText(String stampText) { this.stampText = stampText; }
     public void setStamp(Stamp stamp){ this.stamp = stamp; }
 

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class StateManager {
     private static final StateManager ourInstance = new StateManager();
     private Location currentLocation; // The users current location
+    private String user;
     private ArrayList<POI> mPOIs;
     private ArrayList<Collection> mCollections;
     private ArrayList<Stamp> mStamps;
@@ -26,6 +27,14 @@ public class StateManager {
         mCollections = new ArrayList<>();
         gettingPOIs = false;
         gettingStamps = false;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public Location getCurrentLocation() {
@@ -69,5 +78,13 @@ public class StateManager {
 
     public void setGettingStamps(Boolean gettingStamps) {
         this.gettingStamps = gettingStamps;
+    }
+
+    public void resetAll(){
+        mPOIs.clear();
+        mStamps.clear();
+        gettingPOIs = false;
+        gettingStamps = false;
+        currentLocation = null;
     }
 }

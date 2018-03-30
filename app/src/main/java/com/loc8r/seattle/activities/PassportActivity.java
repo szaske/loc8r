@@ -2,13 +2,20 @@ package com.loc8r.seattle.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.loc8r.seattle.R;
+import com.loc8r.seattle.activities.base.LocationBase_Activity;
 import com.loc8r.seattle.adapters.Collections_Adapter;
 import com.loc8r.seattle.interfaces.OnCollectionClickListener;
 import com.loc8r.seattle.models.Collection;
@@ -27,7 +34,8 @@ public class PassportActivity extends LocationBase_Activity implements Collectio
 
     public ArrayList<POI> mListOfPOIs;
     public ArrayList<Collection> mListOfCollections;
-    private CollectionsRequester mCollectionsRequester; //helper class
+    // private CollectionsRequester mCollectionsRequester; //helper class
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +66,8 @@ public class PassportActivity extends LocationBase_Activity implements Collectio
         // mRecyclerView.setAdapter(new Collections_Adapter(POIsRequester.getInstance(getApplicationContext()).mListOfCollections, this));
 
         //This is the object that can fetch more content
-        mCollectionsRequester = new CollectionsRequester(this);
+        // mCollectionsRequester = new CollectionsRequester(this);
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -74,10 +83,37 @@ public class PassportActivity extends LocationBase_Activity implements Collectio
     private void requestCollections() {
 
         try {
-            mCollectionsRequester.GetAllCollections();
+            GetAllCollections();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void GetAllCollections() throws IOException {
+        Log.d("STZ", "GetAllCollections method started ");
+        db.collection("collections")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("STZ", "Getting Collections task completed successfully, now converting to POI class ");
+                            ArrayList<Collection> results = new ArrayList<>();
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Collection receivedCollection = document.toObject(Collection.class);
+                                results.add(receivedCollection);
+                                // Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+
+                            // Send results back to host activity
+                            onCollectionsListReceived(results);
+                            Log.d("STZ", "onComplete: All Collections received ");
+                        } else {
+                            Log.d(TAG, "Error getting POIs. ", task.getException());
+                        }
+                    }
+                });
+        // [END get_multiple_all]
     }
 
     @Override

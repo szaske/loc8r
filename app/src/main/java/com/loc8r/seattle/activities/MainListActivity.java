@@ -1,24 +1,44 @@
 package com.loc8r.seattle.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.loc8r.seattle.R;
+import com.loc8r.seattle.activities.base.FirebaseBaseActivity;
+import com.loc8r.seattle.utils.FocusedCropTransform;
+import com.squareup.picasso.Picasso;
 
-public class MainListActivity extends LocationBase_Activity
+public class MainListActivity extends FirebaseBaseActivity
 {
 
+//    private static final int RC_SIGN_IN = 123;
     private static final String TAG = MainListActivity.class.getSimpleName();
     private Button mExploreButton;
     private Button mPassportButton;
     private Button mSettingsButton;
+
+    private TextView mTitle;
+    // FirebaseFirestore db;
+    // FirebaseAuth mAuth;
+    // FirebaseUser user;
+
+    //private POIsRequester mPOIsRequester; //helper class
+    // private StampsRequester mStampsRequester;
+
+    private ImageView mBackgroundImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +47,30 @@ public class MainListActivity extends LocationBase_Activity
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+
+        mBackgroundImage = findViewById(R.id.iv_background_image);
+
+        ViewTreeObserver vto = mBackgroundImage.getViewTreeObserver();
+        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            public boolean onPreDraw() {
+                mBackgroundImage.getViewTreeObserver().removeOnPreDrawListener(this);
+                // Should add
+                // .error(R.drawable.error)
+                // .placeholder(R.drawable.blank_img)
+                //
+                //
+                // Also should add a progressbar
+                // here is a good example : https://stackoverflow.com/questions/22143157/android-picasso-placeholder-and-error-image-styling
+                Picasso.with(getApplicationContext())
+                        .load(R.drawable.main_menu_bg)
+                        .transform(new FocusedCropTransform(mBackgroundImage.getMeasuredWidth(),mBackgroundImage.getMeasuredHeight(), 400,600))
+                        .into(mBackgroundImage);
+
+                Log.d(TAG, "STZ _ onPreDraw: Width is " + mBackgroundImage.getMeasuredWidth() + " - Height:"+ mBackgroundImage.getMeasuredHeight());
+
+                return true;
+            }
+        });
 
         mExploreButton = findViewById(R.id.explore_Button);
         mExploreButton.setOnClickListener(new View.OnClickListener() {
@@ -51,15 +95,14 @@ public class MainListActivity extends LocationBase_Activity
             }
         });
 
-        mSettingsButton = findViewById(R.id.settings_Button);
-        mSettingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Settings button pressed ");
-            }
-        });
 
 
+
+
+        Typeface mainTypeface = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/norwester.otf");
+        mTitle = findViewById(R.id.tv_main_title);
+        mTitle.setTypeface(mainTypeface);
+        mTitle.setShadowLayer(15, 0, 0, Color.BLACK );
     }
 
     @Override
@@ -71,15 +114,14 @@ public class MainListActivity extends LocationBase_Activity
 
     @Override
     protected void onStart() {
-
-
-
-
         super.onStart();
+
+        // Start sign in if necessary
+//        if (!isUserSignedIn()) {
+//            startSignIn();
+//        }
+
     }
-
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
@@ -87,7 +129,7 @@ public class MainListActivity extends LocationBase_Activity
         switch (item.getItemId())
         {
             case R.id.menu_log_out:
-                showLogoutDialog(this);
+                signOutUser();
                 break;
             case R.id.menu_admin:
                 Log.d(TAG, "Admin item selected");
@@ -100,5 +142,8 @@ public class MainListActivity extends LocationBase_Activity
     }
 
 
-
+    @Override public void onPOIsAndStampsInStateManager() {
+        super.onPOIsAndStampsInStateManager();
+        Log.d(TAG, "onPOIsAndStampsInStateManager: EVERYTHING IS IN STATEMANAGER");
+    }
 }

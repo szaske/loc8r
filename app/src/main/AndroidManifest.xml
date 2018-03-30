@@ -9,15 +9,15 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!--please see /SRC/DEBUG for more permissions needed for testing -->
+    <!-- please see /SRC/DEBUG for more permissions needed for testing -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"-->
-        <!--android:maxSdkVersion="18" />-->
+    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" -->
+    <!-- android:maxSdkVersion="18" /> -->
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
-
 
     <application
         android:name="android.support.multidex.MultiDexApplication"
@@ -28,7 +28,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SeattlePassport">
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.loc8r.seattle.fileprovider"
@@ -36,7 +35,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_path"></meta-data>
+                android:resource="@xml/file_path" />
         </provider>
 
         <!--
@@ -54,17 +53,16 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GOOGLE_MAPS_KEY" />
 
-        <activity android:name=".activities.BaseActivity" />
-        <activity android:name=".activities.LoginActivity">
+        <activity android:name=".activities.base.BaseActivity" />
+        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.CreateAccountActivity" />
+        <activity android:name=".activities.MainListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.CreateAccountActivity" />
-        <activity android:name=".activities.GMS_Activity" />
-        <activity android:name=".activities.MainListActivity" />
         <activity
             android:name=".activities.MapActivity"
             android:label="@string/title_activity_maps" />
@@ -100,6 +98,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.loc8r.seattle.activities.MainListActivity" />
         </activity>
+        <activity android:name=".activities.base.FirebaseBaseActivity" />
+        <activity
+            android:name=".activities.CreatePOIPlaceholderActivity"
+            android:label="@string/title_activity_add_poito_database"
+            android:theme="@style/Theme.SeattlePassport"></activity>
     </application>
 
 </manifest>

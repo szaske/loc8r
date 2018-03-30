@@ -29,10 +29,10 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.loc8r.seattle.R;
+import com.loc8r.seattle.activities.base.LocationBase_Activity;
 import com.loc8r.seattle.interfaces.LocationListener;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.Constants;
-import com.loc8r.seattle.utils.POIsRequester;
 import com.loc8r.seattle.utils.StateManager;
 import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
@@ -49,7 +49,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MapActivity extends LocationBase_Activity implements
-        POIsRequester.FireBasePOIResponse,
         GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback {
 
@@ -57,7 +56,7 @@ public class MapActivity extends LocationBase_Activity implements
     private GoogleMap mMap;
 
     // private ArrayList<POI> mListOfPOIs;
-    private POIsRequester mPOIsRequester; //helper class
+    //private POIsRequester mPOIsRequester; //helper class
 
     private SlideUp mDrawer;
     private View mDrawerView;
@@ -95,7 +94,7 @@ public class MapActivity extends LocationBase_Activity implements
 
         //mListOfPOIs = new ArrayList<>(); // Create an empty list to hold POIs
         //This is the object that can fetch more content
-        mPOIsRequester = new POIsRequester();
+        //mPOIsRequester = new POIsRequester();
         context = this; // Set context so we can use inside the runnable below
 
         mExistingPoiMarkers = new ArrayList<>();

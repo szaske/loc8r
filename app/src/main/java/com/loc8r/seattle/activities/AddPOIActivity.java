@@ -32,6 +32,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.loc8r.seattle.R;
+import com.loc8r.seattle.activities.base.LocationBase_Activity;
 import com.loc8r.seattle.interfaces.LocationListener;
 import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
@@ -49,7 +50,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class AddPOIActivity extends LocationBase_Activity implements
-        CollectionsRequester.FireBaseCollectionsResponse,
         AdapterView.OnItemSelectedListener {
 
     private static final String TAG = AddPOIActivity.class.getSimpleName();
@@ -57,8 +57,8 @@ public class AddPOIActivity extends LocationBase_Activity implements
     static final int REQUEST_TAKE_PHOTO = 1;
 
     private Location mCurrentLocation;
-    private CollectionsRequester mCollectionRequester;
-    //private ArrayList<Collection> mCollectionsAll;
+    // private CollectionsRequester mCollectionRequester;
+    private ArrayList<Collection> mCollectionsAll;
     private POI newPOI;
     private String mCurrentPhotoPath;
     private UploadTask uploadTask;
@@ -102,20 +102,14 @@ public class AddPOIActivity extends LocationBase_Activity implements
         mImageThumbnail.setDrawingCacheEnabled(true);
         mImageThumbnail.buildDrawingCache();
 
-        mCollectionRequester = new CollectionsRequester(this);
-
-
+        // mCollectionRequester = new CollectionsRequester(this);
 
         // Get collection list if we don't have it already
-        if(StateManager.getInstance().getCollections().size()==0){
             try {
-                mCollectionRequester.GetAllCollections();
+                GetAllCollections();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            initializeSpinner();
-        }
 
         // If this is not the first time, grab state of the various views
         if (savedInstanceState != null) {
@@ -128,15 +122,36 @@ public class AddPOIActivity extends LocationBase_Activity implements
                 File imageFile = new File(mCurrentPhotoPath);
                 mImageThumbnail.setImageURI(Uri.fromFile(imageFile));
             }
-
         }
-
-
     }
 
-    @Override public void onPOIsAndStampsInStateManager() {
+    public void GetAllCollections() throws IOException {
+        Log.d("STZ", "GetAllCollections method started ");
+        db.collection("collections")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("STZ", "Getting Collections task completed successfully, now converting to POI class ");
+                            ArrayList<Collection> results = new ArrayList<>();
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Collection receivedCollection = document.toObject(Collection.class);
+                                results.add(receivedCollection);
+                                // Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
 
+                            // Send results back to host activity
+                            onCollectionsListReceived(results);
+                            Log.d("STZ", "onComplete: All Collections received ");
+                        } else {
+                            Log.d(TAG, "Error getting POIs. ", task.getException());
+                        }
+                    }
+                });
+        // [END get_multiple_all]
     }
+
 
     /**
      *  Click Listeners
@@ -179,8 +194,10 @@ public class AddPOIActivity extends LocationBase_Activity implements
         newPOI.setRelease(999999); // Releases 999999 are beta POIs that are not yet live on the service
         newPOI.setLatitude(mCurrentLocation.getLatitude());
         newPOI.setLongitude(mCurrentLocation.getLongitude());
-        newPOI.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+        newPOI.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
         newPOI.setImg_url(mPOIImgUrlET.getText().toString());
+        newPOI.setImgFocalpointX(0);
+        newPOI.setImgFocalpointY(0);
         newPOI.setCollection(mCollectionsSpinner.getSelectedItem().toString());
         newPOI.setCollectionPosition(Integer.parseInt(mPOICollectionPositionET.getText().toString()));
         newPOI.setStampText(mCollectionsSpinner.getSelectedItem().toString().substring(0, 3) + "_" + mPOINameET.getText().toString().substring(0, 3));
@@ -377,13 +394,6 @@ public class AddPOIActivity extends LocationBase_Activity implements
                 // images are stored in
                 // mnt/sdcard/Android/data/com.loc8r.seattle/files/pictures
 
-//                takePictureIntent.putExtra("crop", "true");
-//                takePictureIntent.putExtra("outputX",600);
-//                takePictureIntent.putExtra("outputY", 600);
-//                takePictureIntent.putExtra("aspectX", 0);
-//                takePictureIntent.putExtra("aspectY", 0);
-//                takePictureIntent.putExtra("scale", true);
-
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
 
@@ -457,8 +467,8 @@ public class AddPOIActivity extends LocationBase_Activity implements
     }
 
 
-    @Override public void onCollectionsListReceived(ArrayList<Collection> collections) {
-        StateManager.getInstance().setCollections(collections);
+    public void onCollectionsListReceived(ArrayList<Collection> collections) {
+        mCollectionsAll = collections;
         initializeSpinner();
 
     }

@@ -2,7 +2,6 @@ package com.loc8r.seattle.activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.loc8r.seattle.R;
+import com.loc8r.seattle.activities.base.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

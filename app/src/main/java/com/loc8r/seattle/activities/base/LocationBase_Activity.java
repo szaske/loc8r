@@ -1,4 +1,4 @@
-package com.loc8r.seattle.activities;
+package com.loc8r.seattle.activities.base;
 
 import android.Manifest;
 import android.content.Context;
@@ -23,29 +23,18 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.loc8r.seattle.R;
+import com.loc8r.seattle.activities.LoginActivity;
 import com.loc8r.seattle.interfaces.LocationListener;
-import com.loc8r.seattle.models.POI;
-import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.utils.CollectionsRequester;
 import com.loc8r.seattle.utils.Constants;
-import com.loc8r.seattle.utils.POIsRequester;
-import com.loc8r.seattle.utils.StampsRequester;
-import com.loc8r.seattle.utils.StateManager;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-abstract class LocationBase_Activity extends BaseActivity implements
+public class LocationBase_Activity extends FirebaseBaseActivity implements
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        POIsRequester.FireBasePOIResponse,
-        StampsRequester.FireBaseStampResponse
+        GoogleApiClient.OnConnectionFailedListener
 {
     private static final int LOCATION_REQUEST_CODE = 420;
     private static final String TAG = LocationBase_Activity.class.getSimpleName();
@@ -55,8 +44,7 @@ abstract class LocationBase_Activity extends BaseActivity implements
     private AlertDialog mLocationEnabledDialog;
     private com.google.android.gms.location.LocationListener mPoiLocationListener;
 
-    private POIsRequester mPOIsRequester; //helper class
-    private StampsRequester mStampsRequester;
+
 
 
     @Override
@@ -95,9 +83,7 @@ abstract class LocationBase_Activity extends BaseActivity implements
 
         initGoogleLocationServices();
 
-        // Requester objects to get the list of POI's in the list & the related stamps
-        mPOIsRequester = new POIsRequester();
-        mStampsRequester = new StampsRequester(this);
+
     }
 
     @Override
@@ -105,12 +91,6 @@ abstract class LocationBase_Activity extends BaseActivity implements
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
-
-        // Better get some content if we don't have it already
-        if (StateManager.getInstance().getPOIs().size() == 0 && !StateManager.getInstance().isGettingPOIs()) {
-            fetchAllToStateManager();
-        }
-
         super.onStart();
     }
 
@@ -171,53 +151,53 @@ abstract class LocationBase_Activity extends BaseActivity implements
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mPoiLocationListener);
     }
 
-    protected void getLastLocation(@NonNull LocationListener listener)
-    {
-        Location location = null;
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        {
-            location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        }
+//    protected void getLastLocation(@NonNull LocationListener listener)
+//    {
+//        Location location = null;
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+//        {
+//            location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+//        }
+//
+//        if (location == null)
+//        {
+//            startLocationUpdates(listener);
+//        }
+//        else
+//        {
+//            listener.onLocationReceived(location);
+//        }
+//    }
 
-        if (location == null)
-        {
-            startLocationUpdates(listener);
-        }
-        else
-        {
-            listener.onLocationReceived(location);
-        }
-    }
-
-    protected void startLocationUpdates(@NonNull final LocationListener listener)
-    {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        {
-
-            if (!mGoogleApiClient.isConnected())
-            {
-                mGoogleApiClient.connect();
-                return;
-            }
-
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, new LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                    , new LocationCallback()
-                    {
-                        @Override
-                        public void onLocationResult(LocationResult locationResult)
-                        {
-                            super.onLocationResult(locationResult);
-                            Location lastLocation = locationResult.getLastLocation();
-                            if (lastLocation != null)
-                            {
-                                // LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-                                listener.onLocationReceived(lastLocation);
-                            }
-                            Log.d(TAG, "onLocationResult: You're location is" + String.valueOf(locationResult));
-                        }
-                    }, getMainLooper());
-        }
-    }
+//    protected void startLocationUpdates(@NonNull final LocationListener listener)
+//    {
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+//        {
+//
+//            if (!mGoogleApiClient.isConnected())
+//            {
+//                mGoogleApiClient.connect();
+//                return;
+//            }
+//
+//            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, new LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+//                    , new LocationCallback()
+//                    {
+//                        @Override
+//                        public void onLocationResult(LocationResult locationResult)
+//                        {
+//                            super.onLocationResult(locationResult);
+//                            Location lastLocation = locationResult.getLastLocation();
+//                            if (lastLocation != null)
+//                            {
+//                                // LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+//                                listener.onLocationReceived(lastLocation);
+//                            }
+//                            Log.d(TAG, "onLocationResult: You're location is" + String.valueOf(locationResult));
+//                        }
+//                    }, getMainLooper());
+//        }
+//    }
 
 
     @Override
@@ -425,61 +405,6 @@ abstract class LocationBase_Activity extends BaseActivity implements
 
     }
 
-    private void fetchAllToStateManager() {
-        StateManager.getInstance().setGettingPOIs(true); // tracking the process
-
-        try {
-            mPOIsRequester.GetAllPOIs(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override public void onPOIsReceived (final ArrayList<POI> POIsSent) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                StateManager.getInstance().setPOIs(POIsSent);
-                StateManager.getInstance().setGettingPOIs(false);
-
-                // Now get Stamps for this collection
-                StateManager.getInstance().setGettingStamps(true);
-                try {
-                    mStampsRequester.GetUserStamps();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    public void onStampsReceived(final ArrayList<Stamp> Stamps) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                for (Stamp stamp: Stamps) {
-                    // Works because I overrode equals in POI model
-                    for (POI poi: StateManager.getInstance().getPOIs()) {
-                        if(poi.getId().equals(stamp.getPoiId())){
-                            poi.setStamp(stamp);
-                            break;
-                        }
-                    }
-                }
-
-                StateManager.getInstance().setGettingStamps(false);
-                Log.d(TAG, "We got it all FOLKS!");
-                onPOIsAndStampsInStateManager();
-            }
-        });
-
-    }
-
-    // callback to sub-classes when POIs and Stamps have been added to StateManager
-    public void onPOIsAndStampsInStateManager(){
-
-    }
 
 }
 

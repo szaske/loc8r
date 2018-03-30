@@ -19,6 +19,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.loc8r.seattle.R;
+import com.loc8r.seattle.activities.base.BaseActivity;
 import com.loc8r.seattle.utils.Constants;
 
 import butterknife.BindView;
@@ -67,11 +68,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-
-                    //Get all stamps for this user.  This may not actually be called if the data in the cloud is not dirty.
-                    // Need to figure this out
-                    // getAllStamps();
-
 
                     Intent intent = new Intent(LoginActivity.this, MainListActivity.class);
 

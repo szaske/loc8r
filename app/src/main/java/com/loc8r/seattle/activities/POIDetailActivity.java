@@ -26,12 +26,14 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.loc8r.seattle.R;
+import com.loc8r.seattle.activities.base.LocationBase_Activity;
 import com.loc8r.seattle.interfaces.LocationListener;
 import com.loc8r.seattle.interfaces.QueryListener;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
 // import com.loc8r.seattle.mongodb.MongoDBManager;
 import com.loc8r.seattle.models.User;
+import com.loc8r.seattle.utils.FocusedCropTransform;
 import com.loc8r.seattle.utils.ProgressDialog;
 import com.loc8r.seattle.utils.StampView;
 import com.loc8r.seattle.utils.StateManager;
@@ -104,9 +106,10 @@ public class POIDetailActivity extends LocationBase_Activity {
                 // here is a good example : https://stackoverflow.com/questions/22143157/android-picasso-placeholder-and-error-image-styling
                 Picasso.with(getApplicationContext())
                         .load(detailedPoi.getImg_url())
-                        .centerCrop()
-                        .resize(mIV_PoiImage.getMeasuredWidth(), mIV_PoiImage.getMeasuredHeight())
+                        .transform(new FocusedCropTransform(mIV_PoiImage.getMeasuredWidth(),mIV_PoiImage.getMeasuredHeight(), detailedPoi.getImgFocalpointX(),detailedPoi.getImgFocalpointY()))
                         .into(mIV_PoiImage);
+
+                Log.d(TAG, "STZ _ onPreDraw: Width is " + mIV_PoiImage.getMeasuredWidth() + " - Height:"+ mIV_PoiImage.getMeasuredHeight());
 
                 return true;
             }
@@ -115,6 +118,7 @@ public class POIDetailActivity extends LocationBase_Activity {
         Log.d(TAG, "Detail view " + detailedPoi.getName());
 
         //Create a the Passport Stamp view
+
         initStampCreation();
 
         mTV_PoiName.setText(detailedPoi.getName());
@@ -131,47 +135,30 @@ public class POIDetailActivity extends LocationBase_Activity {
 
     private void initStampCreation() {
 
-        // We create a Stamp no matter what, as the user might get one right now anyway
-        // This section of code is for items that we always create
-        Context context = getApplicationContext();
-
-        mStampView.setStampTitleText(detailedPoi.getStampText());
-
-        mStampView.setStampIcon(context, context.getResources()
-                .getIdentifier(detailedPoi.getIconName(),
-                        "drawable",
-                        getApplicationContext().getPackageName()));
+        mStampView.constructStampViewFromPOI(detailedPoi);
 
         if(detailedPoi.isStamped()){ // We have a stamp
             mStampBtn.setVisibility(View.GONE);
-            mStampView.setStampTimeStampText(timeStampStringConversion(detailedPoi.getStamp().getTimestamp()));
-            mStampView.setStamped(true); //setStamped automatically invalidates the view, so none is needed.
-
-        } else {
-            // Create a default timestamp
-            SimpleDateFormat defaultDateFormat = new SimpleDateFormat("MMM dd, yyyy");
-            String defaultTimestamp = defaultDateFormat.format(new Date());
-            mStampView.setStampTimeStampText(defaultTimestamp);
         }
     }
 
-    private String timeStampStringConversion(String dbTimeStampString) {
-
-        SimpleDateFormat oldFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
-        SimpleDateFormat newFormat = new SimpleDateFormat("MMM dd, yyyy");
-
-        Date date = null;
-
-        try {
-            date = oldFormat.parse(dbTimeStampString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        //Convert to a new nice looking format
-        return newFormat.format(date);
-
-    }
+//    private String timeStampStringConversion(String dbTimeStampString) {
+//
+//        SimpleDateFormat oldFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+//        SimpleDateFormat newFormat = new SimpleDateFormat("MMM dd, yyyy");
+//
+//        Date date = null;
+//
+//        try {
+//            date = oldFormat.parse(dbTimeStampString);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        //Convert to a new nice looking format
+//        return newFormat.format(date);
+//
+//    }
 
     // TODO Determine if I need to cancel location update onPause or onStop.
     @Override

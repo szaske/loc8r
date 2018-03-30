@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.loc8r.seattle.activities.CreatePOIPlaceholderActivity"
+    tools:showIn="@layout/activity_create_poi_placeholder">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create a new generic POI in the database"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="8dp" />
+
+    <TextView
+        android:id="@+id/tv_Index_Header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="UNIQUE INDEX:"
+        app:layout_constraintStart_toStartOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <EditText
+        android:id="@+id/et_AddPOI_Index"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:hint="POI Index Name"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toEndOf="@+id/tv_Index_Header"
+        app:layout_constraintTop_toTopOf="@+id/tv_Index_Header" />
+
+    <Button
+        android:id="@+id/bn_createPOI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Create POI"
+        app:layout_constraintStart_toStartOf="@+id/et_AddPOI_Name"
+        app:layout_constraintTop_toBottomOf="@+id/et_AddPOI_Name" />
+
+    <TextView
+        android:id="@+id/tv_Name_Header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="NAME:"
+        app:layout_constraintEnd_toStartOf="@+id/et_AddPOI_Name"
+        app:layout_constraintTop_toTopOf="@+id/et_AddPOI_Name" />
+
+    <EditText
+        android:id="@+id/et_AddPOI_Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintStart_toStartOf="@+id/et_AddPOI_Index"
+        app:layout_constraintTop_toBottomOf="@+id/et_AddPOI_Index" />
+</android.support.constraint.ConstraintLayout>
