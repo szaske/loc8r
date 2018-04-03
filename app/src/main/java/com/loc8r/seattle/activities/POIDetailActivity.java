@@ -9,6 +9,7 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.Log;
 import android.view.TouchDelegate;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,17 +63,17 @@ public class POIDetailActivity extends LocationBase_Activity {
     @BindView(R.id.tv_poi_description) TextView mTV_PoiDescription;
     @BindView(R.id.tv_distance) TextView mTV_PoiDistance;
     @BindView(R.id.tv_collection) TextView mTV_PoiCollection;
-
+    @BindView(R.id.photoLayout) ConstraintLayout mPhotoLayout;
     @BindView(R.id.stampView) StampView mStampView;
     @BindView(R.id.bt_getStamp) Button mStampBtn;
     @BindView(R.id.bt_back_arrow) ImageButton mBackArrow;
+    @BindView(R.id.photo_view) PhotoView mPhotoView;
 
     // TODO Should I move currentLocation to the State Manager?
     // private Location mCurrentLocation;
     private POI detailedPoi;
     private FirebaseFirestore db;
     private FirebaseUser user;
-
 
     // New Toolbar layout items
 //    private CollapsingToolbarLayout collapsingToolbar;
@@ -84,6 +86,10 @@ public class POIDetailActivity extends LocationBase_Activity {
         setContentView(R.layout.activity_poi_detail);
         ButterKnife.bind(this);
         detailedPoi = Parcels.unwrap(getIntent().getParcelableExtra("poi"));
+
+        // mPhotoView.setImageResource(R.drawable.image);
+        initPhotoView();
+
 
         //testing enlarged touch delegate
         changeTouchableAreaOfView(mBackArrow,220);
@@ -135,6 +141,20 @@ public class POIDetailActivity extends LocationBase_Activity {
 
         //        //Get the Firebase user
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+    }
+
+    private void initPhotoView() {
+
+        // Make sure the view starts invisible
+        mPhotoLayout.setVisibility(View.INVISIBLE);
+
+        // Load the image into the full screen view
+        Picasso.get()
+                .load(detailedPoi.getImg_url())
+                .into(mPhotoView);
+
+
 
     }
 
@@ -252,9 +272,54 @@ public class POIDetailActivity extends LocationBase_Activity {
         });
     }
 
+    /**
+     *  Click listener for when the user clicks on the back arrow
+     */
     @OnClick(R.id.bt_back_arrow)
     public void onBackArrowClick(){
         finish();
+    }
+
+    /**
+     *  Click listener for when the user clicks on the full screen icon in the Photo View
+     */
+    @OnClick(R.id.iv_fullScreen)
+    public void onClickFullScreenIcon(){
+        hideSystemUI();
+        mPhotoLayout.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     *  Click listener for when the user clicks on the exit full screen icon in the Photo View
+     */
+    @OnClick(R.id.iv_exitFullScreen)
+    public void onClickExitFullScreenIcon(){
+        showSystemUI();
+        mPhotoLayout.setVisibility(View.INVISIBLE);
+    }
+
+
+    // This snippet hides the system bars.
+    private void hideSystemUI() {
+        // Set the IMMERSIVE flag.
+        // Set the content to appear under the system bars so that the content
+        // doesn't resize when the system bars hide and show.
+        mPhotoLayout.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+    }
+
+    // This snippet shows the system bars. It does this by removing all the flags
+// except for the ones that make the content appear under the system bars.
+    private void showSystemUI() {
+        mPhotoLayout.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
     private void animateGettingStamp(){
