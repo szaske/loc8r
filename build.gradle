@@ -2,12 +2,9 @@
 
 buildscript {
     ext.kotlin_version = '1.2.10'
-
-    ext {
-        versions = [
-                supportV7: '26.1.0'
-        ]
-    }
+    ext.gms_version = '12.0.0'
+    ext.supportV7_version = '26.1.0'
+    ext.firebase_version = '12.0.1'
 
     repositories {
         jcenter()
@@ -15,8 +12,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        //classpath 'com.android.tools.build:gradle:3.0.1'
+//        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.1.0'
         // classpath 'com.stanfy.spoon:spoon-gradle-plugin:1.2.2'
         // classpath 'com.stanfy.spoon:spoon-gradle-plugin:spoon-2.0.0-snapshot'
 
@@ -26,7 +23,8 @@ buildscript {
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-        classpath 'com.google.gms:google-services:3.1.0'
+           classpath 'com.google.gms:google-services:3.1.1'
+        // classpath 'com.google.gms:google-services:3.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }

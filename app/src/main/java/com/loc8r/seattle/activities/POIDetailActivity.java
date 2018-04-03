@@ -40,16 +40,16 @@ import com.loc8r.seattle.utils.FocusedCropTransform;
 import com.loc8r.seattle.utils.ProgressDialog;
 import com.loc8r.seattle.utils.StampView;
 import com.loc8r.seattle.utils.StateManager;
-import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
+import com.squareup.picasso.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
+import butterknife.*;
 import butterknife.OnClick;
 
 public class POIDetailActivity extends LocationBase_Activity {
@@ -109,7 +109,7 @@ public class POIDetailActivity extends LocationBase_Activity {
                 //
                 // Also should add a progressbar
                 // here is a good example : https://stackoverflow.com/questions/22143157/android-picasso-placeholder-and-error-image-styling
-                Picasso.with(getApplicationContext())
+                Picasso.get()
                         .load(detailedPoi.getImg_url())
                         .transform(new FocusedCropTransform(mIV_PoiImage.getMeasuredWidth(),mIV_PoiImage.getMeasuredHeight(), detailedPoi.getImgFocalpointX(),detailedPoi.getImgFocalpointY()))
                         .into(mIV_PoiImage);

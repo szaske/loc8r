@@ -1,7 +1,11 @@
 package com.loc8r.seattle.utils;
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.IntDef;
+import android.support.annotation.StringDef;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 /**
@@ -11,15 +15,17 @@ import java.util.ArrayList;
  */
 
 public class Constants {
-//    public static final String FIREBASE_CHILD_POIS = "pois";
-//    public static final String FIREBASE_JSON_URL = "https://day-one-blog.firebaseio.com/.json";
-//    public static final String INTENT_POI_KEY = "POI";
-//    public static final String FIREBASE_CHILD_USERS = "Users";
-//    public static final String FIREBASE_CHILD_STAMPS = "Stamps";
     public static final String PREFERENCES_PREVIOUS_LOCATION_KEY = "previousLocation";
     public static final String PREFERENCES_PREVIOUS_USER_KEY = "previousUser";
     public static final String SELECTED_COLLECTION_KEY = "SELECTED_COLLECTION_KEY";
-//    public static final String FIREBASE_QUERY_INDEX = "index";
     public static final int DISTANCE_TO_SCAN_MARKERS = 800;
+
+    public static final String MARKER = "marker";
+    public static final String ICON = "icon";
+
+    // Declare the @IntDef for these constants
+    @StringDef({MARKER,ICON})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Loc8rGraphics {}
 
 }

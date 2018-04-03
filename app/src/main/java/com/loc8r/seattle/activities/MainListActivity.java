@@ -52,7 +52,7 @@ public class MainListActivity extends LocationBase_Activity
                 //
                 // Also should add a progressbar
                 // here is a good example : https://stackoverflow.com/questions/22143157/android-picasso-placeholder-and-error-image-styling
-                Picasso.with(getApplicationContext())
+                Picasso.get()
                         .load(R.drawable.main_menu_bg)
                         .transform(new FocusedCropTransform(mBackgroundImage.getMeasuredWidth(),mBackgroundImage.getMeasuredHeight(), 400,600))
                         .into(mBackgroundImage);
