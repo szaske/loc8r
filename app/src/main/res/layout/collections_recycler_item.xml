@@ -5,7 +5,10 @@
     android:id="@+id/item_row_background"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/iv_collection_icon"
