@@ -1,6 +1,8 @@
 package com.loc8r.seattle.utils;
 
 import android.graphics.Bitmap;
+import android.util.Log;
+
 import com.squareup.picasso.Transformation;
 
 /**
@@ -74,7 +76,11 @@ public class FocusedCropTransform implements Transformation {
             }
         }
 
+        // passed parameters in pixels not dp
+        // see https://stackoverflow.com/questions/18027054/use-density-independent-pixels-for-width-and-height-when-creating-a-bitmap
         Bitmap result = Bitmap.createBitmap(source,newStartX,newStartY,resultsWidth,resultsHeight);
+        Log.d("FocusedCropTransform:", "source: W:"+ source.getWidth()+"dp, H:" + source.getHeight() + "dp, resized to W:" + result.getWidth() + "dp, H:" + result.getHeight()+"dp");
+
         if (result != source) {
             source.recycle();
         }

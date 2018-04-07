@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.loc8r.seattle.utils.CollectionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item_row_background"
+    android:id="@+id/collection_item_row_rootView"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:background="@color/white"
+    android:layout_height="160dp"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground"
+    tools:background="@drawable/backg_rya">
 
     <ImageView
         android:id="@+id/iv_collection_icon"
@@ -16,11 +17,20 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:adjustViewBounds="false"
+        android:contentDescription="an icon"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ice_cream_icon" />
+        tools:src="@drawable/icon_rya" />
+
+    <View
+        android:id="@+id/scrimBottom"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/scrim_bottom"
+        app:layout_constraintBottom_toBottomOf="@id/collection_item_row_rootView" />
 
     <TextView
         android:id="@+id/nameTV"
@@ -28,8 +38,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="TextView"
-        android:textSize="24sp"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="@+id/iv_collection_icon"
-        app:layout_constraintStart_toEndOf="@+id/iv_collection_icon"
-        app:layout_constraintTop_toTopOf="@+id/iv_collection_icon" />
-</android.support.constraint.ConstraintLayout>
+        app:layout_constraintStart_toEndOf="@+id/iv_collection_icon" />
+
+</com.loc8r.seattle.utils.CollectionLayout>

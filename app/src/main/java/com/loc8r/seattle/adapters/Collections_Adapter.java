@@ -1,19 +1,26 @@
 package com.loc8r.seattle.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.interfaces.OnCollectionClickListener;
 import com.loc8r.seattle.models.Collection;
+import com.loc8r.seattle.utils.CollectionLayout;
+import com.loc8r.seattle.utils.FocusedCropTransform;
 import com.loc8r.seattle.utils.StampView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -72,32 +79,85 @@ public class Collections_Adapter extends RecyclerView.Adapter<Collections_Adapte
 
         TextView name;
         ImageView collectionIcon;
+        ImageView bgImage;
         StampView stampView;
         Context context;
+        CollectionLayout rootView;
+        int bgResourceId;
 
         Collections_View_Holder(View itemView) {
             super(itemView);
+
+            // Configure the title textView
             name = itemView.findViewById(R.id.nameTV);
+            Typeface mainTypeface = Typeface.createFromAsset(name.getContext().getAssets(), "fonts/Roboto-Bold.ttf");
+            name.setTypeface(mainTypeface);
+            name.setShadowLayer(15, 0, 0, Color.BLACK );
+
+
+
             collectionIcon = itemView.findViewById(R.id.iv_collection_icon);
+            rootView = itemView.findViewById(R.id.collection_item_row_rootView);
             context = itemView.getContext();
+
+
         }
 
         public void bind(final Collection item, final OnCollectionClickListener listener){
+
+
             name.setText(item.getName());
 
+
+
             // Get and display the correct icon for each collection
+            int iconResourceId = context.getResources().getIdentifier("icon_" + item.getCollectionResourceID(), "drawable", context.getPackageName());
 
-            int iconResource = context.getResources().getIdentifier(item.getIconName(), "drawable", context.getPackageName());
-
-            if ( iconResource != 0 ) {  // the resource exists...
-                Drawable image = context.getResources().getDrawable(iconResource);
+            if ( iconResourceId != 0 ) {  // the resource exists...
+                Drawable image = context.getResources().getDrawable(iconResourceId);
                 collectionIcon.setImageDrawable(image);
             }
             else {  // checkExistence == 0  // the resource does NOT exist!!
                 collectionIcon.setImageResource(R.drawable.stamp_placeholder);
             }
 
-            // Set background image here
+            // Get the Id for the background image resource
+            bgResourceId = context.getResources().getIdentifier("backg_" + item.getCollectionResourceID(), "drawable", context.getPackageName());
+
+            if(bgResourceId==0){
+                bgResourceId = (int) R.drawable.main_menu_bg;
+            }
+
+            // see https://stackoverflow.com/questions/18081001/android-get-width-of-layout-programatically-having-fill-parent-in-its-xml
+            ViewTreeObserver vto = rootView.getViewTreeObserver();
+            vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                public boolean onPreDraw() {
+                    rootView.getViewTreeObserver().removeOnPreDrawListener(this);
+                    int rootWidth = rootView.getMeasuredWidth();
+                    int rootHeight = rootView.getMeasuredHeight();
+                    Picasso.get()
+                            .load(bgResourceId)
+                            .transform(new FocusedCropTransform(rootWidth,rootHeight,0,0))
+                            .into(rootView);
+
+                    Log.d("tester-", "STZ _ onPreDraw: Width is " + rootView.getMeasuredWidth() + " - Height:"+ rootView.getMeasuredHeight());
+                    return true;
+                }
+            });
+
+//            if ( bgResourceId != 0 && rootWidth!=0) {  // the resource exists...
+////                Drawable image = context.getResources().getDrawable(bgResourceId);
+////                rootView.setBackground(image);
+//                Picasso.get()
+//                        .load(bgResourceId)
+//                        .transform(new FocusedCropTransform(rootWidth,rootHeight,0,0))
+//                        .into(rootView);
+//            }
+//            else {  // checkExistence == 0  // the resource does NOT exist!!
+//                rootView.setBackgroundResource(R.drawable.main_menu_bg);
+//            }
+            Log.d("Log Info-", "STZ _ RootView Width is " + rootView.getMeasuredWidth() + " - Height:"+ rootView.getMeasuredHeight());
+
 
             Log.d("ViewHolder-", "bind: method fired");
             itemView.setOnClickListener(new View.OnClickListener() {
