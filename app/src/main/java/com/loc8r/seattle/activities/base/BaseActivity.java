@@ -3,7 +3,7 @@ package com.loc8r.seattle.activities.base;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+// import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  *  Base Activity includes code shared across multiple activities
@@ -21,6 +21,6 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+        // super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

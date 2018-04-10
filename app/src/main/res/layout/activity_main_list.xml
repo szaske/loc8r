@@ -59,7 +59,6 @@
         android:text="Explore Map"
         android:textColor="@color/primaryTextColor"
         android:textSize="20sp"
-        app:fontPath="fonts/Roboto-Bold.ttf"
         app:layout_constraintBottom_toTopOf="@+id/my_passport_Button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -77,7 +76,6 @@
         android:text="My Passport"
         android:textColor="@color/primaryTextColor"
         android:textSize="20sp"
-        app:fontPath="fonts/Roboto-Bold.ttf"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/explore_Button" />
 
