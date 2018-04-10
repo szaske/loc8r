@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,11 +17,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loc8r.seattle.BuildConfig;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.activities.base.FirebaseBaseActivity;
 import com.loc8r.seattle.activities.base.LocationBase_Activity;
 import com.loc8r.seattle.utils.FocusedCropTransform;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class MainListActivity extends LocationBase_Activity
 {
@@ -41,6 +45,8 @@ public class MainListActivity extends LocationBase_Activity
 
         mBackgroundImage = findViewById(R.id.iv_background_image);
 
+        fetchImages();
+
         ViewTreeObserver vto = mBackgroundImage.getViewTreeObserver();
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
@@ -52,7 +58,7 @@ public class MainListActivity extends LocationBase_Activity
                 //
                 // Also should add a progressbar
                 // here is a good example : https://stackoverflow.com/questions/22143157/android-picasso-placeholder-and-error-image-styling
-                Picasso.with(getApplicationContext())
+                Picasso.get()
                         .load(R.drawable.main_menu_bg)
                         .transform(new FocusedCropTransform(mBackgroundImage.getMeasuredWidth(),mBackgroundImage.getMeasuredHeight(), 400,600))
                         .into(mBackgroundImage);
@@ -90,6 +96,22 @@ public class MainListActivity extends LocationBase_Activity
         mTitle = findViewById(R.id.tv_main_title);
         mTitle.setTypeface(mainTypeface);
         mTitle.setShadowLayer(15, 0, 0, Color.BLACK );
+    }
+
+    private void fetchImages() {
+//        if (BuildConfig.DEBUG) {
+//            Picasso.get().setIndicatorsEnabled(true);
+//            Picasso.get().setLoggingEnabled(true);
+//        }
+//        Picasso.get()
+//                .load(R.drawable.backg_rya)
+//                .fetch();
+//        Picasso.get()
+//                .load(R.drawable.backg_str)
+//                .fetch();
+//        Picasso.get()
+//                .load(R.drawable.backg_tim)
+//                .fetch();
     }
 
     @Override

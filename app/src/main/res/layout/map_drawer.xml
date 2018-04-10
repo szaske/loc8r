@@ -14,88 +14,120 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/drawerView"
-        android:layout_width="350dp"
-        android:layout_height="250dp"
-        android:background="@drawable/rounded_up_corners_bg"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp">
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/draggableArea"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_up_corners_bg"
+            android:paddingBottom="2dp"
+            app:layout_constraintEnd_toEndOf="@+id/content_area"
+            app:layout_constraintStart_toStartOf="@+id/content_area">
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center_horizontal"
                 android:text="HIDE"
-                android:textColor="@color/grey200"
+                android:textColor="@color/primaryDarkColor"
+                app:layout_constraintEnd_toStartOf="@+id/arrow_down_imageView"
+                app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/arrow_down_imageView"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
+                android:layout_marginStart="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView"
+                app:layout_constraintTop_toTopOf="@+id/textView"
                 app:srcCompat="@drawable/ic_keyboard_arrow_down_black_24dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/icon_imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:srcCompat="@drawable/ice_cream_icon" />
+        </android.support.constraint.ConstraintLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/content_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/draggableArea">
 
-                    <TextView
-                        android:id="@+id/title_textView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="POI Title can be long"
-                        app:layout_constraintStart_toEndOf="@+id/icon_imageView"
-                        app:layout_constraintTop_toTopOf="@+id/icon_imageView" />
+            <android.support.constraint.Guideline
+                android:id="@+id/iconGuide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="96dp" />
 
-                    <TextView
-                        android:id="@+id/desc_textView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:maxLines="3"
-                        android:text="A generic description of the POI"
-                        app:layout_constraintStart_toStartOf="@+id/title_textView"
-                        app:layout_constraintTop_toBottomOf="@+id/title_textView"
-                        app:layout_constraintWidth_default="wrap" />
+            <android.support.constraint.Guideline
+                android:id="@+id/buttonGuide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="120dp" />
 
-                    <Button
-                        android:id="@+id/poi_details_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:text="DETAILS"
-                        app:layout_constraintStart_toStartOf="@+id/title_textView"
-                        app:layout_constraintTop_toBottomOf="@+id/desc_textView" />
-                </LinearLayout>
+            <ImageView
+                android:id="@+id/iv_drawer_icon"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="4dp"
+                app:layout_constraintEnd_toStartOf="@+id/iconGuide"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/title_textView"
+                app:srcCompat="@drawable/icon_his" />
 
-            </LinearLayout>
-        </LinearLayout>
+            <Button
+                android:id="@+id/poi_details_button"
+                android:layout_width="88dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="DETAILS"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/buttonGuide"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/title_textView"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="POI Title can be long"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/buttonGuide"
+                app:layout_constraintStart_toStartOf="@+id/iconGuide"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/desc_textView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:text="A generic description of the POI"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/title_textView"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/title_textView"
+                app:layout_constraintTop_toBottomOf="@+id/title_textView"
+                tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." />
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
 

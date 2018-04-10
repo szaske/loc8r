@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -39,7 +40,7 @@ import java.util.Comparator;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CollectionListActivity extends BaseActivity implements
+public class CollectionListActivity extends AppCompatActivity implements
         StampsRequester.FireBaseStampResponse,
         OnPOIClickListener {
     private static final String TAG = CollectionListActivity.class.getSimpleName();

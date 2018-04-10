@@ -3,24 +3,23 @@ package com.loc8r.seattle.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 
-import android.support.design.widget.FloatingActionButton;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.TouchDelegate;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,12 +32,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.loc8r.seattle.Manifest;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.activities.base.LocationBase_Activity;
 import com.loc8r.seattle.interfaces.LocationListener;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.Constants;
+import com.loc8r.seattle.utils.Constants.Loc8rGraphics;
 import com.loc8r.seattle.utils.StateManager;
 import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
@@ -54,6 +53,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.loc8r.seattle.utils.Constants.MARKER;
+
 public class MapActivity extends LocationBase_Activity implements
         GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback {
@@ -61,19 +62,19 @@ public class MapActivity extends LocationBase_Activity implements
     private static final String TAG = MapActivity.class.getSimpleName();
     private GoogleMap mMap;
 
-    // private ArrayList<POI> mListOfPOIs;
-    //private POIsRequester mPOIsRequester; //helper class
-
+    // Drawer UI
     private SlideUp mDrawer;
     private View mDrawerView;
     private View mHideImageView;
     private TextView mDrawerTitleTV;
     private TextView mDrawerDescTV;
+    private ImageView mDrawerIconIV;
     private Button mDrawerDetailButton;
     // private Location mCurrentLocation;
     private Context context;
 
     private List<Integer> mExistingPoiMarkers;
+    private ConstraintLayout mDraggableDrawer;
 
     private Boolean haveNotDoneInitialZoomIn;
     SupportMapFragment mMapFragment;
@@ -93,14 +94,13 @@ public class MapActivity extends LocationBase_Activity implements
         mMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
-        // Drawer Setup
+        // Setup for the drawer UI.
         DrawerSetup();
 
-        //mListOfPOIs = new ArrayList<>(); // Create an empty list to hold POIs
-        //This is the object that can fetch more content
-        //mPOIsRequester = new POIsRequester();
         context = this; // Set context so we can use inside the runnable below
 
+        // Our list of map markers.  An arraylist of ints, the indexs of POIs in the State manager.
+        // I use this list to remember what POIs are currently being shown in the map.
         mExistingPoiMarkers = new ArrayList<>();
 
         //testing enlarged touch delegate
@@ -114,8 +114,16 @@ public class MapActivity extends LocationBase_Activity implements
     }
 
 
-    // Creates a Bitmap marker from vector art
-    // From https://stackoverflow.com/questions/42365658/custom-marker-in-google-maps-in-android-with-vector-asset-icon
+    //
+
+    /**
+     *  Creates a Bitmap marker from vector art
+     *  See https://stackoverflow.com/questions/42365658/custom-marker-in-google-maps-in-android-with-vector-asset-icon
+     *
+     * @param context The current activity
+     * @param vectorResId The ID
+     * @return
+     */
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
         vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
@@ -146,6 +154,7 @@ public class MapActivity extends LocationBase_Activity implements
         mDrawerView = findViewById(R.id.drawerView);
         mDrawerTitleTV = findViewById(R.id.title_textView);
         mDrawerDescTV = findViewById(R.id.desc_textView);
+        mDrawerIconIV = findViewById(R.id.iv_drawer_icon);
 
         // Configure the details button and click listener
         mDrawerDetailButton = findViewById(R.id.poi_details_button);
@@ -183,16 +192,25 @@ public class MapActivity extends LocationBase_Activity implements
                 .withLoggingEnabled(true)
                 .withGesturesEnabled(true)
                 .withStartState(SlideUp.State.HIDDEN)
-                .withSlideFromOtherView(findViewById(R.id.rootView))
                 .build();
 
-        mHideImageView = findViewById(R.id.arrow_down_imageView);
-        mHideImageView.setOnClickListener(new View.OnClickListener() {
+        // close event listener
+
+        mDraggableDrawer = findViewById(R.id.draggableArea);
+        mDraggableDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDrawer.hide();
             }
         });
+
+//        mHideImageView = findViewById(R.id.arrow_down_imageView);
+//        mHideImageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mDrawer.hide();
+//            }
+//        });
 
     }
 
@@ -251,6 +269,7 @@ public class MapActivity extends LocationBase_Activity implements
         //Set draw info to selected POI
         mDrawerTitleTV.setText(mSelectedPOI.getName());
         mDrawerDescTV.setText(mSelectedPOI.getDescription());
+        mDrawerIconIV.setImageResource(getIconDrawableID(getApplicationContext(),mSelectedPOI.getCollectionString(),Constants.ICON));
 
         Log.d(TAG, "onMarkerClick: You selected marker " + mSelectedPOI.getName() );
         //Bring up the details mDrawer
@@ -277,9 +296,10 @@ public class MapActivity extends LocationBase_Activity implements
                     // Add the location's marker to the map
                     LatLng poiLatLng = new LatLng(poi.getLatitude(), poi.getLongitude());
 
+
                     Marker tempMarker = mMap.addMarker(new MarkerOptions()
                             .position(poiLatLng)
-                            .icon(bitmapDescriptorFromVector(this, getMarkerIconDrawableID(this,poi.getCollectionString())))
+                            .icon(bitmapDescriptorFromVector(this, getIconDrawableID(this,poi.getCollectionString(), Constants.MARKER)))
                             .title(poi.getName()));
                     tempMarker.setTag(StateManager.getInstance().getPOIs().indexOf(poi)); //Tag is set to POI Index in full SM Arraylist
 
@@ -295,12 +315,23 @@ public class MapActivity extends LocationBase_Activity implements
         }
     }
 
-    public static int getMarkerIconDrawableID (Context context, String collectionString) {
-        String iconName = "marker_" + collectionString;
+    /**
+     *  Gets a graphic, either icon or marker
+     *
+     * @param context
+     * @param collectionString
+     * @param iconType
+     * @return
+     */
+    public static int getIconDrawableID(Context context, String collectionString, @Loc8rGraphics String iconType) {
+
+        String iconName = iconType + "_" + collectionString;
         Resources resources = context.getResources();
          return resources.getIdentifier(iconName, "drawable",
                 context.getPackageName());
     }
+
+
 
     /**
      *  Fires when we're properly connected to Google services and have all permissions
@@ -359,6 +390,13 @@ public class MapActivity extends LocationBase_Activity implements
         StateManager.getInstance().setPOIs(POIs);
     }
 
+    /**
+     *  Method to increase the 'clickable' area around a view.  Created to make the back arrow easier to click on
+     *  see: https://stackoverflow.com/questions/1343222/is-there-an-example-of-how-to-use-a-touchdelegate-in-android-to-increase-the-siz
+     *
+     * @param view The view that needs more clickable space around it
+     * @param extraSpace the increase size, in DP in all four directions of the view
+     */
     private void changeTouchableAreaOfView(final View view, final int extraSpace) {
 
         final View parent = (View) view.getParent();

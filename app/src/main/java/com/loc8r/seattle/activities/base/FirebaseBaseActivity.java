@@ -3,6 +3,7 @@ package com.loc8r.seattle.activities.base;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.firebase.ui.auth.AuthUI;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FirebaseBaseActivity extends BaseActivity {
+public class FirebaseBaseActivity extends AppCompatActivity {
 
     private static final String TAG = FirebaseBaseActivity.class.getSimpleName();
 

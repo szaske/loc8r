@@ -1,8 +1,13 @@
+/**
+ *  An Activity to show a list of POI collections
+ */
+
 package com.loc8r.seattle.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +30,9 @@ import com.loc8r.seattle.utils.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static android.widget.LinearLayout.HORIZONTAL;
+import static android.widget.LinearLayout.VERTICAL;
 
 public class PassportActivity extends LocationBase_Activity implements CollectionsRequester.FireBaseCollectionsResponse, OnCollectionClickListener{
     private static final String TAG = PassportActivity.class.getSimpleName();
@@ -62,8 +70,9 @@ public class PassportActivity extends LocationBase_Activity implements Collectio
 
         mAdapter = new Collections_Adapter(mListOfCollections, this);
         mRecyclerView.setAdapter(mAdapter);
-
-        // mRecyclerView.setAdapter(new Collections_Adapter(POIsRequester.getInstance(getApplicationContext()).mListOfCollections, this));
+        DividerItemDecoration itemDecor = new DividerItemDecoration(mRecyclerView.getContext(), VERTICAL);
+        itemDecor.setDrawable(getDrawable(R.drawable.collection_rv_divider));
+        mRecyclerView.addItemDecoration(itemDecor);
 
         //This is the object that can fetch more content
         // mCollectionsRequester = new CollectionsRequester(this);

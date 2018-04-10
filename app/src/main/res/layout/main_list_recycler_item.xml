@@ -22,7 +22,6 @@
         android:text="button"
         android:textColor="@color/primaryTextColor"
         android:textSize="20sp"
-        app:fontPath="fonts/Roboto-Bold.ttf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
