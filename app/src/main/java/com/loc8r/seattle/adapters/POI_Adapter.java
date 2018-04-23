@@ -1,7 +1,10 @@
 package com.loc8r.seattle.adapters;
 
+import android.content.res.Resources;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +25,15 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
 
 
     // Class variables
+    private static final int TYPE_LEFT = 0;
+    private static final int TYPE_RIGHT = 1;
+    private static final int TYPE_SPACER = 2;
+
+
     ArrayList<POI> mPOIslist;
     OnPOIClickListener listener;
+    int viewholderHeight;
+    int viewholderRightSpacer;
 
     // Constructor
     public POI_Adapter(ArrayList<POI> list, OnPOIClickListener listener) {
@@ -32,22 +42,50 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if(isOdd(position)) {
+            return TYPE_RIGHT;
+        }
+        return TYPE_LEFT;
+    }
+
+    private boolean isOdd(int position) {
+        return position%2==0;
+    }
+
+    @Override
     public POI_View_Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         //Inflate the layout, initialize the View Holder
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.poi_recycler_item, parent, false);
-        POI_View_Holder holder = new POI_View_Holder(v);
-        return holder;
+
+        if (viewType == TYPE_LEFT) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.poi_recycler_item_right, parent, false);
+            POI_View_Holder vh = new POI_View_Holder(view);
+
+            // Check once for height of viewholder view
+            if(viewholderHeight==0){
+                view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                viewholderHeight = view.getMeasuredHeight() ;
+            }
+            return new POI_View_Holder(view);
+        } else if (viewType == TYPE_RIGHT) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.poi_recycler_item_left, parent, false);
+            return new POI_View_Holder(view);
+        }
+
+        throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
+
+        // View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.poi_recycler_item_right, parent, false);
+        // POI_View_Holder holder = new POI_View_Holder(v);
+        // return holder;
 
     }
 
     @Override
     public void onBindViewHolder(POI_View_Holder holder, int position) {
 
-        //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
-        //holder.title.setText(mPOIslist.get(position).getTitle());
+        // POI_View_Holder viewHolder = (POI_View_Holder)holder;
+        holder.bind(position, mPOIslist.get(position), listener);
 
-        //Instead lets use the viewholder bind method to assign content
-        holder.bind(mPOIslist.get(position), listener);
     }
 
     @Override
@@ -60,28 +98,56 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
     // The VIEWHOLDER
     //
     //
-    static class POI_View_Holder extends RecyclerView.ViewHolder {
+    class POI_View_Holder extends RecyclerView.ViewHolder {
 
         // Variables for the ViewHolder
         private TextView name;
         private TextView positionText;
         private StampView stampView;
+        private ConstraintLayout placeholderLayout;
 
         POI_View_Holder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.poi_nameTV);
             positionText= itemView.findViewById(R.id.poi_positionTV);
             stampView = itemView.findViewById(R.id.poi_StampView);
+            placeholderLayout = itemView.findViewById(R.id.poiPlaceholderLayout);
 
 //            stampView.setSaveEnabled(true); // force state saving
 //            stampView.setId(getPosition());
         }
 
-        public void bind(final POI poi, final OnPOIClickListener listener){
+        /**
+         *  Converts DP to pixels for the devices display
+         * @param dp An int, the number of DP
+         * @return An int, the number of pixels in the given DP
+         */
+        private int DP2Pixels(int dp){
+            Resources r = itemView.getResources();
+            return (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    dp,
+                    r.getDisplayMetrics()
+            );
+        }
+
+        public void bind(int position, final POI poi, final OnPOIClickListener listener){
+
+            // special case for position 1
+            // ensure we only get the spacer measurements once
+//            if(position==1 & viewholderRightSpacer==0){
+//                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) stampView.getLayoutParams();
+//                viewholderRightSpacer = viewholderHeight/2 + params.topMargin;
+//                params.setMargins(params.leftMargin, viewholderRightSpacer , params.rightMargin, params.bottomMargin); //substitute parameters for left, top, right, bottom
+//                stampView.setLayoutParams(params);
+//            }
 
             // Set POI information in viewHolder
             name.setText(poi.getName());
             positionText.setText(String.valueOf(poi.getCollectionPosition()));
+
+            // Put collection location into the view, so we can use it in building list decorations
+            placeholderLayout.setTag(poi.getCollectionPosition());
 
             if(poi.isStamped()){
                 stampView.setStamped(true);

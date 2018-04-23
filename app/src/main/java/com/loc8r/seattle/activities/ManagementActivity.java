@@ -28,6 +28,7 @@ public class ManagementActivity extends AppCompatActivity {
     private Button mAddPOIsButton;
     private Button mAddSinglePOI;
     private Button mPOIPlaceholder;
+    private Button mAdminButton;
     private Map<String, Integer> mCollectionCounterMap;
 
     @Override
@@ -44,7 +45,7 @@ public class ManagementActivity extends AppCompatActivity {
         mAddPOIsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Add POIs button pressed ");
+                Log.d(TAG, "Add set of fake POIs button pressed ");
                 CreateFakePOIs(1);
             }
         });
@@ -53,7 +54,7 @@ public class ManagementActivity extends AppCompatActivity {
         mAddSinglePOI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Add POI button pressed ");
+                Log.d(TAG, "Add Single POI button pressed ");
                 Intent intent = new Intent(ManagementActivity.this, AddPOIActivity.class);
                 startActivity(intent);
             }
@@ -63,9 +64,18 @@ public class ManagementActivity extends AppCompatActivity {
         mPOIPlaceholder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Add POI button pressed ");
+                Log.d(TAG, "Add POI Placeholder button pressed ");
                 Intent intent = new Intent(ManagementActivity.this, CreatePOIPlaceholderActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        mAdminButton = findViewById(R.id.bn_MakeAdmin);
+        mAdminButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Make me an Admin button pressed ");
+
             }
         });
 

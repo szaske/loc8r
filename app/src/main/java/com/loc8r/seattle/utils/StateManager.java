@@ -4,13 +4,15 @@ import android.location.Location;
 import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
+import com.loc8r.seattle.models.User;
 
 import java.util.ArrayList;
 
 public class StateManager {
     private static final StateManager ourInstance = new StateManager();
-    private Location currentLocation; // The users current location
-    private String user;
+    private User mUser;
+    // private Location currentLocation; // The users current location
+   // private String userId;
     private ArrayList<POI> mPOIs;
     private ArrayList<Collection> mCollections;
     private ArrayList<Stamp> mStamps;
@@ -22,6 +24,7 @@ public class StateManager {
     }
 
     private StateManager() {
+        mUser = new User();
         mPOIs = new ArrayList<>();
         mStamps = new ArrayList<>();
         mCollections = new ArrayList<>();
@@ -29,62 +32,48 @@ public class StateManager {
         gettingStamps = false;
     }
 
+    // Getters
     public String getUser() {
-        return user;
+        return mUser.getUserId();
     }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public Location getCurrentLocation() {
-        return currentLocation;
-    }
-
-    public void setCurrentLocation(Location currentLocation) {
-        this.currentLocation = currentLocation;
-    }
-
+    public Location getCurrentLocation() { return mUser.getCurrentLocation(); }
     public ArrayList<POI> getPOIs() { return mPOIs;}
-    public void setPOIs(ArrayList<POI> pois){ this.mPOIs = pois; }
-
     public ArrayList<Collection> getCollections() {
         return mCollections;
     }
-
-    public void setCollections(ArrayList<Collection> mCollections) {
-        this.mCollections = mCollections;
-    }
-
     public ArrayList<Stamp> getStamps() {
         return mStamps;
     }
-
-    public void setStamps(ArrayList<Stamp> mStamps) {
-        this.mStamps = mStamps;
-    }
-
     public Boolean isGettingPOIs() {
         return gettingPOIs;
     }
-
-    public void setGettingPOIs(Boolean gettingPOIs) {
-        this.gettingPOIs = gettingPOIs;
-    }
-
     public Boolean isGettingStamps() {
         return gettingStamps;
     }
 
+    // Setters
+    public void setUser(String userId) { mUser.setUserId(userId); }
+    public void setCurrentLocation(Location currentLocation) { mUser.setCurrentLocation(currentLocation); }
+    public void setPOIs(ArrayList<POI> pois){ this.mPOIs = pois; }
+    public void setCollections(ArrayList<Collection> mCollections) { this.mCollections = mCollections; }
+    public void setStamps(ArrayList<Stamp> mStamps) {
+        this.mStamps = mStamps;
+    }
+    public void setGettingPOIs(Boolean gettingPOIs) {
+        this.gettingPOIs = gettingPOIs;
+    }
     public void setGettingStamps(Boolean gettingStamps) {
         this.gettingStamps = gettingStamps;
     }
 
+    /**
+     *  Method clears all State Manager info, including user.
+     */
     public void resetAll(){
         mPOIs.clear();
         mStamps.clear();
         gettingPOIs = false;
         gettingStamps = false;
-        currentLocation = null;
+        mUser = new User();
     }
 }

@@ -8,6 +8,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import com.loc8r.seattle.interfaces.OnPOIClickListener;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.utils.Constants;
+import com.loc8r.seattle.utils.POIStampDecoration;
 import com.loc8r.seattle.utils.StampView;
 import com.loc8r.seattle.utils.StampsRequester;
 import com.loc8r.seattle.utils.StateManager;
@@ -109,13 +111,20 @@ public class CollectionListActivity extends AppCompatActivity implements
         mRecyclerView.setHasFixedSize(true);
         // use a linear layout manager
         //mLayoutManager = new LinearLayoutManager(this);
-        mLayoutManager = new GridLayoutManager(this, 2);
+        //StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+
+        //mLayoutManager = new GridLayoutManager(this, 2);
+
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mListOfPOIsInCollection = new ArrayList<>(); // Create an empty list for the recyclerView
 
         mAdapter = new POI_Adapter(mListOfPOIsInCollection, this);
         mRecyclerView.setAdapter(mAdapter);
+
+        RecyclerView.ItemDecoration dividerItemDecoration = new POIStampDecoration(getResources().getDrawable(R.drawable.collection_rv_divider));
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -220,6 +229,11 @@ public class CollectionListActivity extends AppCompatActivity implements
 //        }
 //    }
 
+    /**
+     *  Click Listener for when a user clicks on a POI in the recyclerview
+     *
+     * @param poi The POI class object passed when a user clicks on the view
+     */
     @Override
     public void OnPOIClick (POI poi) {
         Log.d(TAG, "OnCollectionClick: Clicked on " + poi.getName());

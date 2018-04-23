@@ -77,9 +77,15 @@ public class FirebaseBaseActivity extends AppCompatActivity {
     }
 
     private void getInitialDataCacheFromDB(){
+        // If this is the first time, grab the list of POIs and save them to the StateManager
         if (stateManagerIsEmpty()) {
             fetchAllToStateManager();
         }
+
+        // Get extra information about the user, separate from FirebaseUser
+
+
+
 
     }
 
@@ -207,7 +213,7 @@ public class FirebaseBaseActivity extends AppCompatActivity {
     }
 
     public void GetUserStamps() throws IOException {
-        Log.d("STZ", "GetAllPOI method started ");
+        Log.d("STZ", "Get User Stamps method started ");
         db.collection("users")
                 .document(user.getUid())
                 .collection("stamps")
@@ -251,15 +257,45 @@ public class FirebaseBaseActivity extends AppCompatActivity {
 
                 StateManager.getInstance().setGettingStamps(false);
                 Log.d(TAG, "We got it all FOLKS!");
-                onPOIsAndStampsInStateManager();
+                //onPOIsAndStampsInStateManager();
             }
         });
 
     }
 
-    // callback to sub-classes when POIs and Stamps have been added to StateManager
-    public void onPOIsAndStampsInStateManager(){
+    public void GetUserRoles() throws IOException {
+        Log.d("STZ", "GetAll method started ");
+        db.collection("users")
+                .document(user.getUid())
+                .collection("stamps")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("STZ", "Getting POIs task completed successfully, now converting to POI class ");
+                            ArrayList<Stamp> results = new ArrayList<>();
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Stamp sentStamp = document.toObject(Stamp.class);
+                                results.add(sentStamp);
+                                // Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
 
+                            // Send results back to host activity
+                            onStampsReceived(results);
+                            Log.d("STZ", "onComplete: ");
+
+                        } else {
+                            Log.d(TAG, "Error getting POIs. ", task.getException());
+                        }
+                    }
+                });
     }
+
+
+//    // callback to sub-classes when POIs and Stamps have been added to StateManager
+//    public void onPOIsAndStampsInStateManager(){
+//
+//    }
 
 }

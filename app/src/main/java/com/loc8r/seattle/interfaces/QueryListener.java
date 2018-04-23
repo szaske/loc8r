@@ -1,7 +1,7 @@
 package com.loc8r.seattle.interfaces;
 
 /**
- * Interface for queries on MongoDB
+ * Interface for queries
  */
 
 public interface QueryListener<T>

@@ -145,8 +145,8 @@ public class MainListActivity extends LocationBase_Activity
     }
 
 
-    @Override public void onPOIsAndStampsInStateManager() {
-        super.onPOIsAndStampsInStateManager();
-        Log.d(TAG, "onPOIsAndStampsInStateManager: EVERYTHING IS IN STATEMANAGER");
-    }
+//    @Override public void onPOIsAndStampsInStateManager() {
+//        super.onPOIsAndStampsInStateManager();
+//        Log.d(TAG, "onPOIsAndStampsInStateManager: EVERYTHING IS IN STATEMANAGER");
+//    }
 }
