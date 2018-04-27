@@ -19,6 +19,7 @@ public class Constants {
     public static final String PREFERENCES_PREVIOUS_LOCATION_KEY = "previousLocation";
     public static final String PREFERENCES_PREVIOUS_USER_KEY = "previousUser";
     public static final String SELECTED_COLLECTION_KEY = "SELECTED_COLLECTION_KEY";
+    public static final String PRETTY_COLLECTION_KEY = "PRETTY_COLLECTION_KEY";
     public static final int DISTANCE_TO_SCAN_MARKERS = 800;
 
     public static final int DEFAULT_STAMP_BACKGROUND_COLOR = Color.WHITE;

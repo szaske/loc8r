@@ -51,7 +51,7 @@ public class CollectionListActivity extends AppCompatActivity implements
     private RecyclerView.LayoutManager mLayoutManager;
 
     private ArrayList<POI> mListOfPOIsInCollection;
-    private String mSelectedCollection;
+    private String mSelectedCollection, mSelectedCollectionName;
 
     FirebaseFirestore db;
     FirebaseUser user;
@@ -95,12 +95,14 @@ public class CollectionListActivity extends AppCompatActivity implements
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         try {
             mSelectedCollection = getIntent().getExtras().getString(Constants.SELECTED_COLLECTION_KEY);
+            mSelectedCollectionName = getIntent().getExtras().getString(Constants.PRETTY_COLLECTION_KEY);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        getSupportActionBar().setTitle(mSelectedCollectionName + " Collection");
 
         mRecyclerView = (RecyclerView) findViewById(R.id.collectionsRV);
 
