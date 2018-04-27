@@ -106,7 +106,7 @@ public class Collections_Adapter extends RecyclerView.Adapter<Collections_Adapte
             name.setText(item.getName());
 
             // Get and display the correct icon for each collection
-            int iconResourceId = context.getResources().getIdentifier("icon_" + item.getCollectionResourceID(), "drawable", context.getPackageName());
+            int iconResourceId = context.getResources().getIdentifier("icon_" + item.getId(), "drawable", context.getPackageName());
 
             if ( iconResourceId != 0 ) {  // the resource exists...
                 Drawable image = context.getResources().getDrawable(iconResourceId);
@@ -117,7 +117,7 @@ public class Collections_Adapter extends RecyclerView.Adapter<Collections_Adapte
             }
 
             // Get the Id for the background image resource
-            bgResourceId = context.getResources().getIdentifier("backg_" + item.getCollectionResourceID(), "drawable", context.getPackageName());
+            bgResourceId = context.getResources().getIdentifier("backg_" + item.getId(), "drawable", context.getPackageName());
 
             if(bgResourceId==0){
                 bgResourceId = (int) R.drawable.main_menu_bg;

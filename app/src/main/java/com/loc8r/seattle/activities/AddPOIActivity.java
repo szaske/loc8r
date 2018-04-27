@@ -44,6 +44,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -297,9 +299,13 @@ public class AddPOIActivity extends LocationBase_Activity implements
         
         // Add each collection to the spinner arraym
         ArrayList<String> spinnerList = new ArrayList<>();
-        for (Collection collectionName: StateManager.getInstance().getCollections()) {
-            spinnerList.add(collectionName.getName());
+
+        // See https://stackoverflow.com/questions/4234985/how-to-for-each-the-hashmap
+        for(Map.Entry<String, Collection> entry : StateManager.getInstance().getCollections().entrySet()) {
+            Collection collection = entry.getValue();
+            spinnerList.add(collection.getName());
         }
+
 
         ArrayAdapter<String> collections_adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, spinnerList);

@@ -151,8 +151,8 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
 
             if(poi.isStamped()){
                 stampView.setStamped(true);
-                stampView.setElevation(4);
-                stampView.setTranslationZ(4);
+                stampView.setElevation(5);
+                stampView.setTranslationZ(5);
                 stampView.setClipToOutline(true);
                 // stampView.invalidate();
                 stampView.constructStampViewFromPOI(poi);

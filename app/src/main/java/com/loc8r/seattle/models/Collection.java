@@ -1,5 +1,7 @@
 package com.loc8r.seattle.models;
 
+import com.google.firebase.firestore.Exclude;
+
 import org.parceler.Parcel;
 
 /**
@@ -8,30 +10,39 @@ import org.parceler.Parcel;
 
 @Parcel
 public class Collection {
-    int id;
+    //String id;
     String name; // Limited to 19 characters
+    String date;
+    String color;
 
     public Collection(){}
 
-    public Collection(int id,
-                      String name){
-        this.id = id;
+    public Collection(String name,
+                      String color){
         this.name = name;
+        this.color = color;
     }
 
     // Getters
-    public int getId() { return id; }
+    // @Exclude public String getId() { return id; }
     public String getName() { return name; }
-    public  String getCollectionResourceID(){
-        return name.substring(0,3).toLowerCase();
+    public String getDate() { return date; }
+    public String getColor() { return color; }
+    @Exclude public String getId(){
+        String results = name + date;
+        return results.replaceAll("[^a-zA-Z0-9]+","")
+                .toLowerCase();
     }
 
     // Setters
-    public void setId(int id) {
-        this.id = id;
-    }
+//    public void setId(String id) {
+//        this.id = id;
+//    }
     public void setName(String name) {
         this.name = name;
     }
-
+    public void setDate(String date) {
+        this.date = date;
+    }
+    public void setColor(String color) { this.color = color; }
 }

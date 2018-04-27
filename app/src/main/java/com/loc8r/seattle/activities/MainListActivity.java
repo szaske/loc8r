@@ -104,13 +104,13 @@ public class MainListActivity extends LocationBase_Activity
 //            Picasso.get().setLoggingEnabled(true);
 //        }
 //        Picasso.get()
-//                .load(R.drawable.backg_rya)
+//                .load(R.drawable.backg_ryanhenryward2018)
 //                .fetch();
 //        Picasso.get()
-//                .load(R.drawable.backg_str)
+//                .load(R.drawable.backg_streetart2018)
 //                .fetch();
 //        Picasso.get()
-//                .load(R.drawable.backg_tim)
+//                .load(R.drawable.backg_timecapsule2018)
 //                .fetch();
     }
 

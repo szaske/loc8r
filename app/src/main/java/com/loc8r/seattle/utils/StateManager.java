@@ -7,6 +7,7 @@ import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.models.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class StateManager {
     private static final StateManager ourInstance = new StateManager();
@@ -14,10 +15,11 @@ public class StateManager {
     // private Location currentLocation; // The users current location
    // private String userId;
     private ArrayList<POI> mPOIs;
-    private ArrayList<Collection> mCollections;
+    private HashMap<String, Collection> mCollections;
     private ArrayList<Stamp> mStamps;
     private Boolean gettingPOIs;
     private Boolean gettingStamps;
+    private Boolean gettingCollections;
 
     public static StateManager getInstance() {
         return ourInstance;
@@ -27,9 +29,10 @@ public class StateManager {
         mUser = new User();
         mPOIs = new ArrayList<>();
         mStamps = new ArrayList<>();
-        mCollections = new ArrayList<>();
+        mCollections = new HashMap<>();
         gettingPOIs = false;
         gettingStamps = false;
+        gettingCollections = false;
     }
 
     // Getters
@@ -38,7 +41,7 @@ public class StateManager {
     }
     public Location getCurrentLocation() { return mUser.getCurrentLocation(); }
     public ArrayList<POI> getPOIs() { return mPOIs;}
-    public ArrayList<Collection> getCollections() {
+    public HashMap<String, Collection> getCollections() {
         return mCollections;
     }
     public ArrayList<Stamp> getStamps() {
@@ -50,12 +53,13 @@ public class StateManager {
     public Boolean isGettingStamps() {
         return gettingStamps;
     }
+    public Boolean isGettingCollections() { return gettingCollections; }
 
     // Setters
     public void setUser(String userId) { mUser.setUserId(userId); }
     public void setCurrentLocation(Location currentLocation) { mUser.setCurrentLocation(currentLocation); }
     public void setPOIs(ArrayList<POI> pois){ this.mPOIs = pois; }
-    public void setCollections(ArrayList<Collection> mCollections) { this.mCollections = mCollections; }
+    public void setCollections(HashMap<String, Collection> mCollections) { this.mCollections = mCollections; }
     public void setStamps(ArrayList<Stamp> mStamps) {
         this.mStamps = mStamps;
     }
@@ -65,6 +69,7 @@ public class StateManager {
     public void setGettingStamps(Boolean gettingStamps) {
         this.gettingStamps = gettingStamps;
     }
+    public void setGettingCollections(Boolean gettingCollections ) { this.gettingCollections = gettingCollections; }
 
     /**
      *  Method clears all State Manager info, including user.
@@ -74,6 +79,7 @@ public class StateManager {
         mStamps.clear();
         gettingPOIs = false;
         gettingStamps = false;
+        gettingCollections = false;
         mUser = new User();
     }
 }

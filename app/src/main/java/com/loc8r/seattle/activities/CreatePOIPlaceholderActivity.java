@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.loc8r.seattle.R;
+import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
 
 import butterknife.BindView;

@@ -9,7 +9,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    tools:background="@drawable/backg_rya">
+    tools:background="@drawable/backg_ryanhenryward2018">
 
     <ImageView
         android:id="@+id/iv_collection_icon"

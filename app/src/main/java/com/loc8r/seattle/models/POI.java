@@ -4,6 +4,7 @@ package com.loc8r.seattle.models;
 import android.location.Location;
 import android.widget.SimpleCursorTreeAdapter;
 
+import com.google.firebase.firestore.Exclude;
 import com.loc8r.seattle.utils.StateManager;
 
 import org.parceler.Parcel;
@@ -23,6 +24,7 @@ public class POI  {
     String img_url;
     int imgFocalpointX, imgFocalpointY;
     String collection;
+    String collectionColor;
     int collectionPosition;
     String stampText;
     boolean stampChecked; // Has the POI been checked to be stamped?
@@ -53,11 +55,13 @@ public class POI  {
         this.description = description;
         this.img_url = img_url;
         this.collection = collection;
+        this.collectionColor = "#819ca9";
         this.collectionPosition = collectionPosition;
         this.stampText = stampText;
         this.imgFocalpointX = imgFocalpointX;
         this.imgFocalpointY = imgFocalpointY;
         this.stampChecked = false;
+
     }
 
     @Override
@@ -128,9 +132,10 @@ public class POI  {
     public int getCollectionPosition() { return collectionPosition; }
     public String getStampText() { return stampText; }
     public Stamp getStamp() { return stamp; }
-    public String getIconName(){
+    @Exclude public String getIconName(){
         return "icon_" + collection.substring(0,3).toLowerCase();
     }
+    public String getCollectionColor() { return collectionColor; }
 
     // Setters
     public void setId(String id) { this.id = id; }
@@ -158,5 +163,6 @@ public class POI  {
     public void setCollectionPosition(int collectionPosition) { this.collectionPosition = collectionPosition; }
     public void setStampText(String stampText) { this.stampText = stampText; }
     public void setStamp(Stamp stamp){ this.stamp = stamp; }
+    public void setCollectionColor(String collectionColor) { this.collectionColor = collectionColor; }
 
 }

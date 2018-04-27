@@ -130,7 +130,8 @@ public class PassportActivity extends LocationBase_Activity implements Collectio
         Log.d(TAG, "OnCollectionClick: Clicked on " + collection.getName());
         // Go to the selected Collections page
         Intent intent = new Intent(this, CollectionListActivity.class);
-        intent.putExtra(Constants.SELECTED_COLLECTION_KEY, collection.getName());
+        // intent.putExtra(Constants.SELECTED_COLLECTION_KEY, collection.getName());
+        intent.putExtra(Constants.SELECTED_COLLECTION_KEY, collection.getId());
 
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);

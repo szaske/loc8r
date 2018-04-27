@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.utils.StateManager;
@@ -22,6 +23,7 @@ import com.loc8r.seattle.utils.StateManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class FirebaseBaseActivity extends AppCompatActivity {
@@ -256,11 +258,59 @@ public class FirebaseBaseActivity extends AppCompatActivity {
                 }
 
                 StateManager.getInstance().setGettingStamps(false);
+                GetCollections();
+//                try {
+//                    GetCollections();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
+
                 Log.d(TAG, "We got it all FOLKS!");
                 //onPOIsAndStampsInStateManager();
             }
         });
 
+    }
+
+    private void GetCollections() {
+        StateManager.getInstance().setGettingCollections(true);
+        Log.d("STZ", "Get Collections method started ");
+        db.collection("collections")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("STZ", "Getting Collections task completed successfully, now converting to Collection class ");
+                            HashMap<String, Collection> collectionResults = new HashMap<>();
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Collection sentCollection = document.toObject(Collection.class);
+
+                                collectionResults.put(sentCollection.getId(),sentCollection);
+                                // Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+
+                            // Send results to SM
+                            onCollectionsReceived(collectionResults);
+                            Log.d("STZ", "Collections got ");
+
+                        } else {
+                            Log.d(TAG, "Error getting POIs. ", task.getException());
+                        }
+                    }
+                });
+        // [END get_multiple_all]
+    }
+
+    public void onCollectionsReceived (final HashMap<String, Collection> collectionsSent) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                StateManager.getInstance().setCollections(collectionsSent);
+                StateManager.getInstance().setGettingCollections(false);
+            }
+        });
     }
 
     public void GetUserRoles() throws IOException {
