@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:elevation="0dp">
+    android:elevation="1dp">
 
     <ImageView
         android:id="@+id/vineLine"
@@ -21,17 +21,15 @@
 
     <com.loc8r.seattle.utils.StampView
         android:id="@+id/poi_StampView"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginBottom="24dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:clipChildren="false"
-        android:clipToPadding="false"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/vineLine"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/bullseye" />
+        app:srcCompat="@drawable/stamp_placeholder" />
 
     <TextView
         android:id="@+id/poi_positionTV"
@@ -51,9 +49,7 @@
         android:id="@+id/poi_nameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="10dp"
         android:text="TextView"
         android:textAlignment="center"
         android:textSize="16sp"

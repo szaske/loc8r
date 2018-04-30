@@ -133,29 +133,19 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
 
         public void bind(int position, final POI poi, final OnPOIClickListener listener){
 
-            // special case for position 1
-            // ensure we only get the spacer measurements once
-//            if(position==1 & viewholderRightSpacer==0){
-//                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) stampView.getLayoutParams();
-//                viewholderRightSpacer = viewholderHeight/2 + params.topMargin;
-//                params.setMargins(params.leftMargin, viewholderRightSpacer , params.rightMargin, params.bottomMargin); //substitute parameters for left, top, right, bottom
-//                stampView.setLayoutParams(params);
-//            }
-
             // Set POI information in viewHolder
             name.setText(poi.getName());
-            positionText.setText(String.valueOf(poi.getCollectionPosition()));
+            positionText.setText(String.valueOf(position+1));
 
             // Put collection location into the view, so we can use it in building list decorations
-            placeholderLayout.setTag(poi.getCollectionPosition());
+            placeholderLayout.setTag(position+1);
 
             if(poi.isStamped()){
                 stampView.setStamped(true);
-                stampView.setElevation(5);
-                stampView.setTranslationZ(5);
-                stampView.setClipToOutline(true);
-                // stampView.invalidate();
+                stampView.setElevation(4);
+                stampView.setTranslationZ(4);
                 stampView.constructStampViewFromPOI(poi);
+                showPlaceholder(false);
             } else {
                 stampView.setStamped(false);
                 stampView.setElevation(0);
@@ -167,6 +157,11 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
                     listener.OnPOIClick(poi);
                 }
             });
+        }
+
+        private void showPlaceholder(boolean b) {
+            name.setVisibility(View.INVISIBLE);
+            positionText.setVisibility(View.INVISIBLE);
         }
     }
 

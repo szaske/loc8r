@@ -12,9 +12,12 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -37,21 +40,26 @@ public class StampView extends View {
 
     // private static final int DEFAULT_COLOR = ;
     private static final Float STROKEWIDTH_PERCENTAGE = .12f;
+    private static final Double OUTSIDE_PERCENTAGE = .06;
 
     // View State items
     private String stampText, stampTimeStamp;
     private int stampIconId;
     private boolean stamped;
     private int stampBackgroundColor = Constants.DEFAULT_STAMP_BACKGROUND_COLOR;
+    private Collection stampCollection;
 
     // View draw variables
     private int mWidth;
     private int mHeight;
+    private int insetAmount;
     private Paint mTextPaint, mShadowPaint, backgroundPaint;
+    private Paint boundsPaint;
+    public Rect bounds, bgBounds;
 
     int[] mShadowOffsetXY;
     private Path mTopArc, mLowerArc;
-    private Drawable mIcon, stampPlaceholder;
+    private Drawable mIcon, stampPlaceholder, mBackground;
 
     public StampView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -63,16 +71,26 @@ public class StampView extends View {
             stampTimeStamp = "";
         }
 
+        //Set background shape
+        //setBackgroundResource(R.drawable.shadow_shape);
+
+        //Configure temp bounds
+        boundsPaint = new Paint();
+        boundsPaint.setStyle(Paint.Style.STROKE);
+        boundsPaint.setStrokeWidth(1);
+        boundsPaint.setColor(Color.RED);
+
         // Configure Outer Circle
         backgroundPaint = new Paint();
         // I need to optimize the reorg how the background color is set to
         // make this
         backgroundPaint.setColor(stampBackgroundColor);
+//        backgroundPaint.setStyle(Paint.Style.FILL);
         backgroundPaint.setStyle(Paint.Style.FILL);
         backgroundPaint.setAntiAlias(true);
 
-        mShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mShadowPaint.setStyle(Paint.Style.FILL);
+//        mShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+//        mShadowPaint.setStyle(Paint.Style.FILL);
 
         // Configure the default text
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -99,8 +117,12 @@ public class StampView extends View {
         //Configure the placeholder
         stampPlaceholder = getResources().getDrawable(R.drawable.stamp_placeholder);
 
-        // init background color
-        stampBackgroundColor = Color.parseColor("#000000");
+        // init background
+//        stampBackgroundColor = Color.parseColor("#00ff00");
+//        GradientDrawable mBackground = (GradientDrawable) getResources().getDrawable(R.drawable.stamp_background_circle);
+//        setBackground(mBackground);
+//        mBackground.setColor(stampBackgroundColor);
+
         setSaveEnabled(true);
     }
 
@@ -216,15 +238,12 @@ public class StampView extends View {
         setOutlineProvider(new FancyOutline(w, h));
     }
 
-
-
-
     // See https://stackoverflow.com/questions/12266899/onmeasure-custom-view-explanation
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        int desiredWidth = 500;
-        int desiredHeight = 500;
+        int desiredWidth = 100;
+        int desiredHeight = 100;
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -260,9 +279,9 @@ public class StampView extends View {
 
         // Measure must be square
         if(mWidth<=mHeight){
-            mHeight=mWidth;
-        } else {
             mWidth=mHeight;
+        } else {
+            mHeight=mWidth;
         }
 
         //MUST CALL THIS
@@ -273,7 +292,16 @@ public class StampView extends View {
     public void draw(Canvas canvas) {
         super.draw(canvas);
 
-        Rect bounds = new Rect(0,0,mWidth,mHeight);
+        // The full drawable bounds
+        bounds = new Rect(0,0,mWidth,mHeight);
+
+        // The background circle bounds, 10 percent smaller on each side
+        insetAmount = (int) Math.floor(mWidth*OUTSIDE_PERCENTAGE);
+        bgBounds = new Rect(bounds);
+        bgBounds.inset(insetAmount,insetAmount);
+
+//        //Used instead of a custom outline
+//        setBackgroundResource(R.drawable.stamp_background_circle);
 
         if(stamped){
             // Draw the stamp
@@ -281,7 +309,7 @@ public class StampView extends View {
             //Draw background bounds.  This appears as a circle because we altered the
             // outline
 
-            canvas.drawOval(bounds.left,bounds.top,bounds.right,bounds.bottom, backgroundPaint);
+            canvas.drawOval(bgBounds.left,bgBounds.top,bgBounds.right,bgBounds.bottom, backgroundPaint);
 
 //            Bitmap originalBitmap = drawableToBitmap(mIcon);
 //
@@ -290,28 +318,23 @@ public class StampView extends View {
             //canvas.drawBitmap(originalBitmap,innerBounds.left,innerBounds.top,mShadowPaint);
 
             // make the text 10% of the height
-            Float targetFontSize = bounds.height() * .1f;
+            Float targetFontSize = bgBounds.height() * .1f;
 
             // Get Text arc radius
-            Float StrokeWidth = bounds.width() * STROKEWIDTH_PERCENTAGE;
+            Float StrokeWidth = bgBounds.width() * STROKEWIDTH_PERCENTAGE;
 
             // The text arc is drawn 1 half the Strokewitdth inside of the bounds,
             // so that the stroke width does not get clipped by the view edge.
             // Float textArcRadius = (bounds.width()/2)-StrokeWidth/2;
-            Float textArcRadius = (bounds.width()-StrokeWidth)/2;
-
-            // Draw the circle
-            // CircPaint.setStrokeWidth(StrokeWidth);
-            //canvas.drawCircle(bounds.centerX(),bounds.centerY(),textArcRadius,CircPaint);
-
+            Float textArcRadius = (bgBounds.width()-StrokeWidth)/2;
 
             // Draw the top text
-            mTopArc.addArc(bounds.left,bounds.top,bounds.right,bounds.bottom, -180, 180);
+            mTopArc.addArc(bgBounds.left,bgBounds.top,bgBounds.right,bgBounds.bottom, -180, 180);
             mTextPaint.setTextSize(targetFontSize);
             canvas.drawTextOnPath(stampText.toUpperCase(), mTopArc, 0, targetFontSize, mTextPaint);
 
             // Draw bottom text
-            mLowerArc.addArc(bounds.left,bounds.top,bounds.right,bounds.bottom, -180, -180);
+            mLowerArc.addArc(bgBounds.left,bgBounds.top,bgBounds.right,bgBounds.bottom, -180, -180);
             canvas.drawTextOnPath(stampTimeStamp, mLowerArc, 0, -(StrokeWidth-targetFontSize), mTextPaint);
 
 
@@ -327,25 +350,24 @@ public class StampView extends View {
 
             if(mIcon!=null){  //Check if icon exists, if it does, draw it
                 // See https://stackoverflow.com/questions/4931892/why-does-the-division-of-two-integers-return-0-0-in-java
-                float iconAspectRatio = ((float) mIcon.getIntrinsicWidth()) / mIcon.getIntrinsicHeight();
+//                float iconAspectRatio = ((float) mIcon.getIntrinsicWidth()) / mIcon.getIntrinsicHeight();
+//
+//                Rect innerBounds = new Rect(0,0,mWidth,mHeight);
+//
+//                innerBounds.inset(Math.round(StrokeWidth),Math.round(StrokeWidth));
+//                int newWidth = innerBounds.width();
+//                int neededWidth = Math.round(newWidth*iconAspectRatio);
+//                int WidthInsetAmountforRatio = Math.round((newWidth-neededWidth)/2);
+//                innerBounds.inset(WidthInsetAmountforRatio,0);
 
-                Rect innerBounds = new Rect(0,0,mWidth,mHeight);
-
-                innerBounds.inset(Math.round(StrokeWidth),Math.round(StrokeWidth));
-                int newWidth = innerBounds.width();
-                int neededWidth = Math.round(newWidth*iconAspectRatio);
-                int WidthInsetAmountforRatio = Math.round((newWidth-neededWidth)/2);
-                innerBounds.inset(WidthInsetAmountforRatio,0);
-
-//                mIcon.setBounds(innerBounds);
-//                mIcon.draw(canvas);
+                mIcon.setBounds(bounds);
+                mIcon.draw(canvas);
 
                 //Draw the filtered icon
-                Bitmap originalBitmap = drawableToBitmap(mIcon);
-//
-                Bitmap convertedBM = applyFadedEffect(originalBitmap);
-                canvas.drawBitmap(convertedBM,innerBounds.left,innerBounds.top,mShadowPaint);
-                //canvas.drawBitmap(originalBitmap,innerBounds.left,innerBounds.top,mShadowPaint);
+//                Bitmap originalBitmap = drawableToBitmap(mIcon);
+//                Bitmap convertedBM = applyFadedEffect(originalBitmap);
+//                canvas.drawBitmap(convertedBM,innerBounds.left,innerBounds.top,mShadowPaint);
+//                canvas.drawBitmap(originalBitmap,innerBounds.left,innerBounds.top,mShadowPaint);
 
 //                Bitmap shadowImage = originalBitmap.extractAlpha(mShadowPaint, mShadowOffsetXY);
 //                Bitmap shadowImage32 = shadowImage.copy(Bitmap.Config.ARGB_8888, true);
@@ -361,6 +383,13 @@ public class StampView extends View {
             stampPlaceholder.draw(canvas);
 
         }
+
+//        Debugging code, draws a outlines around the StampView
+//        Rect outlineBounds = new Rect(bounds);
+//        outlineBounds.inset(1,1);
+//
+//        canvas.drawRect(outlineBounds,boundsPaint);
+
 
     }
 
@@ -389,38 +418,33 @@ public class StampView extends View {
         Context context = getContext();
         setStampTitleText(poi.getStampText());
 
-        // Set Collection color
+        // Set Collection and Text colors
         //if we can get the collection from the POI
         if(StateManager
                 .getInstance()
                 .getCollections()
                 .get(poi.getCollection())!=null){
-            Collection collection = StateManager
+            stampCollection = StateManager
                     .getInstance()
                     .getCollections()
                     .get(poi.getCollection());
-            if(collection.getColor()!=null){
-                setStampBackgroundColor(Color.parseColor(collection.getColor()));
-                backgroundPaint.setColor(Color.parseColor(collection.getColor()));
-            } else {
-                setStampBackgroundColor(Constants.DEFAULT_STAMP_BACKGROUND_COLOR);
-                backgroundPaint.setColor(Constants.DEFAULT_STAMP_BACKGROUND_COLOR);
-
+            if(stampCollection.getColor()!=null){
+                backgroundPaint.setColor(Color.parseColor(stampCollection.getColor()));
             }
-        } else {
-            //if not set a default color
-            setStampBackgroundColor(Constants.DEFAULT_STAMP_BACKGROUND_COLOR);
-            backgroundPaint.setColor(Constants.DEFAULT_STAMP_BACKGROUND_COLOR);
+            if(stampCollection.getTextColor()!=null){
+                mTextPaint.setColor(Color.parseColor(stampCollection.getTextColor()));
+            }
         }
 
         setStampIcon(context.getResources()
-                .getIdentifier(poi.getIconName(),
+                .getIdentifier("icon_" +  stampCollection.getId(),
                         "drawable",
                         context.getPackageName()));
 
         if(poi.isStamped()){ // We have a stamp
             setStampTimeStampText(timeStampStringConversion(poi.getStamp().getTimestamp()));
             setStamped(true); //setStamped automatically invalidates the view, so none is needed.
+
 
         } else {
             // Create a default timestamp
@@ -446,7 +470,7 @@ public class StampView extends View {
     private String timeStampStringConversion(String dbTimeStampString) {
 
         SimpleDateFormat oldFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
-        SimpleDateFormat newFormat = new SimpleDateFormat("MMM dd, yyyy");
+        SimpleDateFormat newFormat = new SimpleDateFormat("MMM dd - yyyy");
 
         Date date = null;
 
@@ -499,26 +523,7 @@ public class StampView extends View {
         return bitmap;
     }
 
-    // See https://stackoverflow.com/questions/27497987/android-elevation-is-not-showing-a-shadow-under-a-customview
-    public class FancyOutline extends ViewOutlineProvider {
 
-        int mOutlineWidth;
-        int mOutlineHeight;
-
-        FancyOutline(int width, int height) {
-            this.mOutlineWidth = width;
-            this.mOutlineHeight = height;
-        }
-
-        @Override
-        public void getOutline(View view, Outline outline) {
-
-            //Outline is a circle
-            outline.setOval(0,0,mOutlineWidth, mOutlineHeight);
-            // outline.setRoundRect(15, 15, mOutlineWidth, mOutlineHeight, mOutlineWidth/2);
-
-        }
-    }
 
 //    public static final int COLOR_MIN = 0x00;
 //    public static final int COLOR_MAX = 0xFF;
@@ -604,4 +609,21 @@ public class StampView extends View {
         return bmOut;
     }
 
+    // See https://stackoverflow.com/questions/27497987/android-elevation-is-not-showing-a-shadow-under-a-customview
+    public class FancyOutline extends ViewOutlineProvider {
+
+        int offset;
+
+        FancyOutline(int width, int height) {
+            offset = (int) Math.floor(width*OUTSIDE_PERCENTAGE);
+        }
+
+        @Override
+        public void getOutline(View view, Outline outline) {
+
+            //Outline is a circle
+            outline.setOval(offset,offset,view.getWidth()-offset, view.getHeight()-offset);
+
+        }
+    } // end of FancyOutline class
 }

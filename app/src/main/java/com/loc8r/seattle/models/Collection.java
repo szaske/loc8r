@@ -14,6 +14,7 @@ public class Collection {
     String name; // Limited to 19 characters
     String date;
     String color;
+    String textColor;
 
     public Collection(){}
 
@@ -21,6 +22,7 @@ public class Collection {
                       String color){
         this.name = name;
         this.color = color;
+        this.textColor = "#ffffff"; // default to white text
     }
 
     // Getters
@@ -28,6 +30,7 @@ public class Collection {
     public String getName() { return name; }
     public String getDate() { return date; }
     public String getColor() { return color; }
+    public String getTextColor() { return textColor; }
     @Exclude public String getId(){
         String results = name + date;
         return results.replaceAll("[^a-zA-Z0-9]+","")
@@ -45,4 +48,5 @@ public class Collection {
         this.date = date;
     }
     public void setColor(String color) { this.color = color; }
+    public void setTextColor(String textColor) { this.textColor = textColor; }
 }
