@@ -269,7 +269,7 @@ public class MapActivity extends LocationBase_Activity implements
         //Set draw info to selected POI
         mDrawerTitleTV.setText(mSelectedPOI.getName());
         mDrawerDescTV.setText(mSelectedPOI.getDescription());
-        mDrawerIconIV.setImageResource(getIconDrawableID(getApplicationContext(),mSelectedPOI.getCollectionString(),Constants.ICON));
+        mDrawerIconIV.setImageResource(getIconDrawableID(getApplicationContext(),mSelectedPOI.getCollection(),Constants.ICON));
 
         Log.d(TAG, "onMarkerClick: You selected marker " + mSelectedPOI.getName() );
         //Bring up the details mDrawer
@@ -299,7 +299,7 @@ public class MapActivity extends LocationBase_Activity implements
 
                     Marker tempMarker = mMap.addMarker(new MarkerOptions()
                             .position(poiLatLng)
-                            .icon(bitmapDescriptorFromVector(this, getIconDrawableID(this,poi.getCollectionString(), Constants.MARKER)))
+                            .icon(bitmapDescriptorFromVector(this, getIconDrawableID(this,poi.getCollection(), Constants.MARKER)))
                             .title(poi.getName()));
                     tempMarker.setTag(StateManager.getInstance().getPOIs().indexOf(poi)); //Tag is set to POI Index in full SM Arraylist
 
@@ -319,16 +319,28 @@ public class MapActivity extends LocationBase_Activity implements
      *  Gets a graphic, either icon or marker
      *
      * @param context
-     * @param collectionString
+     * @param collection
      * @param iconType
      * @return
      */
-    public static int getIconDrawableID(Context context, String collectionString, @Loc8rGraphics String iconType) {
+    public static int getIconDrawableID(Context context, String collection, @Loc8rGraphics String iconType) {
 
-        String iconName = iconType + "_" + collectionString;
+        String iconName = iconType + "_" + collection;
         Resources resources = context.getResources();
-         return resources.getIdentifier(iconName, "drawable",
-                context.getPackageName());
+
+        // Check that the icon exists
+        if(resources.getIdentifier(iconName, "drawable",
+                context.getPackageName())!=0){
+            return resources.getIdentifier(iconName, "drawable",
+                    context.getPackageName());
+        } else {
+            //The icon didn't exists we'll return a default icon
+            if(iconType=="marker"){
+                return R.drawable.marker_default;
+            }
+            return R.drawable.icon_placeholder;
+        }
+
     }
 
 

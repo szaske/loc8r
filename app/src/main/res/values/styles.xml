@@ -69,18 +69,54 @@
         <!--<item name="fontPath">@string/font_medium</item>-->
     </style>
 
-    <!--Official Theme Section-->
+    <!--Official Seattle Passport Section-->
 
     <style name="MainMenu_Title">
         <item name="android:textSize">86sp</item>
         <item name="titleTextColor">@color/secondaryColor</item>
     </style>
 
-    <!-- Green theme for Map Activity -->
-    <style name="AppTheme.Green" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary_green</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark_green</item>
-        <item name="colorAccent">@color/colorAccent_green</item>
+    <style name="StampView_Base_Style">
+        <item name="android:layout_width">@dimen/stampview_size</item>
+        <item name="android:layout_height">@dimen/stampview_size</item>
+        <item name="android:layout_marginTop">@dimen/stampview_top_margin</item>
+        <item name="android:layout_marginBottom">@dimen/stampview_bottom_margin</item>
+        <item name="srcCompat">@drawable/stamp_placeholder</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+        <item name="layout_constraintTop_toTopOf">parent</item>
+    </style>
+
+    <style name="StampView_Style_Left" parent="StampView_Base_Style">
+        <item name="android:layout_marginEnd">@dimen/stampview_vine_margin</item>
+    </style>
+
+    <style name="StampView_Style_Right" parent="StampView_Base_Style">
+        <item name="android:layout_marginStart">@dimen/stampview_vine_margin</item>
+    </style>
+
+    <style name="VineLine_Base_Style">
+        <item name="android:layout_width">@dimen/vineline_width</item>
+        <item name="android:layout_height">@dimen/vineline_height</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+        <item name="layout_constraintTop_toTopOf">parent</item>
+
+    </style>
+
+    <style name="VineLine_Style_Left" parent="VineLine_Base_Style">
+        <item name="android:src">@drawable/stamp_vine_line_left</item>
+    </style>
+
+    <style name="VineLine_Style_Right" parent="VineLine_Base_Style">
+        <item name="android:src">@drawable/stamp_vine_line_right</item>
+    </style>
+
+    <style name="poi_title_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">23</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:textSize">@dimen/collection_title_size</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Theme.SeattlePassport.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

@@ -349,29 +349,9 @@ public class StampView extends View {
              **/
 
             if(mIcon!=null){  //Check if icon exists, if it does, draw it
-                // See https://stackoverflow.com/questions/4931892/why-does-the-division-of-two-integers-return-0-0-in-java
-//                float iconAspectRatio = ((float) mIcon.getIntrinsicWidth()) / mIcon.getIntrinsicHeight();
-//
-//                Rect innerBounds = new Rect(0,0,mWidth,mHeight);
-//
-//                innerBounds.inset(Math.round(StrokeWidth),Math.round(StrokeWidth));
-//                int newWidth = innerBounds.width();
-//                int neededWidth = Math.round(newWidth*iconAspectRatio);
-//                int WidthInsetAmountforRatio = Math.round((newWidth-neededWidth)/2);
-//                innerBounds.inset(WidthInsetAmountforRatio,0);
 
                 mIcon.setBounds(bounds);
                 mIcon.draw(canvas);
-
-                //Draw the filtered icon
-//                Bitmap originalBitmap = drawableToBitmap(mIcon);
-//                Bitmap convertedBM = applyFadedEffect(originalBitmap);
-//                canvas.drawBitmap(convertedBM,innerBounds.left,innerBounds.top,mShadowPaint);
-//                canvas.drawBitmap(originalBitmap,innerBounds.left,innerBounds.top,mShadowPaint);
-
-//                Bitmap shadowImage = originalBitmap.extractAlpha(mShadowPaint, mShadowOffsetXY);
-//                Bitmap shadowImage32 = shadowImage.copy(Bitmap.Config.ARGB_8888, true);
-
 
             } else { //if not draw nothing
 

@@ -1,5 +1,6 @@
 package com.loc8r.seattle.utils;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -8,12 +9,19 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 
+import com.loc8r.seattle.R;
+
 
 public class POIStampDecoration extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
+    private int vineHeight;
 
-    public POIStampDecoration(Drawable divider) {
+    public POIStampDecoration(Drawable divider, Context context) {
         mDivider = divider;
+
+        // We acquire vine height, so we can properly draw the vine to the top and bottom of
+        // the vineLine.  Without it the draw would end up half way up the vineLine and look weird
+        vineHeight = (int) context.getResources().getDimension(R.dimen.vineline_height)/2;
     }
 
     private boolean isOnLeft(int position){
@@ -29,11 +37,10 @@ public class POIStampDecoration extends RecyclerView.ItemDecoration {
      * @param parent RecyclerView this ItemDecoration is drawing into
      * @param state  The current state of RecyclerView
      */
-    @Override public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
+    @Override public void onDrawOver(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
         super.onDraw(canvas, parent, state);
 
-        final int extraVine = 2;
-
+        //final int vineHeight = 2;
         int childCount = parent.getChildCount();
 
         for (int i = 0; i < childCount; i++) {
@@ -49,21 +56,21 @@ public class POIStampDecoration extends RecyclerView.ItemDecoration {
             // Special case, if we're on the first item in the list,
             // make it only half height starting at middle of view
             if(listPosition == 0){
-                decoratorTop = (int) Math.floor ((child.getTop() + child.getBottom())/2) - extraVine; // To fix a minor graphical bug at top of "POI vine" in view
+                decoratorTop = (int) Math.floor ((child.getTop() + child.getBottom())/2) - vineHeight; // To fix a minor graphical bug at top of "POI vine" in view
             }
 
             // Special case, if we're the first item on the right
             // This helps align the 2 collection "vine" lines at the top
             if(listPosition == 1){
-                decoratorTop -= extraVine; // To fix a minor graphical bug at top of "POI vine" in view
+                decoratorTop -= vineHeight; // To fix a minor graphical bug at top of "POI vine" in view
             }
 
             // Special case, for the last 2 items in the list
             if(i == childCount-2){
-                decoratorBottom += extraVine;
+                decoratorBottom += vineHeight;
             }
             if(i == childCount-1){
-                decoratorBottom = (int) Math.floor ((child.getTop() + child.getBottom())/2) + extraVine;
+                decoratorBottom = (int) Math.floor ((child.getTop() + child.getBottom())/2) + vineHeight;
             }
 
             // RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
@@ -110,7 +117,8 @@ public class POIStampDecoration extends RecyclerView.ItemDecoration {
         // good example here: https://stackoverflow.com/questions/29666598/android-recyclerview-finding-out-first-and-last-view-on-itemdecoration/30404499#30404499
 
         /**
-         *  Special case.  Te first right side item in the list should have an extra 50% top offset so that these equal sized views are perfectly staggered.
+         *  Special case.  Te first right side item in the list should have an extra 50% top
+         *  offset so that these equal sized views are perfectly staggered.
          */
         if (parent.getChildAdapterPosition(view) == 1) {
 

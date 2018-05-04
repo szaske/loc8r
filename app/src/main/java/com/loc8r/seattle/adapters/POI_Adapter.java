@@ -25,8 +25,8 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
 
 
     // Class variables
-    private static final int TYPE_LEFT = 0;
-    private static final int TYPE_RIGHT = 1;
+    private static final int TYPE_RIGHT = 0;
+    private static final int TYPE_LEFT = 1;
     private static final int TYPE_SPACER = 2;
 
 
@@ -44,9 +44,9 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
     @Override
     public int getItemViewType(int position) {
         if(isOdd(position)) {
-            return TYPE_RIGHT;
+            return TYPE_LEFT;
         }
-        return TYPE_LEFT;
+        return TYPE_RIGHT;
     }
 
     private boolean isOdd(int position) {
@@ -55,9 +55,10 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
 
     @Override
     public POI_View_Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         //Inflate the layout, initialize the View Holder
 
-        if (viewType == TYPE_LEFT) {
+        if (viewType == TYPE_RIGHT) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.poi_recycler_item_right, parent, false);
             POI_View_Holder vh = new POI_View_Holder(view);
 
@@ -67,7 +68,7 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
                 viewholderHeight = view.getMeasuredHeight() ;
             }
             return new POI_View_Holder(view);
-        } else if (viewType == TYPE_RIGHT) {
+        } else if (viewType == TYPE_LEFT) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.poi_recycler_item_left, parent, false);
             return new POI_View_Holder(view);
         }
@@ -109,7 +110,7 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
         POI_View_Holder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.poi_nameTV);
-            positionText= itemView.findViewById(R.id.poi_positionTV);
+            positionText= itemView.findViewById(R.id.tv_poi_position);
             stampView = itemView.findViewById(R.id.poi_StampView);
             placeholderLayout = itemView.findViewById(R.id.poiPlaceholderLayout);
 

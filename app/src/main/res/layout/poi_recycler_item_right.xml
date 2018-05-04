@@ -5,45 +5,25 @@
     android:id="@+id/poiPlaceholderLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clipChildren="false"
-    android:clipToPadding="false"
-    android:elevation="1dp">
+    android:background="@drawable/paper_bg">
 
     <ImageView
         android:id="@+id/vineLine"
-        android:layout_width="50dp"
-        android:layout_height="25dp"
-        android:layerType="none"
-        android:src="@drawable/stamp_connector_line"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        style="@style/VineLine_Style_Right"/>
 
     <com.loc8r.seattle.utils.StampView
         android:id="@+id/poi_StampView"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/vineLine"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/stamp_placeholder" />
+        style="@style/StampView_Style_Right"/>
 
     <TextView
-        android:id="@+id/poi_positionTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:text="23"
-        android:textColor="@color/primaryTextColor"
-        android:textSize="36sp"
-        android:textStyle="bold"
+        android:id="@+id/tv_poi_position"
         app:layout_constraintBottom_toBottomOf="@+id/poi_StampView"
         app:layout_constraintEnd_toEndOf="@+id/poi_StampView"
         app:layout_constraintStart_toStartOf="@+id/poi_StampView"
-        app:layout_constraintTop_toTopOf="@+id/poi_StampView" />
+        app:layout_constraintTop_toTopOf="@+id/poi_StampView"
+        style="@style/poi_title_style"/>
 
     <TextView
         android:id="@+id/poi_nameTV"

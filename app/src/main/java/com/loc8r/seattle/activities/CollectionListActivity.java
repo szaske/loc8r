@@ -125,7 +125,7 @@ public class CollectionListActivity extends AppCompatActivity implements
         mAdapter = new POI_Adapter(mListOfPOIsInCollection, this);
         mRecyclerView.setAdapter(mAdapter);
 
-        RecyclerView.ItemDecoration dividerItemDecoration = new POIStampDecoration(getResources().getDrawable(R.drawable.collection_rv_divider));
+        RecyclerView.ItemDecoration dividerItemDecoration = new POIStampDecoration(getResources().getDrawable(R.drawable.collection_rv_divider), this);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         db = FirebaseFirestore.getInstance();

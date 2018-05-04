@@ -83,11 +83,7 @@ public class FirebaseBaseActivity extends AppCompatActivity {
         if (stateManagerIsEmpty()) {
             fetchAllToStateManager();
         }
-
         // Get extra information about the user, separate from FirebaseUser
-
-
-
 
     }
 
@@ -113,8 +109,7 @@ public class FirebaseBaseActivity extends AppCompatActivity {
         // Sign in with FirebaseUI
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
-                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build());
+                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
 
         // Create and launch sign-in intent
         startActivityForResult(

@@ -25,6 +25,7 @@
                 android:layout_height="480dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
+                android:background="@color/darkImageBackground"
                 android:orientation="vertical">
 
                 <android.support.constraint.ConstraintLayout

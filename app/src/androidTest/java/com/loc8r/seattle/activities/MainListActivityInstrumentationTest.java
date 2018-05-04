@@ -54,13 +54,12 @@ public class MainListActivityInstrumentationTest {
     }
 
     /**
-     *  Basic test to see if all 3 buttons are included in the UI
+     *  Basic test to see if both buttons are included in the UI
      */
     @Test
     public void MainMenuContainsThreeButtons() {
         onView(withId(R.id.explore_Button)).check(matches(withText("Explore Map")));
         onView(withId(R.id.my_passport_Button)).check(matches(withText("My Passport")));
-        onView(withId(R.id.settings_Button)).check(matches(withText("Settings")));
     }
 
     /**
@@ -74,7 +73,7 @@ public class MainListActivityInstrumentationTest {
     }
 
     /**
-     *  Tests to see if we can get to the
+     *  Tests to see if we can get to the Admin page
      */
     @Test
     public void ValidateWeCanGetToAdminPage() {
@@ -88,11 +87,4 @@ public class MainListActivityInstrumentationTest {
 
         intended(hasComponent(ManagementActivity.class.getName()));
     }
-
-
-
-
-
-
-
 }

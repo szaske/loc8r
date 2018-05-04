@@ -75,9 +75,10 @@ public class POI  {
                 '}';
     }
 
-    public String getCollectionString(){
-        return collection.toLowerCase().substring(0,3);
-    }
+//    @Exclude
+//    public String getCollectionString(){
+//        return collection.toLowerCase().substring(0,3);
+//    }
 
     /**
      *  Calculates the distance between a POI and the user, in meters
