@@ -25,7 +25,7 @@
                 android:layout_height="480dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
-                android:background="@color/darkImageBackground"
+                android:background="@color/darkBackground"
                 android:orientation="vertical">
 
                 <android.support.constraint.ConstraintLayout
@@ -76,11 +76,10 @@
 
                     <TextView
                         android:id="@+id/tv_poi_name"
-                        fontPath="fonts/Roboto-Bold.ttf"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="26dp"
                         android:shadowColor="#000000"
                         android:shadowDx="1"
                         android:shadowDy="1"
@@ -129,21 +128,24 @@
                 android:layout_height="match_parent"
                 android:clipChildren="false"
                 android:clipToPadding="false"
-                android:padding="12dp">
+                android:paddingEnd="26dp"
+                android:paddingStart="26dp"
+                android:paddingTop="16dp">
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/firstColumn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="8dp"
                     app:layout_constraintEnd_toStartOf="@+id/secondColumn"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:id="@+id/tv_poi_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingEnd="28dp"
                         android:shadowColor="#000000"
                         android:shadowDx="1"
                         android:shadowDy="1"
@@ -239,25 +241,23 @@
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/secondColumn"
-                    android:layout_width="170dp"
+                    android:layout_width="180dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/stamp_location_background"
+                    android:background="@drawable/left_side_only_background"
                     android:clipChildren="false"
                     android:clipToPadding="false"
-                    android:padding="16dp"
+                    android:paddingStart="24dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/firstColumn"
                     app:layout_constraintTop_toTopOf="parent">
-
 
                     <Button
                         android:id="@+id/bt_getStamp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/get_stamp_button"
                         app:layout_constraintBottom_toBottomOf="@+id/stampView"
@@ -270,8 +270,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
-                        android:elevation="3dp"
-                        android:scaleType="fitCenter"
+                        android:elevation="2dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

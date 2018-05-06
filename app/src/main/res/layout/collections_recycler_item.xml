@@ -11,19 +11,6 @@
     android:foreground="?android:attr/selectableItemBackground"
     tools:background="@drawable/backg_ryanhenryward2018">
 
-    <ImageView
-        android:id="@+id/iv_collection_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="16dp"
-        android:adjustViewBounds="false"
-        android:contentDescription="an icon"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:src="@drawable/icon_rya" />
-
     <View
         android:id="@+id/scrimBottom"
         android:layout_width="match_parent"
@@ -36,11 +23,12 @@
         android:id="@+id/nameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
         android:text="TextView"
         android:textColor="@color/primaryTextColor"
         android:textSize="32sp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_collection_icon"
-        app:layout_constraintStart_toEndOf="@+id/iv_collection_icon" />
+        app:layout_constraintBottom_toBottomOf="@+id/scrimBottom"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </com.loc8r.seattle.utils.CollectionLayout>

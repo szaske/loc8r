@@ -60,7 +60,7 @@ public class MainListActivity extends LocationBase_Activity
                 // here is a good example : https://stackoverflow.com/questions/22143157/android-picasso-placeholder-and-error-image-styling
                 Picasso.get()
                         .load(R.drawable.main_menu_bg)
-                        .transform(new FocusedCropTransform(mBackgroundImage.getMeasuredWidth(),mBackgroundImage.getMeasuredHeight(), 400,600))
+                        .transform(new FocusedCropTransform(mBackgroundImage.getMeasuredWidth(),mBackgroundImage.getMeasuredHeight(), mBackgroundImage.getId() , .5,.5))
                         .into(mBackgroundImage);
 
                 Log.d(TAG, "STZ _ onPreDraw: Width is " + mBackgroundImage.getMeasuredWidth() + " - Height:"+ mBackgroundImage.getMeasuredHeight());

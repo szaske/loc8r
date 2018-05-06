@@ -54,7 +54,6 @@ public class PassportActivity extends LocationBase_Activity implements Collectio
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         mRecyclerView = (RecyclerView) findViewById(R.id.collectionsRV);
 
         // use this setting to
@@ -130,7 +129,6 @@ public class PassportActivity extends LocationBase_Activity implements Collectio
         Log.d(TAG, "OnCollectionClick: Clicked on " + collection.getName());
         // Go to the selected Collections page
         Intent intent = new Intent(this, CollectionListActivity.class);
-        // intent.putExtra(Constants.SELECTED_COLLECTION_KEY, collection.getName());
         intent.putExtra(Constants.SELECTED_COLLECTION_KEY, collection.getId());
         intent.putExtra(Constants.PRETTY_COLLECTION_KEY, collection.getName());
 

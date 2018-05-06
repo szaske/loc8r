@@ -69,11 +69,43 @@
         <!--<item name="fontPath">@string/font_medium</item>-->
     </style>
 
-    <!--Official Seattle Passport Section-->
+    <!-- Official Seattle Passport Section-->
+
+    <!-- Main List Section-->
+
+    <style name="MainMenu_Layout">
+        <item name="android:background">@color/darkBackground</item>
+    </style>
+
+    <style name="MainMenu_Scrim">
+    </style>
 
     <style name="MainMenu_Title">
-        <item name="android:textSize">86sp</item>
-        <item name="titleTextColor">@color/secondaryColor</item>
+        <item name="android:textSize">66sp</item>
+        <item name="android:layout_marginEnd">@dimen/title_margin</item>
+        <item name="android:layout_marginStart">@dimen/title_margin</item>
+        <item name="android:layout_marginTop">@dimen/title_margin_top</item>
+        <item name="android:lineSpacingMultiplier">@dimen/title_ls_multiplier</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/titleTextColor</item>
+        <item name="titleTextColor">@color/titleTextColor</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MainMenu_Button">
+        <item name="android:layout_width">280dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:background">@drawable/main_menu_button</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1.5</item>
     </style>
 
     <style name="StampView_Base_Style">

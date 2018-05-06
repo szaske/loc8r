@@ -36,6 +36,11 @@
     <string name="connect_with_facebook">connect with Facebook</string>
     <string name="i_have_an_account_already">I have an Account already</string>
 
+    <!-- Main Menu Strings-->
+    <string name="app_title">Seattle\nPassport</string>
+    <string name="mainmenu_exploreMap_button_text">Explore Map</string>
+    <string name="mainmenu_my_passport_button_text">My Passport</string>
+
     <!--Option Menu Strings-->
     <string name="map">Map</string>
     <string name="search">Search</string>
@@ -57,7 +62,6 @@
     <!--POI Detail Activity Strings-->
     <string name="get_stamp_button">Get Stamp</string>
     <string name="stamp_error">Error getting Stamp</string>
-    <string name="poi_list_title">Seattle\nPassport</string>
     <string name="title_activity_maps">Explorer STZ</string>
 
     <!--Passport Activity Strings-->
@@ -66,7 +70,7 @@
     <string name="title_activity_add_poi">AddPOIActivity</string>
 
     <!--Details Activity Strings-->
-    <string name="poi_description_placeholder_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+    <string name="poi_description_placeholder_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
     <string name="collection_header">Collection:</string>
     <string name="distance_header">Distance:</string>
     <string name="title_activity_add_poito_database">AddPOIToDatabaseActivity</string>

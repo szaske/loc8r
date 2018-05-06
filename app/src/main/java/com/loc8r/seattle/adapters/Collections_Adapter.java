@@ -78,9 +78,6 @@ public class Collections_Adapter extends RecyclerView.Adapter<Collections_Adapte
     static class Collections_View_Holder extends RecyclerView.ViewHolder {
 
         TextView name;
-        ImageView collectionIcon;
-        ImageView bgImage;
-        StampView stampView;
         Context context;
         CollectionLayout rootView;
         int bgResourceId;
@@ -94,7 +91,6 @@ public class Collections_Adapter extends RecyclerView.Adapter<Collections_Adapte
             name.setTypeface(mainTypeface);
             name.setShadowLayer(15, 0, 0, Color.BLACK );
 
-            collectionIcon = itemView.findViewById(R.id.iv_collection_icon);
             rootView = itemView.findViewById(R.id.collection_item_row_rootView);
             context = itemView.getContext();
 
@@ -104,17 +100,6 @@ public class Collections_Adapter extends RecyclerView.Adapter<Collections_Adapte
 
             // Bind the title
             name.setText(item.getName());
-
-            // Get and display the correct icon for each collection
-            int iconResourceId = context.getResources().getIdentifier("icon_" + item.getId(), "drawable", context.getPackageName());
-
-            if ( iconResourceId != 0 ) {  // the resource exists...
-                Drawable image = context.getResources().getDrawable(iconResourceId);
-                collectionIcon.setImageDrawable(image);
-            }
-            else {  // checkExistence == 0  // the resource does NOT exist!!
-                collectionIcon.setImageResource(R.drawable.stamp_placeholder);
-            }
 
             // Get the Id for the background image resource
             bgResourceId = context.getResources().getIdentifier("backg_" + item.getId(), "drawable", context.getPackageName());
@@ -132,7 +117,7 @@ public class Collections_Adapter extends RecyclerView.Adapter<Collections_Adapte
                     int rootHeight = rootView.getMeasuredHeight();
                     Picasso.get()
                             .load(bgResourceId)
-                            .transform(new FocusedCropTransform(rootWidth,rootHeight,0,0))
+                            .transform(new FocusedCropTransform(rootWidth,rootHeight, rootView.getId(), .5,.5))
                             .into(rootView);
 
                     Log.d("tester-", "STZ _ onPreDraw: Width is " + rootView.getMeasuredWidth() + " - Height:"+ rootView.getMeasuredHeight());

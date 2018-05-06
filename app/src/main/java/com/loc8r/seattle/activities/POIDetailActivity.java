@@ -117,7 +117,11 @@ public class POIDetailActivity extends LocationBase_Activity {
                 // here is a good example : https://stackoverflow.com/questions/22143157/android-picasso-placeholder-and-error-image-styling
                 Picasso.get()
                         .load(detailedPoi.getImg_url())
-                        .transform(new FocusedCropTransform(mIV_PoiImage.getMeasuredWidth(),mIV_PoiImage.getMeasuredHeight(), detailedPoi.getImgFocalpointX(),detailedPoi.getImgFocalpointY()))
+                        .transform(new FocusedCropTransform(mIV_PoiImage.getMeasuredWidth(),
+                                mIV_PoiImage.getMeasuredHeight(),
+                                mIV_PoiImage.getId(),
+                                detailedPoi.getImgFocalpointX(),
+                                detailedPoi.getImgFocalpointY()))
                         .into(mIV_PoiImage);
 
                 Log.d(TAG, "STZ _ onPreDraw: Width is " + mIV_PoiImage.getMeasuredWidth() + " - Height:"+ mIV_PoiImage.getMeasuredHeight());
