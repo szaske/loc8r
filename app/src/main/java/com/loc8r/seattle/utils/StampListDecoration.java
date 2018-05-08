@@ -12,11 +12,11 @@ import android.view.View;
 import com.loc8r.seattle.R;
 
 
-public class POIStampDecoration extends RecyclerView.ItemDecoration {
+public class StampListDecoration extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
     private int vineHeight;
 
-    public POIStampDecoration(Drawable divider, Context context) {
+    public StampListDecoration(Drawable divider, Context context) {
         mDivider = divider;
 
         // We acquire vine height, so we can properly draw the vine to the top and bottom of
@@ -73,11 +73,9 @@ public class POIStampDecoration extends RecyclerView.ItemDecoration {
                 decoratorBottom = (int) Math.floor ((child.getTop() + child.getBottom())/2) + vineHeight;
             }
 
-            // RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
             if(isOnLeft(listPosition)){
                 decoratorRight = child.getRight();
                 decoratorLeft = decoratorRight - mDivider.getIntrinsicWidth();
-                Log.d("Intrinsic", "divider width says: " + String.valueOf(mDivider.getIntrinsicWidth()));
             } else {
                 decoratorLeft = child.getLeft();
                 decoratorRight = child.getLeft() + mDivider.getIntrinsicWidth();

@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -21,14 +19,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.loc8r.seattle.R;
-import com.loc8r.seattle.activities.base.BaseActivity;
-import com.loc8r.seattle.adapters.POI_Adapter;
+import com.loc8r.seattle.adapters.POIStamp_Adapter;
 import com.loc8r.seattle.interfaces.OnPOIClickListener;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.utils.Constants;
-import com.loc8r.seattle.utils.POIStampDecoration;
-import com.loc8r.seattle.utils.StampView;
+import com.loc8r.seattle.utils.StampListDecoration;
 import com.loc8r.seattle.utils.StampsRequester;
 import com.loc8r.seattle.utils.StateManager;
 
@@ -39,19 +35,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class CollectionListActivity extends AppCompatActivity implements
         StampsRequester.FireBaseStampResponse,
         OnPOIClickListener {
     private static final String TAG = CollectionListActivity.class.getSimpleName();
     private RecyclerView mRecyclerView;
-    private POI_Adapter mAdapter;
+    private POIStamp_Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private ArrayList<POI> mListOfPOIsInCollection;
-    private String mSelectedCollection, mSelectedCollectionName;
+    private String mSelectedCollectionId, mSelectedCollectionName;
 
     FirebaseFirestore db;
     FirebaseUser user;
@@ -96,7 +89,7 @@ public class CollectionListActivity extends AppCompatActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         try {
-            mSelectedCollection = getIntent().getExtras().getString(Constants.SELECTED_COLLECTION_KEY);
+            mSelectedCollectionId = getIntent().getExtras().getString(Constants.SELECTED_COLLECTION_KEY);
             mSelectedCollectionName = getIntent().getExtras().getString(Constants.PRETTY_COLLECTION_KEY);
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,21 +104,16 @@ public class CollectionListActivity extends AppCompatActivity implements
         // in content do not change the layout size
         // of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
-        // use a linear layout manager
-        //mLayoutManager = new LinearLayoutManager(this);
-        //StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-
-        //mLayoutManager = new GridLayoutManager(this, 2);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mListOfPOIsInCollection = new ArrayList<>(); // Create an empty list for the recyclerView
 
-        mAdapter = new POI_Adapter(mListOfPOIsInCollection, this);
+        mAdapter = new POIStamp_Adapter(mListOfPOIsInCollection, this);
         mRecyclerView.setAdapter(mAdapter);
 
-        RecyclerView.ItemDecoration dividerItemDecoration = new POIStampDecoration(getResources().getDrawable(R.drawable.collection_rv_divider), this);
+        RecyclerView.ItemDecoration dividerItemDecoration = new StampListDecoration(getResources().getDrawable(R.drawable.collection_rv_divider), this);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         db = FirebaseFirestore.getInstance();
@@ -139,7 +127,7 @@ public class CollectionListActivity extends AppCompatActivity implements
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ArrayList<POI> newPOIs = getPOIsByCollectionFromStateManager(mSelectedCollection);
+                ArrayList<POI> newPOIs = getPOIsByCollectionIdFromStateManager(mSelectedCollectionId);
 
                 // Sort the POIs
                 // See https://stackoverflow.com/questions/4066538/sort-an-arraylist-based-on-an-object-field
@@ -157,7 +145,7 @@ public class CollectionListActivity extends AppCompatActivity implements
 
                 // Now get Stamps for this collection
                 try {
-                    GetUserStampsByCollection(mSelectedCollection);
+                    GetUserStampsByCollection(mSelectedCollectionId);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -212,24 +200,15 @@ public class CollectionListActivity extends AppCompatActivity implements
                 });
     }
 
-    private ArrayList<POI> getPOIsByCollectionFromStateManager(String collection) {
+    private ArrayList<POI> getPOIsByCollectionIdFromStateManager(String collectionId) {
         ArrayList<POI> results = new ArrayList<>();
         for(POI poi: StateManager.getInstance().getPOIs()){
-            if(poi.getCollection().equals(collection)){
+            if(poi.getCollectionId().equals(collectionId)){
                 results.add(poi);
             }
         }
         return results;
     }
-
-//    private void requestPOICollections() {
-//
-//        try {
-//            // mPOIsRequester.GetPoiByCollection(this,mSelectedCollection);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     /**
      *  Click Listener for when a user clicks on a POI in the recyclerview
@@ -263,20 +242,6 @@ public class CollectionListActivity extends AppCompatActivity implements
         }
         return false;
     }
-
-//    @Override public void onPOIsCollectionReceived(final ArrayList<POI> POIsSent, final String collection) {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                mListOfPOIsInCollection.clear(); //not sure clear is needed, but being safe
-//                mListOfPOIsInCollection.addAll(POIsSent); // This adds a new item to the list
-//
-//
-//
-//            }
-//        });
-//    }
 
     public void onStampsReceived(final ArrayList<Stamp> Stamps) {
         runOnUiThread(new Runnable() {

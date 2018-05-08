@@ -133,10 +133,15 @@ public class POI  {
     public int getCollectionPosition() { return collectionPosition; }
     public String getStampText() { return stampText; }
     public Stamp getStamp() { return stamp; }
+    public String getCollectionColor() { return collectionColor; }
     @Exclude public String getIconName(){
         return "icon_" + collection.substring(0,3).toLowerCase();
     }
-    public String getCollectionColor() { return collectionColor; }
+    @Exclude public String getCollectionId(){
+        String results = collection + String.valueOf(release).substring(0,4);
+        return results.replaceAll("[^a-zA-Z0-9]+","")
+                .toLowerCase();
+    }
 
     // Setters
     public void setId(String id) { this.id = id; }

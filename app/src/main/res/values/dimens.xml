@@ -30,7 +30,7 @@
     <dimen name="stampview_bottom_margin">16dp</dimen>
     <dimen name="stampview_top_margin">16dp</dimen>
     <dimen name="stampview_vine_margin">4dp</dimen>
-    <dimen name="vineline_width">50dp</dimen>
+    <dimen name="vineline_width">20dp</dimen>
     <dimen name="vineline_height">2dp</dimen>
     <dimen name="collection_title_size">36sp</dimen>
 

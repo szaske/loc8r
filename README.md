@@ -44,6 +44,7 @@ Thanks to the following for use of icons off of Noun Project:
 
 Map Marker outline - https://thenounproject.com/term/map-marker/59715/ "Map Marker by Lee Mette from the Noun Project"
 Fremont Troll - https://www.flickr.com/photos/dph1110/472754028, https://creativecommons.org/licenses/by/2.0/legalcode
+Rain Photo by Gabriele Diwald on Unsplash
 
 
 ## Credits

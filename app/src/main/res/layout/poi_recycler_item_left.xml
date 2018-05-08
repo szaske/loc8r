@@ -21,23 +21,19 @@
 
 
     <TextView
-        android:id="@+id/tv_poi_position"
-        app:layout_constraintBottom_toBottomOf="@+id/poi_StampView"
-        app:layout_constraintEnd_toEndOf="@+id/poi_StampView"
-        app:layout_constraintStart_toStartOf="@+id/poi_StampView"
-        app:layout_constraintTop_toTopOf="@+id/poi_StampView"
-        style="@style/poi_title_style"/>
-
-    <TextView
         android:id="@+id/poi_nameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
+        android:ems="5"
+        android:maxEms="5"
+        android:singleLine="false"
         android:text="TextView"
-        android:textAlignment="viewEnd"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/poi_StampView"
-        app:layout_constraintEnd_toStartOf="@+id/poi_StampView"
+        app:layout_constraintEnd_toEndOf="@+id/poi_StampView"
+        app:layout_constraintStart_toStartOf="@+id/poi_StampView"
         app:layout_constraintTop_toTopOf="@+id/poi_StampView" />
 
 

@@ -44,9 +44,6 @@ public class LocationBase_Activity extends FirebaseBaseActivity implements
     private AlertDialog mLocationEnabledDialog;
     private com.google.android.gms.location.LocationListener mPoiLocationListener;
 
-
-
-
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected() called with: " + "bundle = [" + bundle + "]");

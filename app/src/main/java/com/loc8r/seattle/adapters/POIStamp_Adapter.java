@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Created by steve on 1/9/2018.
  */
 
-public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holder> {
+public class POIStamp_Adapter extends RecyclerView.Adapter<POIStamp_Adapter.POI_View_Holder> {
 
 
     // Class variables
@@ -36,7 +36,7 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
     int viewholderRightSpacer;
 
     // Constructor
-    public POI_Adapter(ArrayList<POI> list, OnPOIClickListener listener) {
+    public POIStamp_Adapter(ArrayList<POI> list, OnPOIClickListener listener) {
         this.mPOIslist = list;
         this.listener = listener;
     }
@@ -110,7 +110,7 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
         POI_View_Holder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.poi_nameTV);
-            positionText= itemView.findViewById(R.id.tv_poi_position);
+            // positionText= itemView.findViewById(R.id.tv_poi_position);
             stampView = itemView.findViewById(R.id.poi_StampView);
             placeholderLayout = itemView.findViewById(R.id.poiPlaceholderLayout);
 
@@ -136,7 +136,7 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
 
             // Set POI information in viewHolder
             name.setText(poi.getName());
-            positionText.setText(String.valueOf(position+1));
+            // positionText.setText(String.valueOf(position+1));
 
             // Put collection location into the view, so we can use it in building list decorations
             placeholderLayout.setTag(position+1);
@@ -162,7 +162,7 @@ public class POI_Adapter extends RecyclerView.Adapter<POI_Adapter.POI_View_Holde
 
         private void showPlaceholder(boolean b) {
             name.setVisibility(View.INVISIBLE);
-            positionText.setVisibility(View.INVISIBLE);
+            //positionText.setVisibility(View.INVISIBLE);
         }
     }
 

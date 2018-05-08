@@ -403,11 +403,11 @@ public class StampView extends View {
         if(StateManager
                 .getInstance()
                 .getCollections()
-                .get(poi.getCollection())!=null){
+                .get(poi.getCollectionId())!=null){
             stampCollection = StateManager
                     .getInstance()
                     .getCollections()
-                    .get(poi.getCollection());
+                    .get(poi.getCollectionId());
             if(stampCollection.getColor()!=null){
                 backgroundPaint.setColor(Color.parseColor(stampCollection.getColor()));
             }
@@ -416,6 +416,7 @@ public class StampView extends View {
             }
         }
 
+        //need to put a check in here
         setStampIcon(context.getResources()
                 .getIdentifier("icon_" +  stampCollection.getId(),
                         "drawable",

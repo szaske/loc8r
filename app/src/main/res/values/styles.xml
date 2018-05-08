@@ -145,7 +145,6 @@
     <style name="poi_title_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:text">23</item>
         <item name="android:textColor">@color/primaryTextColor</item>
         <item name="android:textSize">@dimen/collection_title_size</item>
         <item name="android:textStyle">bold</item>
