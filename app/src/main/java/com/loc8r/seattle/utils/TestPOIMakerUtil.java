@@ -101,8 +101,8 @@ public class TestPOIMakerUtil {
                 getRandomLongitude(),
                 DESC,
                 getRandomString(IMG_URLS,random),
-                0,
-                0,
+                0D,
+                0D,
                 col,
                 0,
                 col.substring(0,2).toUpperCase() + "_" + nam.substring(0,2).toUpperCase());

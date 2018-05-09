@@ -198,8 +198,8 @@ public class AddPOIActivity extends LocationBase_Activity implements
         newPOI.setLongitude(mCurrentLocation.getLongitude());
         newPOI.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
         newPOI.setImg_url(mPOIImgUrlET.getText().toString());
-        newPOI.setImgFocalpointX(0);
-        newPOI.setImgFocalpointY(0);
+        newPOI.setImgFocalpointX(0.0D);
+        newPOI.setImgFocalpointY(0.0D);
         newPOI.setCollection(mCollectionsSpinner.getSelectedItem().toString());
         newPOI.setCollectionPosition(Integer.parseInt(mPOICollectionPositionET.getText().toString()));
         newPOI.setStampText(mCollectionsSpinner.getSelectedItem().toString().substring(0, 3) + "_" + mPOINameET.getText().toString().substring(0, 3));

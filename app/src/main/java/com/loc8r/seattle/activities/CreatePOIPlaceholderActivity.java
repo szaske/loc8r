@@ -73,8 +73,8 @@ public class CreatePOIPlaceholderActivity extends AppCompatActivity {
         newPOI.setLongitude(-122.55555);
         newPOI.setDescription("Lorem ipsum");
         newPOI.setImg_url("www.loc8r.com");
-        newPOI.setImgFocalpointX(0);
-        newPOI.setImgFocalpointY(0);
+        newPOI.setImgFocalpointX(0D);
+        newPOI.setImgFocalpointY(0D);
         newPOI.setCollection("collection");
         newPOI.setCollectionPosition(1);
         newPOI.setStampText("StampText");

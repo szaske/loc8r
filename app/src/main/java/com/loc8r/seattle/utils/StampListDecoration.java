@@ -15,6 +15,7 @@ import com.loc8r.seattle.R;
 public class StampListDecoration extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
     private int vineHeight;
+    private int halfVineWidth;
 
     public StampListDecoration(Drawable divider, Context context) {
         mDivider = divider;
@@ -22,6 +23,7 @@ public class StampListDecoration extends RecyclerView.ItemDecoration {
         // We acquire vine height, so we can properly draw the vine to the top and bottom of
         // the vineLine.  Without it the draw would end up half way up the vineLine and look weird
         vineHeight = (int) context.getResources().getDimension(R.dimen.vineline_height)/2;
+        halfVineWidth = mDivider.getIntrinsicWidth()/2;
     }
 
     private boolean isOnLeft(int position){
@@ -40,11 +42,13 @@ public class StampListDecoration extends RecyclerView.ItemDecoration {
     @Override public void onDrawOver(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
         super.onDraw(canvas, parent, state);
 
-        //final int vineHeight = 2;
+        // All layouts (left and right) are considered children
         int childCount = parent.getChildCount();
 
         for (int i = 0; i < childCount; i++) {
             View child = parent.getChildAt(i);
+
+            // Tag is the position starting at 1, so we minus 1 to start list at zero
             int listPosition = (int) child.getTag() - 1;
 
             // Initialize Bounds for the decorations
@@ -55,30 +59,42 @@ public class StampListDecoration extends RecyclerView.ItemDecoration {
 
             // Special case, if we're on the first item in the list,
             // make it only half height starting at middle of view
-            if(listPosition == 0){
+            if(listPosition <= 1){
                 decoratorTop = (int) Math.floor ((child.getTop() + child.getBottom())/2) - vineHeight; // To fix a minor graphical bug at top of "POI vine" in view
             }
 
             // Special case, if we're the first item on the right
             // This helps align the 2 collection "vine" lines at the top
-            if(listPosition == 1){
-                decoratorTop -= vineHeight; // To fix a minor graphical bug at top of "POI vine" in view
-            }
+//            if(listPosition == 1){
+//                decoratorTop -= vineHeight; // To fix a minor graphical bug at top of "POI vine" in view
+//            }
+//
+//            // Special case, for the last 2 items in the list
+//            if(i == childCount-2){
+//                decoratorBottom += vineHeight;
+//            }
 
-            // Special case, for the last 2 items in the list
-            if(i == childCount-2){
-                decoratorBottom += vineHeight;
-            }
+            // Special case for last item
             if(i == childCount-1){
                 decoratorBottom = (int) Math.floor ((child.getTop() + child.getBottom())/2) + vineHeight;
             }
 
+            //before
+//            if(isOnLeft(listPosition)){
+//                decoratorRight = child.getRight();
+//                decoratorLeft = decoratorRight - mDivider.getIntrinsicWidth();
+//            } else {
+//                decoratorLeft = child.getLeft();
+//                decoratorRight = child.getLeft() + mDivider.getIntrinsicWidth();
+//            }
+
+            // split the line to draw half on left, half on right
             if(isOnLeft(listPosition)){
-                decoratorRight = child.getRight();
-                decoratorLeft = decoratorRight - mDivider.getIntrinsicWidth();
+                decoratorLeft = child.getRight() - halfVineWidth;
+                decoratorRight = child.getRight() + halfVineWidth;
             } else {
-                decoratorLeft = child.getLeft();
-                decoratorRight = child.getLeft() + mDivider.getIntrinsicWidth();
+                decoratorLeft = child.getLeft() - halfVineWidth;
+                decoratorRight = child.getLeft() + halfVineWidth;
             }
 
             mDivider.setBounds(decoratorLeft, decoratorTop, decoratorRight, decoratorBottom);
@@ -118,35 +134,35 @@ public class StampListDecoration extends RecyclerView.ItemDecoration {
          *  Special case.  Te first right side item in the list should have an extra 50% top
          *  offset so that these equal sized views are perfectly staggered.
          */
-        if (parent.getChildAdapterPosition(view) == 1) {
-
-            /**
-             *  We would normally do a outRect.top = view.getHeight()/2 to create a 50% top offset on the first right item in the list.
-             *  However, problems would arise if we paused the app when the top right item was scrolled off screen.
-             *  In this situation, when we re-inflated the recyclerview since the view was off screen
-             *  Android would say the height of the view was zero.  So instead I added code that
-             *  looked for the height of the top most view that was visible (and would therefore
-             *  have a height.
-             *
-             *  see https://stackoverflow.com/questions/29463560/findfirstvisibleitempositions-doesnt-work-for-recycleview-android
-             *  because as a staggeredGrid layout you have a special case first visible method
-             *  findFirstVisibleItemPositions that returns an array of (notice the S on the end of
-             *  the method name.
-             */
-            StaggeredGridLayoutManager layoutMngr = ((StaggeredGridLayoutManager) parent.getLayoutManager());
-            int firstVisibleItemPosition = layoutMngr.findFirstVisibleItemPositions(null)[0];
-
-            int topPos = 0;
-            try {
-                topPos = parent.getChildAt(firstVisibleItemPosition).getMeasuredHeight()/2;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            outRect.set(0, topPos, 0, 0);
-        } else {
-            outRect.set(0, 0, 0, 0);
-        }
+//        if (parent.getChildAdapterPosition(view) == 1) {
+//
+//            /**
+//             *  We would normally do a outRect.top = view.getHeight()/2 to create a 50% top offset on the first right item in the list.
+//             *  However, problems would arise if we paused the app when the top right item was scrolled off screen.
+//             *  In this situation, when we re-inflated the recyclerview since the view was off screen
+//             *  Android would say the height of the view was zero.  So instead I added code that
+//             *  looked for the height of the top most view that was visible (and would therefore
+//             *  have a height.
+//             *
+//             *  see https://stackoverflow.com/questions/29463560/findfirstvisibleitempositions-doesnt-work-for-recycleview-android
+//             *  because as a staggeredGrid layout you have a special case first visible method
+//             *  findFirstVisibleItemPositions that returns an array of (notice the S on the end of
+//             *  the method name.
+//             */
+//            StaggeredGridLayoutManager layoutMngr = ((StaggeredGridLayoutManager) parent.getLayoutManager());
+//            int firstVisibleItemPosition = layoutMngr.findFirstVisibleItemPositions(null)[0];
+//
+//            int topPos = 0;
+//            try {
+//                topPos = parent.getChildAt(firstVisibleItemPosition).getMeasuredHeight()/2;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            outRect.set(0, topPos, 0, 0);
+//        } else {
+//            outRect.set(0, 0, 0, 0);
+//        }
 
     }
 }

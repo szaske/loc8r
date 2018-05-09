@@ -125,7 +125,7 @@ public class FocusedCropTransform implements Transformation {
      */
     @Override
     public String key() {
-        return resultKey;
+        return resultKey+neededWidth+"x"+neededHeight;
     }
 
 }

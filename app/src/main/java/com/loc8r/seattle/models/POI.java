@@ -22,7 +22,7 @@ public class POI  {
     Double longitude;
     String description;
     String img_url;
-    int imgFocalpointX, imgFocalpointY;
+    Double imgFocalpointX, imgFocalpointY;
     String collection;
     String collectionColor;
     int collectionPosition;
@@ -42,8 +42,8 @@ public class POI  {
                Double longitude,
                String description,
                String img_url,
-               int imgFocalpointX,
-               int imgFocalpointY,
+               Double imgFocalpointX,
+               Double imgFocalpointY,
                String collection,
                int collectionPosition,
                String stampText) {
@@ -127,8 +127,8 @@ public class POI  {
     public Double getLongitude() { return longitude; }
     public String getDescription() { return description; }
     public String getImg_url() { return img_url; }
-    public int getImgFocalpointX() { return imgFocalpointX; }
-    public int getImgFocalpointY() { return imgFocalpointY; }
+    public Double getImgFocalpointX() { return imgFocalpointX; }
+    public Double getImgFocalpointY() { return imgFocalpointY; }
     public String getCollection() { return collection; }
     public int getCollectionPosition() { return collectionPosition; }
     public String getStampText() { return stampText; }
@@ -161,8 +161,8 @@ public class POI  {
     public void setImg_url(String img_url) {
         this.img_url = img_url;
     }
-    public void setImgFocalpointX(int imgFocalpointX) { this.imgFocalpointX = imgFocalpointX; }
-    public void setImgFocalpointY(int imgFocalpointY) { this.imgFocalpointY = imgFocalpointY; }
+    public void setImgFocalpointX(Double imgFocalpointX) { this.imgFocalpointX = imgFocalpointX; }
+    public void setImgFocalpointY(Double imgFocalpointY) { this.imgFocalpointY = imgFocalpointY; }
     public void setCollection(String collection) {
         this.collection = collection;
     }

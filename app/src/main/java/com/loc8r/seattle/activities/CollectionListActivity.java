@@ -63,31 +63,40 @@ public class CollectionListActivity extends AppCompatActivity implements
         mListState = mLayoutManager.onSaveInstanceState();
         state.putParcelable(LIST_STATE_KEY, mListState);
 
-        mCollectionList = Parcels.wrap(mListOfPOIsInCollection);
-        state.putParcelable(COLLECTION_ARRAYLIST_STATE_KEY,mCollectionList);
+//        mCollectionList = Parcels.wrap(mListOfPOIsInCollection);
+//        state.putParcelable(COLLECTION_ARRAYLIST_STATE_KEY,mCollectionList);
     }
 
     protected void onRestoreInstanceState(Bundle state) {
         super.onRestoreInstanceState(state);
 
         // Retrieve list state and list/item positions
-        if(state != null) {
-            mListState = state.getParcelable(LIST_STATE_KEY);
-            //mCollectionList = state.getParcelable(COLLECTION_ARRAYLIST_STATE_KEY);
-            mListOfPOIsInCollection = Parcels.unwrap(state.getParcelable(COLLECTION_ARRAYLIST_STATE_KEY));
-        }
+//        if(state != null) {
+//            mListState = state.getParcelable(LIST_STATE_KEY);
+//            //mListOfPOIsInCollection = Parcels.unwrap(state.getParcelable(COLLECTION_ARRAYLIST_STATE_KEY));
+//        }
     }
 
+    /**
+     *  Create items needed for the activity
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection_list);
 
+        // Create the Firebase items
+        db = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        // Create and contfigure the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Get the name of the collection we're looking at
         try {
             mSelectedCollectionId = getIntent().getExtras().getString(Constants.SELECTED_COLLECTION_KEY);
             mSelectedCollectionName = getIntent().getExtras().getString(Constants.PRETTY_COLLECTION_KEY);
@@ -97,27 +106,21 @@ public class CollectionListActivity extends AppCompatActivity implements
 
         getSupportActionBar().setTitle(mSelectedCollectionName + " Collection");
 
+        // Configure the RecyclerView
         mRecyclerView = (RecyclerView) findViewById(R.id.collectionsRV);
 
-        // use this setting to
-        // improve performance if you know that changes
-        // in content do not change the layout size
-        // of the RecyclerView
+        /** use this setting to improve performance if you know that changes
+        in content do not change the layout size of the RecyclerView
+         **/
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-
         mRecyclerView.setLayoutManager(mLayoutManager);
-
         mListOfPOIsInCollection = new ArrayList<>(); // Create an empty list for the recyclerView
-
         mAdapter = new POIStamp_Adapter(mListOfPOIsInCollection, this);
         mRecyclerView.setAdapter(mAdapter);
-
         RecyclerView.ItemDecoration dividerItemDecoration = new StampListDecoration(getResources().getDrawable(R.drawable.collection_rv_divider), this);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        db = FirebaseFirestore.getInstance();
-        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override

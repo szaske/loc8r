@@ -151,6 +151,7 @@ public class POIStamp_Adapter extends RecyclerView.Adapter<POIStamp_Adapter.POI_
                 stampView.setStamped(false);
                 stampView.setElevation(0);
                 stampView.setTranslationZ(0);
+                showPlaceholder(true);
             }
             Log.d("ViewHolder-", "bind: method fired");
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -161,8 +162,11 @@ public class POIStamp_Adapter extends RecyclerView.Adapter<POIStamp_Adapter.POI_
         }
 
         private void showPlaceholder(boolean b) {
-            name.setVisibility(View.INVISIBLE);
-            //positionText.setVisibility(View.INVISIBLE);
+            if(b){
+                name.setVisibility(View.VISIBLE);
+            } else {
+                name.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
