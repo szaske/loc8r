@@ -18,6 +18,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -43,7 +46,7 @@ public class StampView extends View {
     private static final Double OUTSIDE_PERCENTAGE = .06;
 
     // View State items
-    private String stampText, stampTimeStamp;
+    private String stampText, stampTimeStamp, placeholderText;
     private int stampIconId;
     private boolean stamped;
     private int stampBackgroundColor = Constants.DEFAULT_STAMP_BACKGROUND_COLOR;
@@ -55,6 +58,7 @@ public class StampView extends View {
     private int insetAmount;
     private Paint mTextPaint, mShadowPaint, backgroundPaint;
     private Paint boundsPaint;
+    private TextPaint mPlaceholderTextPaint;
     public Rect bounds, bgBounds;
 
     int[] mShadowOffsetXY;
@@ -70,6 +74,8 @@ public class StampView extends View {
         if(stampTimeStamp ==null){
             stampTimeStamp = "";
         }
+
+        placeholderText = "";
 
         //Set background shape
         //setBackgroundResource(R.drawable.shadow_shape);
@@ -122,6 +128,21 @@ public class StampView extends View {
 //        GradientDrawable mBackground = (GradientDrawable) getResources().getDrawable(R.drawable.stamp_background_circle);
 //        setBackground(mBackground);
 //        mBackground.setColor(stampBackgroundColor);
+
+        mPlaceholderTextPaint = new TextPaint();
+        mPlaceholderTextPaint.setAntiAlias(true);
+        float textSize = 14 * getResources().getDisplayMetrics().density;
+        mPlaceholderTextPaint.setTextSize(textSize);
+        // mPlaceholderTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
+        mPlaceholderTextPaint.setColor(0xFFDDDDDD);
+
+        // set the shadowLayer
+        mPlaceholderTextPaint.setShadowLayer(
+                textSize * .05f,
+                2f, // blurX
+                2f, // blurY
+                Color.argb(255, 0, 0, 0) // shadow color
+        );
 
         setSaveEnabled(true);
     }
@@ -242,8 +263,8 @@ public class StampView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        int desiredWidth = 100;
-        int desiredHeight = 100;
+        int desiredWidth = 1000;
+        int desiredHeight = 1000;
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -311,12 +332,6 @@ public class StampView extends View {
 
             canvas.drawOval(bgBounds.left,bgBounds.top,bgBounds.right,bgBounds.bottom, backgroundPaint);
 
-//            Bitmap originalBitmap = drawableToBitmap(mIcon);
-//
-//                Bitmap convertedBM = applyFadedEffect(originalBitmap);
-//                canvas.drawBitmap(convertedBM,innerBounds.left,innerBounds.top,mShadowPaint);
-            //canvas.drawBitmap(originalBitmap,innerBounds.left,innerBounds.top,mShadowPaint);
-
             // make the text 10% of the height
             Float targetFontSize = bgBounds.height() * .1f;
 
@@ -362,15 +377,14 @@ public class StampView extends View {
             stampPlaceholder.setBounds(bounds);
             stampPlaceholder.draw(canvas);
 
+            StaticLayout mTextLayout = new StaticLayout(placeholderText, mPlaceholderTextPaint, getWidth()/2 - getPaddingLeft() - getPaddingRight(), Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
+
+            canvas.save();
+
+            canvas.translate (bounds.centerX () / 2, bounds.centerY () - mTextLayout.getHeight () / 2); // find center of bounds
+            mTextLayout.draw(canvas);
+            canvas.restore();
         }
-
-//        Debugging code, draws a outlines around the StampView
-//        Rect outlineBounds = new Rect(bounds);
-//        outlineBounds.inset(1,1);
-//
-//        canvas.drawRect(outlineBounds,boundsPaint);
-
-
     }
 
     private String timestampConversion(String dbTimeStampString) {
@@ -391,6 +405,13 @@ public class StampView extends View {
 
     }
 
+    public void setPlaceholderText(String placeholderText){
+        this.placeholderText = placeholderText;
+    }
+
+    public void setPlaceholder(Drawable placeholder){
+        this.stampPlaceholder = placeholder;
+    }
 
     public void constructStampViewFromPOI(POI poi){
 

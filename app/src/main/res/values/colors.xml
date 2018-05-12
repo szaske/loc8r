@@ -21,6 +21,8 @@
     <color name="titleTextColor">#ff5722</color>
     <color name="darkBackground">#1c1c1c</color>
 
+    <color name="infoBox_Background">#aa000000</color>
+
 
     <!--TODO: These colors added as part of integrating the Map activity code.  -->
     <!--We need to integrate these colors into a holistic app color scheme-->

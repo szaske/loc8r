@@ -136,7 +136,7 @@
                     android:id="@+id/firstColumn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toStartOf="@+id/secondColumn"
+                    app:layout_constraintEnd_toStartOf="@+id/stampBox"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -240,7 +240,7 @@
                 </android.support.constraint.ConstraintLayout>
 
                 <android.support.constraint.ConstraintLayout
-                    android:id="@+id/secondColumn"
+                    android:id="@+id/stampBox"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/left_side_only_background"

@@ -11,21 +11,6 @@
         <!--<item name="windowNoTitle">true</item>-->
     </style>
 
-    <style name="Theme.SeattlePassport" parent="AppTheme">
-        <item name="android:textColorPrimary">@color/primaryTextColor</item>
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="colorAccent">@color/secondaryColor</item>
-        <item name="android:colorAccent">@color/secondaryColor</item>
-        <item name="android:colorPrimary">@color/primaryColor</item>
-        <item name="android:colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="android:colorBackground">@color/primaryDarkColor</item>
-        <item name="colorButtonNormal">@color/secondaryColor</item>
-        <item name="colorControlHighlight">@color/accent_material_dark</item>
-
-    </style>
-
-
     <style name="DialogTransparentBackgroundTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
@@ -70,6 +55,22 @@
     </style>
 
     <!-- Official Seattle Passport Section-->
+
+    <style name="Theme.SeattlePassport" parent="AppTheme">
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/secondaryColor</item>
+        <item name="android:colorAccent">@color/secondaryColor</item>
+        <item name="android:colorPrimary">@color/primaryColor</item>
+        <item name="android:colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="android:colorBackground">@color/primaryDarkColor</item>
+        <item name="colorButtonNormal">@color/secondaryColor</item>
+        <item name="colorControlHighlight">@color/accent_material_dark</item>
+
+    </style>
+
 
     <!-- Main List Section-->
 
@@ -142,16 +143,34 @@
         <item name="android:src">@drawable/stamp_vine_line_right</item>
     </style>
 
-    <style name="poi_title_style">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/primaryTextColor</item>
-        <item name="android:textSize">@dimen/collection_title_size</item>
-        <item name="android:textStyle">bold</item>
-    </style>
 
     <style name="Theme.SeattlePassport.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.SeattlePassport.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- POI Details Section-->
+
+    <style name="poi_title_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">3</item>
+        <item name="android:shadowDy">3</item>
+        <item name="android:shadowRadius">20</item>
+        <item name="android:textSize">@dimen/details_title_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="infobox_style">
+        <item name="android:background">@drawable/infobox_background</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:paddingTop">8dp</item>
+    </style>
 
 </resources>

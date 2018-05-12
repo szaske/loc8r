@@ -24,6 +24,7 @@
     <!--POI Details Dimensions-->
     <dimen name="appbar_header_height">256dp</dimen>
     <dimen name="activity_margin_content">24dp</dimen>
+    <dimen name="details_title_size">22sp</dimen>
 
     <!--Collection List Styling-->
     <dimen name="stampview_size">140dp</dimen>
@@ -32,7 +33,7 @@
     <dimen name="stampview_vine_margin">4dp</dimen>
     <dimen name="vineline_width">20dp</dimen>
     <dimen name="vineline_height">2dp</dimen>
-    <dimen name="collection_title_size">36sp</dimen>
+
 
 
 </resources>

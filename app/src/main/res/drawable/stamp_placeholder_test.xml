@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--Layer 0-->
+    <!--Layer 1-->
+    <!--Layer 2-->
+    <!--Layer 3-->
+    <!--Layer 4 (content background)-->
 
+    <!-- dropshadow -->
+    <item
+        android:left="9dp"
+        android:right="9dp"
+        android:top="9dp"
+        android:bottom="9dp">
+        <shape android:shape="oval">
+
+            <!--minus the padding-->
+            <stroke
+                android:color="#80ffffff"
+                android:dashWidth="4dp"
+                android:dashGap="3.37dp"
+                android:width="1dp"/>
+
+            <padding
+                android:bottom="1dp"
+                android:left="1dp"
+                android:right="1dp"
+                android:top="1dp" />
+
+        </shape>
+    </item>
+
+    <!-- content background -->
     <item
         android:left="9dp"
         android:right="9dp"
@@ -13,8 +43,8 @@
 
             <gradient
                 android:type="radial"
-                android:gradientRadius="60dp"
-                android:startColor="#6f000000"
+                android:gradientRadius="30dp"
+                android:startColor="#37000000"
                 android:endColor="#00000000"
                 android:centerX="0.53"
                 android:centerY="0.53"/>
@@ -26,8 +56,8 @@
                 android:height="60dp"/>
             <stroke
                 android:color="#d1000000"
-                android:dashWidth="5dp"
-                android:dashGap="6dp"
+                android:dashWidth="4dp"
+                android:dashGap="3dp"
                 android:width="2dp"/>
 
             <padding

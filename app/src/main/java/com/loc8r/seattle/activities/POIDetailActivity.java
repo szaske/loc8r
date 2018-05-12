@@ -133,9 +133,9 @@ public class POIDetailActivity extends LocationBase_Activity {
         Log.d(TAG, "Detail view " + detailedPoi.getName());
 
         //Create a the Passport Stamp view
-
         initStampCreation();
 
+        // Configure Page content
         mTV_PoiName.setText(detailedPoi.getName());
         mTV_PoiDescription.setText(detailedPoi.getDescription());
         mTV_PoiCollection.setText(detailedPoi.getCollection()+" #"+String.valueOf(detailedPoi.getCollectionPosition()));
@@ -158,17 +158,23 @@ public class POIDetailActivity extends LocationBase_Activity {
                 .load(detailedPoi.getImg_url())
                 .into(mPhotoView);
 
-
-
     }
 
     private void initStampCreation() {
 
+        mStampView.setPlaceholder(getResources().getDrawable(R.drawable.stamp_placeholder_darker));
         mStampView.constructStampViewFromPOI(detailedPoi);
 
         if(detailedPoi.isStamped()){ // We have a stamp
-            mStampBtn.setVisibility(View.GONE);
+            return;
+        } else {
+            mStampView.setPlaceholderText("GET CLOSER");
+            mStampView.setOnClickListener(new StampPlaceholderClicked());
+
+            // By default the listener is set, but disabled and only available
+            mStampView.setClickable(false);
         }
+
     }
 
     // TODO Determine if I need to cancel location update onPause or onStop.
@@ -186,7 +192,7 @@ public class POIDetailActivity extends LocationBase_Activity {
                 StateManager.getInstance().setCurrentLocation(location);
                 Log.d(TAG, "UI update initiated .............");
                 if (null != StateManager.getInstance().getCurrentLocation()) {
-                    mTV_PoiDistance.setText(String.valueOf(detailedPoi.distanceToUser())+" meters");
+                    mTV_PoiDistance.setText(String.valueOf(detailedPoi.distanceToUser())+"m");
                 } else {
                     Log.d(TAG, "location is null ...............");
                 }
@@ -234,46 +240,50 @@ public class POIDetailActivity extends LocationBase_Activity {
         };
     }
 
-    @OnClick(R.id.bt_getStamp)
+    class StampPlaceholderClicked implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    final Stamp newStamp = CreateStamp(); // Create a new stamp
+
+                    // See what happens with animation in separate thread.
+                    animateGettingStamp();
+
+                    //Create a doc reference to this specific stamp
+                    DocumentReference stampDocRef = db
+                            .collection("users")
+                            .document(user.getUid())
+                            .collection("stamps")
+                            .document(detailedPoi.getId());
+
+                    //Attempt to get the document/object...if it does not exist then get the stamp
+                    stampDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            //City city = documentSnapshot.toObject(City.class);
+                            if(documentSnapshot.exists()){
+                                Log.d(TAG, "the stamp already EXISTS, aborting save");
+                            } else {
+                                Log.d(TAG, "onSuccess: NO Stamp found, lets make one");
+
+                                AddStampToDB(newStamp);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+
+    // @OnClick(R.id.bt_getStamp)
     public void onStampButtonClick() {
 
         //TODO Add a check to determine if we're within a constant amount of meters from the POI.  If close enough then enable the button
 
-        // Hide button;
-        mStampBtn.setVisibility(View.GONE);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                final Stamp newStamp = CreateStamp(); // Create a new stamp
-
-                // See what happens with animation in separate thread.
-                animateGettingStamp();
-
-                //Create a doc reference to this specific stamp
-                DocumentReference stampDocRef = db
-                        .collection("users")
-                        .document(user.getUid())
-                        .collection("stamps")
-                        .document(detailedPoi.getId());
-
-                //Attempt to get the document/object...if it does not exist then get the stamp
-                stampDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        //City city = documentSnapshot.toObject(City.class);
-                        if(documentSnapshot.exists()){
-                            Log.d(TAG, "the stamp already EXISTS, aborting save");
-                        } else {
-                            Log.d(TAG, "onSuccess: NO Stamp found, lets make one");
-
-                            AddStampToDB(newStamp);
-                        }
-                    }
-                });
-            }
-        });
     }
 
     /**

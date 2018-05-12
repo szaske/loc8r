@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- content background -->
     <item
         android:left="9dp"
         android:right="9dp"
@@ -14,8 +15,8 @@
             <gradient
                 android:type="radial"
                 android:gradientRadius="60dp"
-                android:startColor="#6f000000"
-                android:endColor="#00000000"
+                android:startColor="#c6000000"
+                android:endColor="#15000000"
                 android:centerX="0.53"
                 android:centerY="0.53"/>
 
@@ -25,9 +26,9 @@
                 android:width="60dp"
                 android:height="60dp"/>
             <stroke
-                android:color="#d1000000"
-                android:dashWidth="5dp"
-                android:dashGap="6dp"
+                android:color="#acb6b6b6"
+                android:dashWidth="4dp"
+                android:dashGap="4dp"
                 android:width="2dp"/>
 
             <padding
