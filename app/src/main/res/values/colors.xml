@@ -34,4 +34,11 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="grey200">#cecece</color>
+
+    <color name="homepagefont">@color/md_grey_900</color>
+    <color name="homepage_background">@color/black</color>
+    <color name="md_grey_900">#212121</color>
+    <color name="md_white_1000">#ffffff</color>
+
+
 </resources>

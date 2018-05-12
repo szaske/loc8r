@@ -22,6 +22,7 @@ import com.loc8r.seattle.R;
 import com.loc8r.seattle.activities.base.FirebaseBaseActivity;
 import com.loc8r.seattle.activities.base.LocationBase_Activity;
 import com.loc8r.seattle.utils.FocusedCropTransform;
+import com.loc8r.seattle.utils.ProgressIndicator;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class MainListActivity extends LocationBase_Activity
     private Button mPassportButton;
     private TextView mTitle;
     private ImageView mBackgroundImage;
+    private ProgressIndicator progressIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

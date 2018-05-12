@@ -19,6 +19,7 @@ import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +69,7 @@ public class POIDetailActivity extends LocationBase_Activity {
     @BindView(R.id.bt_getStamp) Button mStampBtn;
     @BindView(R.id.bt_back_arrow) ImageButton mBackArrow;
     @BindView(R.id.photo_view) PhotoView mPhotoView;
+    @BindView(R.id.progressBar) ProgressBar mProgressBar;
 
     // TODO Should I move currentLocation to the State Manager?
     // private Location mCurrentLocation;
@@ -122,7 +124,20 @@ public class POIDetailActivity extends LocationBase_Activity {
                                 mIV_PoiImage.getId(),
                                 detailedPoi.getImgFocalpointX(),
                                 detailedPoi.getImgFocalpointY()))
-                        .into(mIV_PoiImage);
+                        .into(mIV_PoiImage, new Callback() {
+
+                            @Override
+                            public void onSuccess() {
+                                mIV_PoiImage.setVisibility(View.VISIBLE);
+                                mProgressBar.setVisibility(View.INVISIBLE);
+                            }
+
+                            // Need to handle errors
+                            @Override public void onError(Exception e) {
+                                mProgressBar.setVisibility(View.VISIBLE);
+                                mIV_PoiImage.setVisibility(View.INVISIBLE);
+                            }
+                        });
 
                 Log.d(TAG, "STZ _ onPreDraw: Width is " + mIV_PoiImage.getMeasuredWidth() + " - Height:"+ mIV_PoiImage.getMeasuredHeight());
 
