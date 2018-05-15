@@ -49,7 +49,7 @@ public class CreatePOIPlaceholderActivity extends AppCompatActivity {
 
     @OnClick(R.id.bn_createPOI)
     void onCreatePoiButtonClicked() {
-        Log.d(TAG, "onCreatePoiButtonClicked:  Fired");
+        Log.d(TAG, "onSubmitSuggestionButtonClicked:  Fired");
 
         // Some basic form validation.  Perf is 227 for 500,000 runs
         if(!"".equals(et_Index.getText().toString()) &&

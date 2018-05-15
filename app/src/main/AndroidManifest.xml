@@ -88,7 +88,7 @@
             android:label="@string/title_activity_management"
             android:theme="@style/Theme.SeattlePassport" />
         <activity
-            android:name=".activities.AddPOIActivity"
+            android:name=".activities.AddSuggestionActivity"
             android:label="@string/title_activity_add_poi"
             android:parentActivityName=".activities.MainListActivity"
             android:theme="@style/Theme.SeattlePassport">

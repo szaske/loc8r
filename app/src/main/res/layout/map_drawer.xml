@@ -63,30 +63,11 @@
             app:layout_constraintTop_toBottomOf="@+id/draggableArea">
 
             <android.support.constraint.Guideline
-                android:id="@+id/iconGuide"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_begin="96dp" />
-
-            <android.support.constraint.Guideline
                 android:id="@+id/buttonGuide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_end="120dp" />
-
-            <ImageView
-                android:id="@+id/iv_drawer_icon"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="4dp"
-                app:layout_constraintEnd_toStartOf="@+id/iconGuide"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/title_textView"
-                app:srcCompat="@drawable/icon_his" />
 
             <Button
                 android:id="@+id/poi_details_button"
@@ -104,11 +85,13 @@
                 android:id="@+id/title_textView"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="POI Title can be long"
+                android:textColor="@color/black"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/buttonGuide"
-                app:layout_constraintStart_toStartOf="@+id/iconGuide"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -118,6 +101,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="4dp"
                 android:ellipsize="end"
+                android:textColor="@color/black"
                 android:maxLines="3"
                 android:text="A generic description of the POI"
                 app:layout_constraintBottom_toBottomOf="parent"

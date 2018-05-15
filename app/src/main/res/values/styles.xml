@@ -1,15 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="colorAccent">@color/secondaryColor</item>
-        <!--Added to stop toolbar crash-->
-        <!--<item name="windowActionBar">false</item>-->
-        <!--<item name="windowNoTitle">true</item>-->
-    </style>
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+
+        <!--&lt;!&ndash;Added to stop toolbar crash&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="windowActionBar">false</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="windowNoTitle">true</item>&ndash;&gt;-->
+    <!--</style>-->
 
     <style name="DialogTransparentBackgroundTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -56,9 +54,9 @@
 
     <!-- Official Seattle Passport Section-->
 
-    <style name="Theme.SeattlePassport" parent="AppTheme">
+    <style name="Theme.SeattlePassport" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:textColorPrimary">@color/primaryTextColor</item>
-        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:textColorSecondary">@color/secondaryTextColor</item>
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
@@ -144,7 +142,9 @@
     </style>
 
 
-    <style name="Theme.SeattlePassport.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.SeattlePassport.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    </style>
 
     <style name="Theme.SeattlePassport.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 

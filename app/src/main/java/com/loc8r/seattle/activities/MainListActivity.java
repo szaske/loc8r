@@ -136,10 +136,15 @@ public class MainListActivity extends LocationBase_Activity
             case R.id.menu_log_out:
                 signOutUser();
                 break;
+            case R.id.menu_suggest:
+                Log.d(TAG, "Suggest item selected");
+                Intent intent = new Intent(MainListActivity.this, AddSuggestionActivity.class);
+                startActivity(intent);
+                break;
             case R.id.menu_admin:
                 Log.d(TAG, "Admin item selected");
-                Intent intent = new Intent(MainListActivity.this, ManagementActivity.class);
-                startActivity(intent);
+                Intent intent2 = new Intent(MainListActivity.this, ManagementActivity.class);
+                startActivity(intent2);
                 break;
         }
 

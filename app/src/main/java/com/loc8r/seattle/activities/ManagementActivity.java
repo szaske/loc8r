@@ -55,7 +55,7 @@ public class ManagementActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Add Single POI button pressed ");
-                Intent intent = new Intent(ManagementActivity.this, AddPOIActivity.class);
+                Intent intent = new Intent(ManagementActivity.this, AddSuggestionActivity.class);
                 startActivity(intent);
             }
         });

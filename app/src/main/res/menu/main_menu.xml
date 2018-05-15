@@ -6,6 +6,10 @@
           app:showAsAction="never"
           android:title="@string/log_out"/>
 
+    <item android:id="@+id/menu_suggest"
+        app:showAsAction="never"
+        android:title="@string/suggest"/>
+
     <item android:id="@+id/menu_admin"
         app:showAsAction="never"
         android:title="@string/admin"/>

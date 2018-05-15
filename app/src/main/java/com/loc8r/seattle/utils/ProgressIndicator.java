@@ -8,6 +8,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+// Not currently used
+
 // See: https://medium.com/@sreekumar_av/how-to-create-your-own-progressbar-in-android-511419293158
 public class ProgressIndicator extends View {
     private int mSize;

@@ -75,6 +75,7 @@
     <string name="distance_header">Distance:</string>
     <string name="title_activity_add_poito_database">AddPOIToDatabaseActivity</string>
     <string name="exit_full_screen_icon_description">exit full screen</string>
+    <string name="suggest">Suggestion a Place</string>
 
 
 </resources>

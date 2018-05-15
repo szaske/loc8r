@@ -68,7 +68,7 @@ public class MapActivity extends LocationBase_Activity implements
     private View mHideImageView;
     private TextView mDrawerTitleTV;
     private TextView mDrawerDescTV;
-    private ImageView mDrawerIconIV;
+    // private ImageView mDrawerIconIV;
     private Button mDrawerDetailButton;
     // private Location mCurrentLocation;
     private Context context;
@@ -154,7 +154,7 @@ public class MapActivity extends LocationBase_Activity implements
         mDrawerView = findViewById(R.id.drawerView);
         mDrawerTitleTV = findViewById(R.id.title_textView);
         mDrawerDescTV = findViewById(R.id.desc_textView);
-        mDrawerIconIV = findViewById(R.id.iv_drawer_icon);
+        // mDrawerIconIV = findViewById(R.id.iv_drawer_icon);
 
         // Configure the details button and click listener
         mDrawerDetailButton = findViewById(R.id.poi_details_button);
@@ -269,7 +269,7 @@ public class MapActivity extends LocationBase_Activity implements
         //Set draw info to selected POI
         mDrawerTitleTV.setText(mSelectedPOI.getName());
         mDrawerDescTV.setText(mSelectedPOI.getDescription());
-        mDrawerIconIV.setImageResource(getIconDrawableID(getApplicationContext(),mSelectedPOI.getCollection(),Constants.ICON));
+        // mDrawerIconIV.setImageResource(getIconDrawableID(getApplicationContext(),mSelectedPOI.getCollection(),Constants.ICON));
 
         Log.d(TAG, "onMarkerClick: You selected marker " + mSelectedPOI.getName() );
         //Bring up the details mDrawer
