@@ -1,13 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
-        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
 
-        <!--&lt;!&ndash;Added to stop toolbar crash&ndash;&gt;-->
-        <!--&lt;!&ndash;<item name="windowActionBar">false</item>&ndash;&gt;-->
-        <!--&lt;!&ndash;<item name="windowNoTitle">true</item>&ndash;&gt;-->
-    <!--</style>-->
+        <!--Added to stop toolbar crash-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
+    </style>
 
     <style name="DialogTransparentBackgroundTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -55,6 +55,7 @@
     <!-- Official Seattle Passport Section-->
 
     <style name="Theme.SeattlePassport" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColorPrimary">@color/texttest</item>
         <item name="android:textColorPrimary">@color/primaryTextColor</item>
         <item name="android:textColorSecondary">@color/secondaryTextColor</item>
         <item name="colorPrimary">@color/primaryColor</item>
@@ -149,6 +150,19 @@
     <style name="Theme.SeattlePassport.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- POI Details Section-->
+    <style name="Theme.SP_POIDetails" parent="Theme.SeattlePassport">
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <item name="android:textColorSecondary">@color/secondaryTextColor</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/secondaryColor</item>
+        <item name="android:colorAccent">@color/secondaryColor</item>
+        <item name="android:colorPrimary">@color/primaryColor</item>
+        <item name="android:colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="android:colorBackground">@color/primaryDarkColor</item>
+        <item name="colorButtonNormal">@color/secondaryColor</item>
+        <item name="colorControlHighlight">@color/accent_material_dark</item>
+    </style>
 
     <style name="poi_title_style">
         <item name="android:layout_width">wrap_content</item>

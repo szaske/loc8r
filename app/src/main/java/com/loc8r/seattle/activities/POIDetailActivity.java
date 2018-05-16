@@ -6,6 +6,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Rect;
 import android.location.Location;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
@@ -64,12 +68,16 @@ public class POIDetailActivity extends LocationBase_Activity {
     @BindView(R.id.tv_poi_description) TextView mTV_PoiDescription;
     @BindView(R.id.tv_distance) TextView mTV_PoiDistance;
     @BindView(R.id.tv_collection) TextView mTV_PoiCollection;
+    @BindView(R.id.tv_distance_header) TextView mTV_distance_header;
     @BindView(R.id.photoLayout) ConstraintLayout mPhotoLayout;
     @BindView(R.id.stampView) StampView mStampView;
     @BindView(R.id.bt_getStamp) Button mStampBtn;
     @BindView(R.id.bt_back_arrow) ImageButton mBackArrow;
     @BindView(R.id.photo_view) PhotoView mPhotoView;
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
+
+    private SoundPool soundpool;
+    private int tadaSound;
 
     // TODO Should I move currentLocation to the State Manager?
     // private Location mCurrentLocation;
@@ -80,7 +88,7 @@ public class POIDetailActivity extends LocationBase_Activity {
     // New Toolbar layout items
 //    private CollapsingToolbarLayout collapsingToolbar;
 //    private AppBarLayout appBarLayout;
-    private boolean appBarExpanded = true;
+//    private boolean appBarExpanded = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,9 +97,30 @@ public class POIDetailActivity extends LocationBase_Activity {
         ButterKnife.bind(this);
         detailedPoi = Parcels.unwrap(getIntent().getParcelableExtra("poi"));
 
-        // mPhotoView.setImageResource(R.drawable.image);
-        initPhotoView();
+        // Cancel location updates if we already have the stamp and hide Distance UI
+        if (detailedPoi.isStamped()){ // POI is stamped
+            setLocationNeeded(false);
+            mTV_distance_header.setVisibility(View.INVISIBLE);
+            mTV_PoiDistance.setVisibility(View.INVISIBLE);
+        }
 
+        // Create the Soundpool and sounds
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            soundpool = new SoundPool.Builder()
+                    .setMaxStreams(2)
+                    .setAudioAttributes(audioAttributes)
+                    .build();
+        } else {
+            soundpool = new SoundPool(2, AudioManager.STREAM_MUSIC,0);
+        }
+        tadaSound = soundpool.load(this,R.raw.tada,1);
+
+        // Setup full screen view
+        initPhotoView();
 
         //testing enlarged touch delegate
         changeTouchableAreaOfView(mBackArrow,220);
@@ -102,10 +131,12 @@ public class POIDetailActivity extends LocationBase_Activity {
 //
 //        mCollapsingToolbar.setTitle(detailedPoi.getName());
 
-        // addOnPreDrawListener is required so we can measure the size of the image on this
-        // specific phone.  Without the listener code we might not fill the
-        // imageview with the POI image.
-        // https://stackoverflow.com/questions/4680499/how-to-get-the-width-and-height-of-an-android-widget-imageview
+
+        /** addOnPreDrawListener is required so we can measure the size of the image on this
+         *  specific phone.  Without the listener code we might not fill the
+         *  imageview with the POI image.
+         *  see: https://stackoverflow.com/questions/4680499/how-to-get-the-width-and-height-of-an-android-widget-imageview
+         */
         ViewTreeObserver vto = mIV_PoiImage.getViewTreeObserver();
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
@@ -158,7 +189,7 @@ public class POIDetailActivity extends LocationBase_Activity {
         // Access a Cloud Firestore instance from your Activity
         db = FirebaseFirestore.getInstance();
 
-        //        //Get the Firebase user
+        //Get the Firebase user
         user = FirebaseAuth.getInstance().getCurrentUser();
 
     }
@@ -187,7 +218,7 @@ public class POIDetailActivity extends LocationBase_Activity {
             mStampView.setOnClickListener(new StampPlaceholderClicked());
 
             // By default the listener is set, but disabled and only available
-            mStampView.setClickable(false);
+            // mStampView.setClickable(false);
         }
 
     }
@@ -353,6 +384,9 @@ public class POIDetailActivity extends LocationBase_Activity {
 
     private void animateGettingStamp(){
 
+        // start sound
+        soundpool.play(tadaSound,0.2f,0.2f,0,0,1);
+        
         // Change StampView to show stamp
         mStampView.setElevation(4f);
         mStampView.setStamped(true);
@@ -403,7 +437,6 @@ public class POIDetailActivity extends LocationBase_Activity {
         mTranslationAnimator.start();
 
     }
-
 
     private void AddStampToDB(final Stamp newStamp){
         Log.d(TAG, "onClick: fired");

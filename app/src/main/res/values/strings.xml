@@ -66,8 +66,8 @@
 
     <!--Passport Activity Strings-->
     <string name="title_activity_passport">Passport Collections</string>
-    <string name="title_activity_management">ManagementActivity</string>
-    <string name="title_activity_add_poi">AddPOIActivity</string>
+    <string name="title_activity_management">Management Activities</string>
+    <string name="title_activity_suggest">Suggest A Place</string>
 
     <!--Details Activity Strings-->
     <string name="poi_description_placeholder_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>

@@ -11,7 +11,9 @@
     <color name="secondaryDarkColor">#c41c00</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="TransparentColor">#00ffffff</color>
-    <color name="secondaryTextColor">#000000</color>
+
+    <!--Sets color of menu icon (3 dots)-->
+    <color name="secondaryTextColor">#fed401</color>
     <color name="primary_material_dark">#546e7a</color>
     <color name="primary_dark_material_dark">#29434e</color>
     <color name="accent_material_dark">#ff5722</color>
@@ -20,6 +22,7 @@
 
     <color name="titleTextColor">#ff5722</color>
     <color name="darkBackground">#1c1c1c</color>
+    <color name="texttest">#0cfb03</color>
 
     <color name="infoBox_Background">#aa000000</color>
 

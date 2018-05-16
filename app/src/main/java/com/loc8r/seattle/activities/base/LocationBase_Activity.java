@@ -39,6 +39,8 @@ public class LocationBase_Activity extends FirebaseBaseActivity implements
     private static final int LOCATION_REQUEST_CODE = 420;
     private static final String TAG = LocationBase_Activity.class.getSimpleName();
 
+    private boolean locationNeeded = true;
+
     private CollectionsRequester mCollectionRequester;
     private GoogleApiClient mGoogleApiClient;
     private AlertDialog mLocationEnabledDialog;
@@ -83,13 +85,11 @@ public class LocationBase_Activity extends FirebaseBaseActivity implements
 
     @Override
     protected void onStart() {
-        if (mGoogleApiClient != null) {
+        if (mGoogleApiClient != null && locationNeeded) {
             mGoogleApiClient.connect();
         }
         super.onStart();
     }
-
-
 
     @Override
     protected void onStop() {
@@ -139,6 +139,10 @@ public class LocationBase_Activity extends FirebaseBaseActivity implements
                 .FusedLocationApi
                 .requestLocationUpdates(mGoogleApiClient, mLocationRequest, mPoiLocationListener);
         Log.d(TAG, "STZ Location update started ..............: ");
+    }
+
+    protected void setLocationNeeded(boolean bol){
+        this.locationNeeded = bol;
     }
 
     protected void cancelContinousLocationUpdates(){

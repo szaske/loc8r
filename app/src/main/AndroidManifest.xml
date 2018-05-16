@@ -78,7 +78,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.loc8r.seattle.activities.PassportActivity" />
         </activity>
-        <activity android:name=".activities.POIDetailActivity">
+        <activity
+            android:name=".activities.POIDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.loc8r.seattle.activities.MainListActivity" />
@@ -89,7 +90,7 @@
             android:theme="@style/Theme.SeattlePassport" />
         <activity
             android:name=".activities.AddSuggestionActivity"
-            android:label="@string/title_activity_add_poi"
+            android:label="@string/title_activity_suggest"
             android:parentActivityName=".activities.MainListActivity"
             android:theme="@style/Theme.SeattlePassport">
             <meta-data
