@@ -45,11 +45,10 @@ public class StampListDecoration extends RecyclerView.ItemDecoration {
         // All layouts (left and right) are considered children
         int childCount = parent.getChildCount();
 
-        for (int i = 0; i < childCount; i++) {
-            View child = parent.getChildAt(i);
+        for (int viewablePosition = 0; viewablePosition < childCount; viewablePosition++) {
+            View child = parent.getChildAt(viewablePosition);
 
-            // Tag is the position starting at 1, so we minus 1 to start list at zero
-            int listPosition = (int) child.getTag() - 1;
+            int listPosition = parent.getChildAdapterPosition(child);
 
             // Initialize Bounds for the decorations
             int decoratorLeft = 0;
@@ -57,39 +56,21 @@ public class StampListDecoration extends RecyclerView.ItemDecoration {
             int decoratorTop = child.getTop();
             int decoratorBottom = child.getBottom();
 
-            // Special case, if we're on the first item in the list,
+            // Special case, if we're one of the first 2 items in the list
             // make it only half height starting at middle of view
             if(listPosition <= 1){
                 decoratorTop = (int) Math.floor ((child.getTop() + child.getBottom())/2) - vineHeight; // To fix a minor graphical bug at top of "POI vine" in view
             }
 
-            // Special case, if we're the first item on the right
-            // This helps align the 2 collection "vine" lines at the top
-//            if(listPosition == 1){
-//                decoratorTop -= vineHeight; // To fix a minor graphical bug at top of "POI vine" in view
-//            }
-//
-//            // Special case, for the last 2 items in the list
-//            if(i == childCount-2){
-//                decoratorBottom += vineHeight;
-//            }
-
-            // Special case for last item
-            if(i == childCount-1){
+            // Special case for last two item
+            // we're subtracting 2 because list position starts at 0
+            // and childcount at 1
+            if(listPosition >= parent.getAdapter().getItemCount() - 2){
                 decoratorBottom = (int) Math.floor ((child.getTop() + child.getBottom())/2) + vineHeight;
             }
 
-            //before
-//            if(isOnLeft(listPosition)){
-//                decoratorRight = child.getRight();
-//                decoratorLeft = decoratorRight - mDivider.getIntrinsicWidth();
-//            } else {
-//                decoratorLeft = child.getLeft();
-//                decoratorRight = child.getLeft() + mDivider.getIntrinsicWidth();
-//            }
-
             // split the line to draw half on left, half on right
-            if(isOnLeft(listPosition)){
+            if(isOnLeft(viewablePosition)){
                 decoratorLeft = child.getRight() - halfVineWidth;
                 decoratorRight = child.getRight() + halfVineWidth;
             } else {
@@ -99,7 +80,6 @@ public class StampListDecoration extends RecyclerView.ItemDecoration {
 
             mDivider.setBounds(decoratorLeft, decoratorTop, decoratorRight, decoratorBottom);
             mDivider.draw(canvas);
-
         }
 
     }

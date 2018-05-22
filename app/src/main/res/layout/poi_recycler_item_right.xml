@@ -5,33 +5,42 @@
     android:id="@+id/poiPlaceholderLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/paper_bg">
+    android:background="@drawable/tiled_paper_dark">
 
-    <ImageView
-        android:id="@+id/vineLine"
-        app:layout_constraintStart_toStartOf="parent"
-        style="@style/VineLine_Style_Right"/>
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/spacerToggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <com.loc8r.seattle.utils.StampView
-        android:id="@+id/poi_StampView"
-        app:layout_constraintStart_toEndOf="@+id/vineLine"
-        style="@style/StampView_Style_Right"/>
+        <com.loc8r.seattle.utils.StampView
+            android:id="@+id/poi_StampView"
+            style="@style/StampView_Style_Right"
+            app:layout_constraintStart_toEndOf="@+id/vineLine"
+            tools:layout_editor_absoluteY="16dp" />
 
-    <TextView
-        android:id="@+id/poi_nameTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="5"
-        android:maxEms="5"
-        android:singleLine="false"
-        android:text="TextView"
-        android:textColor="@android:color/white"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/poi_StampView"
-        app:layout_constraintEnd_toEndOf="@+id/poi_StampView"
-        app:layout_constraintStart_toStartOf="@+id/poi_StampView"
-        app:layout_constraintTop_toTopOf="@+id/poi_StampView" />
+        <ImageView
+            android:id="@+id/vineLine"
+            style="@style/VineLine_Style_Right"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="389dp" />
+
+        <TextView
+            android:id="@+id/poi_nameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="5"
+            android:maxEms="5"
+            android:singleLine="false"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/poi_StampView"
+            app:layout_constraintEnd_toEndOf="@+id/poi_StampView"
+            app:layout_constraintStart_toStartOf="@+id/poi_StampView"
+            app:layout_constraintTop_toTopOf="@+id/poi_StampView" />
+
+    </android.support.constraint.ConstraintLayout>
 
 
 </android.support.constraint.ConstraintLayout>

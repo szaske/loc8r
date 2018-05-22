@@ -299,7 +299,7 @@ public class MapActivity extends LocationBase_Activity implements
 
                     Marker tempMarker = mMap.addMarker(new MarkerOptions()
                             .position(poiLatLng)
-                            .icon(bitmapDescriptorFromVector(this, getIconDrawableID(this,poi.getCollection(), Constants.MARKER)))
+                            .icon(bitmapDescriptorFromVector(this, getIconDrawableID(this,poi.getCollectionId(), Constants.MARKER)))
                             .title(poi.getName()));
                     tempMarker.setTag(StateManager.getInstance().getPOIs().indexOf(poi)); //Tag is set to POI Index in full SM Arraylist
 

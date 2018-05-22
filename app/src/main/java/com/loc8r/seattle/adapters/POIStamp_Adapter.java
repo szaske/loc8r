@@ -39,6 +39,7 @@ public class POIStamp_Adapter extends RecyclerView.Adapter<POIStamp_Adapter.POI_
     public POIStamp_Adapter(ArrayList<POI> list, OnPOIClickListener listener) {
         this.mPOIslist = list;
         this.listener = listener;
+
     }
 
     @Override
@@ -103,13 +104,14 @@ public class POIStamp_Adapter extends RecyclerView.Adapter<POIStamp_Adapter.POI_
 
         // Variables for the ViewHolder
         private TextView name;
-        private TextView positionText;
+        private ConstraintLayout spacerToggle;
         private StampView stampView;
         private ConstraintLayout placeholderLayout;
 
         POI_View_Holder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.poi_nameTV);
+            spacerToggle = itemView.findViewById(R.id.spacerToggle);
             // positionText= itemView.findViewById(R.id.tv_poi_position);
             stampView = itemView.findViewById(R.id.poi_StampView);
             placeholderLayout = itemView.findViewById(R.id.poiPlaceholderLayout);
@@ -134,31 +136,38 @@ public class POIStamp_Adapter extends RecyclerView.Adapter<POIStamp_Adapter.POI_
 
         public void bind(int position, final POI poi, final OnPOIClickListener listener){
 
-            // Set POI information in viewHolder
-            name.setText(poi.getName());
-            // positionText.setText(String.valueOf(position+1));
-
-            // Put collection location into the view, so we can use it in building list decorations
-            placeholderLayout.setTag(position+1);
-
-            if(poi.isStamped()){
-                stampView.setStamped(true);
-                stampView.setElevation(4);
-                stampView.setTranslationZ(4);
-                stampView.constructStampViewFromPOI(poi);
-                showPlaceholder(false);
+            // Check if the poi is a spacer.  This handles the rare case where the list ends
+            // in an odd number.  To solve this problem we add a new item to the list when it's past
+            // to the collection activity
+            if(poi.getName()=="blank"){
+                spacerToggle.setVisibility(View.INVISIBLE);
             } else {
-                stampView.setStamped(false);
-                stampView.setElevation(0);
-                stampView.setTranslationZ(0);
-                showPlaceholder(true);
-            }
-            Log.d("ViewHolder-", "bind: method fired");
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View view) {
-                    listener.OnPOIClick(poi);
+                // Set POI information in viewHolder
+                name.setText(poi.getName());
+                // positionText.setText(String.valueOf(position+1));
+
+                // Put collection location into the view, so we can use it in building list decorations
+                placeholderLayout.setTag(position+1);
+
+                if(poi.isStamped()){
+                    stampView.setStamped(true);
+                    stampView.setElevation(4);
+                    stampView.setTranslationZ(4);
+                    stampView.constructStampViewFromPOI(poi);
+                    showPlaceholder(false);
+                } else {
+                    stampView.setStamped(false);
+                    stampView.setElevation(0);
+                    stampView.setTranslationZ(0);
+                    showPlaceholder(true);
                 }
-            });
+                Log.d("ViewHolder-", "bind: method fired");
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View view) {
+                        listener.OnPOIClick(poi);
+                    }
+                });
+            }
         }
 
         private void showPlaceholder(boolean b) {

@@ -112,7 +112,7 @@ public class CollectionListActivity extends AppCompatActivity implements
         /** use this setting to improve performance if you know that changes
         in content do not change the layout size of the RecyclerView
          **/
-        mRecyclerView.setHasFixedSize(true);
+        //mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mListOfPOIsInCollection = new ArrayList<>(); // Create an empty list for the recyclerView
@@ -141,6 +141,14 @@ public class CollectionListActivity extends AppCompatActivity implements
                         return o1.getCollectionPosition() < o2.getCollectionPosition() ? -1 : 1;
                     }
                 });
+
+                // check to ensure we have an even number of POIs, so that the list lays out correctly
+                //check to see if we need to even the list
+                if(newPOIs.size()%2!=0){
+                    POI blankPoi=new POI();
+                    blankPoi.setName("blank");
+                    newPOIs.add(blankPoi);
+                }
 
                 // See https://stackoverflow.com/questions/15422120/notifydatasetchange-not-working-from-custom-adapter
                 mListOfPOIsInCollection.clear();

@@ -70,6 +70,8 @@ public class POIDetailActivity extends LocationBase_Activity {
     @BindView(R.id.tv_collection) TextView mTV_PoiCollection;
     @BindView(R.id.tv_distance_header) TextView mTV_distance_header;
     @BindView(R.id.photoLayout) ConstraintLayout mPhotoLayout;
+    @BindView(R.id.fs_toggle_on) ConstraintLayout mToggleOn;
+    @BindView(R.id.fs_toggle_off) ConstraintLayout mToggleOff;
     @BindView(R.id.stampView) StampView mStampView;
     @BindView(R.id.bt_getStamp) Button mStampBtn;
     @BindView(R.id.bt_back_arrow) ImageButton mBackArrow;
@@ -124,6 +126,7 @@ public class POIDetailActivity extends LocationBase_Activity {
 
         //testing enlarged touch delegate
         changeTouchableAreaOfView(mBackArrow,220);
+        changeTouchableAreaOfView(mToggleOff,220);
 
 //        setSupportActionBar(mToolbar);
 //        if (getSupportActionBar() != null)
@@ -192,6 +195,12 @@ public class POIDetailActivity extends LocationBase_Activity {
         //Get the Firebase user
         user = FirebaseAuth.getInstance().getCurrentUser();
 
+    }
+
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        soundpool.release();
+        soundpool = null;
     }
 
     private void initPhotoView() {
@@ -343,7 +352,7 @@ public class POIDetailActivity extends LocationBase_Activity {
     /**
      *  Click listener for when the user clicks on the full screen icon in the Photo View
      */
-    @OnClick(R.id.iv_fullScreen)
+    @OnClick(R.id.fs_toggle_on)
     public void onClickFullScreenIcon(){
         hideSystemUI();
         mPhotoLayout.setVisibility(View.VISIBLE);
@@ -352,7 +361,7 @@ public class POIDetailActivity extends LocationBase_Activity {
     /**
      *  Click listener for when the user clicks on the exit full screen icon in the Photo View
      */
-    @OnClick(R.id.iv_exitFullScreen)
+    @OnClick(R.id.fs_toggle_off)
     public void onClickExitFullScreenIcon(){
         showSystemUI();
         mPhotoLayout.setVisibility(View.INVISIBLE);

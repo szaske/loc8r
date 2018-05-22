@@ -29,7 +29,7 @@ public class Collection {
     // @Exclude public String getId() { return id; }
     public String getName() { return name; }
     public String getDate() { return date; }
-    public String getColor() { return color; }
+    public String getColor() { return "#" + color; }
     public String getTextColor() { return textColor; }
     @Exclude public String getId(){
         String results = name + date;

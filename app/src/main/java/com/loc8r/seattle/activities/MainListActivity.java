@@ -53,17 +53,23 @@ public class MainListActivity extends LocationBase_Activity
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
                 mBackgroundImage.getViewTreeObserver().removeOnPreDrawListener(this);
-                // Should add
-                // .error(R.drawable.error)
-                // .placeholder(R.drawable.blank_img)
-                //
-                //
-                // Also should add a progressbar
-                // here is a good example : https://stackoverflow.com/questions/22143157/android-picasso-placeholder-and-error-image-styling
-                Picasso.get()
-                        .load(R.drawable.main_menu_bg)
-                        .transform(new FocusedCropTransform(mBackgroundImage.getMeasuredWidth(),mBackgroundImage.getMeasuredHeight(), mBackgroundImage.getId() , .5,.5))
-                        .into(mBackgroundImage);
+
+                int width = mBackgroundImage.getMeasuredWidth();
+                int height = mBackgroundImage.getMeasuredHeight();
+
+                // Checking for size in rare case that app starts with screen off causes exception
+                if(width > 0 && height > 0) {
+                    // good example of Picasso builder: https://stackoverflow.com/questions/22143157/android-picasso-placeholder-and-error-image-styling
+                    Picasso.get()
+                            .load(R.drawable.main_menu_bg)
+                            .transform(new FocusedCropTransform(
+                                    width,
+                                    height,
+                                    mBackgroundImage.getId(),
+                                    .5,
+                                    .5))
+                            .into(mBackgroundImage);
+                }
 
                 Log.d(TAG, "STZ _ onPreDraw: Width is " + mBackgroundImage.getMeasuredWidth() + " - Height:"+ mBackgroundImage.getMeasuredHeight());
 
@@ -106,7 +112,22 @@ public class MainListActivity extends LocationBase_Activity
 //            Picasso.get().setLoggingEnabled(true);
 //        }
 //        Picasso.get()
+//                .load(R.drawable.backg_2018besties2018)
+//                .fetch();
+//        Picasso.get()
 //                .load(R.drawable.backg_ryanhenryward2018)
+//                .fetch();
+//        Picasso.get()
+//                .load(R.drawable.backg_hiddengems2018)
+//                .fetch();
+//        Picasso.get()
+//                .load(R.drawable.backg_kylermartz2018)
+//                .fetch();
+//        Picasso.get()
+//                .load(R.drawable.backg_oddities2018)
+//                .fetch();
+//        Picasso.get()
+//                .load(R.drawable.backg_seasonal2018)
 //                .fetch();
 //        Picasso.get()
 //                .load(R.drawable.backg_streetart2018)

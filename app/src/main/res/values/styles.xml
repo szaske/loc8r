@@ -34,13 +34,6 @@
         <item name="android:textSize">@dimen/sign_int_edit_text_size</item>
     </style>
 
-    <style name="OrangeButton" parent="BaseButton">
-        <!--<item name="fontPath">@string/font_bold</item>-->
-        <item name="android:background">@drawable/orange_button</item>
-        <item name="android:layout_marginLeft">-10dp</item>
-        <item name="android:layout_marginRight">-10dp</item>
-    </style>
-
     <style name="TransparentButton" parent="BaseButton">
         <item name="android:textColor">@color/transparent_btn_color_selector</item>
         <item name="android:background">@null</item>
@@ -55,7 +48,6 @@
     <!-- Official Seattle Passport Section-->
 
     <style name="Theme.SeattlePassport" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:textColorPrimary">@color/texttest</item>
         <item name="android:textColorPrimary">@color/primaryTextColor</item>
         <item name="android:textColorSecondary">@color/secondaryTextColor</item>
         <item name="colorPrimary">@color/primaryColor</item>

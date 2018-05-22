@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:background="@drawable/paper_bg">
+    android:background="@drawable/tiled_paper_dark">
 
     <ImageView
         android:id="@+id/vineLine"
