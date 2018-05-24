@@ -317,20 +317,27 @@ public class StampView extends View {
         bounds = new Rect(0,0,mWidth,mHeight);
 
         // The background circle bounds, 10 percent smaller on each side
+        // This allows us to draw outside of the circle with the logo if we prefer
         insetAmount = (int) Math.floor(mWidth*OUTSIDE_PERCENTAGE);
         bgBounds = new Rect(bounds);
         bgBounds.inset(insetAmount,insetAmount);
 
-//        //Used instead of a custom outline
-//        setBackgroundResource(R.drawable.stamp_background_circle);
-
         if(stamped){
             // Draw the stamp
 
-            //Draw background bounds.  This appears as a circle because we altered the
-            // outline
-
+            //Draw the Stamp background circle
             canvas.drawOval(bgBounds.left,bgBounds.top,bgBounds.right,bgBounds.bottom, backgroundPaint);
+
+
+            // Draw the icon
+            if(mIcon!=null){  //Check if icon exists, if it does, draw it
+
+                mIcon.setBounds(bounds);
+                mIcon.draw(canvas);
+
+            } else { //if not draw nothing
+
+            }
 
             // make the text 10% of the height
             Float targetFontSize = bgBounds.height() * .1f;
@@ -353,24 +360,6 @@ public class StampView extends View {
             canvas.drawTextOnPath(stampTimeStamp, mLowerArc, 0, -(StrokeWidth-targetFontSize), mTextPaint);
 
 
-            /**
-             * Draw the icon.  First we need to create an area inside the band,
-             * And create a bounds rectangle.  The bounds need to be in the correct aspect ratio
-             * or the icon will not be drawn correctly.
-             *
-             * *** This assumes that only the width needs to change.  I'm not sure this will work correctly
-             * if height needs to be adjusted.***
-             *
-             **/
-
-            if(mIcon!=null){  //Check if icon exists, if it does, draw it
-
-                mIcon.setBounds(bounds);
-                mIcon.draw(canvas);
-
-            } else { //if not draw nothing
-
-            }
 
         } else {
             // Draw a placeholder instead
@@ -437,7 +426,8 @@ public class StampView extends View {
             }
         }
 
-        //need to put a check in here
+        // Need to put a check in here
+        // This call will crash if a POI appears without a proper Release #
         setStampIcon(context.getResources()
                 .getIdentifier("icon_" +  stampCollection.getId(),
                         "drawable",

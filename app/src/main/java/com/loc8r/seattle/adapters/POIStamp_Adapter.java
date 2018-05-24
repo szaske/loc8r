@@ -1,10 +1,8 @@
 package com.loc8r.seattle.adapters;
 
-import android.content.res.Resources;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +31,6 @@ public class POIStamp_Adapter extends RecyclerView.Adapter<POIStamp_Adapter.POI_
     ArrayList<POI> mPOIslist;
     OnPOIClickListener listener;
     int viewholderHeight;
-    int viewholderRightSpacer;
 
     // Constructor
     public POIStamp_Adapter(ArrayList<POI> list, OnPOIClickListener listener) {
@@ -104,15 +101,14 @@ public class POIStamp_Adapter extends RecyclerView.Adapter<POIStamp_Adapter.POI_
 
         // Variables for the ViewHolder
         private TextView name;
-        private ConstraintLayout spacerToggle;
+        private ConstraintLayout contentLayout;
         private StampView stampView;
         private ConstraintLayout placeholderLayout;
 
         POI_View_Holder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.poi_nameTV);
-            spacerToggle = itemView.findViewById(R.id.spacerToggle);
-            // positionText= itemView.findViewById(R.id.tv_poi_position);
+            contentLayout = itemView.findViewById(R.id.content_layout);
             stampView = itemView.findViewById(R.id.poi_StampView);
             placeholderLayout = itemView.findViewById(R.id.poiPlaceholderLayout);
 
@@ -120,19 +116,6 @@ public class POIStamp_Adapter extends RecyclerView.Adapter<POIStamp_Adapter.POI_
 //            stampView.setId(getPosition());
         }
 
-        /**
-         *  Converts DP to pixels for the devices display
-         * @param dp An int, the number of DP
-         * @return An int, the number of pixels in the given DP
-         */
-        private int DP2Pixels(int dp){
-            Resources r = itemView.getResources();
-            return (int) TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    dp,
-                    r.getDisplayMetrics()
-            );
-        }
 
         public void bind(int position, final POI poi, final OnPOIClickListener listener){
 
@@ -140,8 +123,13 @@ public class POIStamp_Adapter extends RecyclerView.Adapter<POIStamp_Adapter.POI_
             // in an odd number.  To solve this problem we add a new item to the list when it's past
             // to the collection activity
             if(poi.getName()=="blank"){
-                spacerToggle.setVisibility(View.INVISIBLE);
+                contentLayout.setVisibility(View.INVISIBLE);
             } else {
+
+                // Set visibility to true.  I do this so the recyclerview does not
+                // accidently recycler this setting on resume
+                contentLayout.setVisibility(View.VISIBLE);
+
                 // Set POI information in viewHolder
                 name.setText(poi.getName());
                 // positionText.setText(String.valueOf(position+1));

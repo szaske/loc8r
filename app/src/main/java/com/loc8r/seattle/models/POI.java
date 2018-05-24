@@ -27,8 +27,8 @@ public class POI  {
     String collectionColor;
     int collectionPosition;
     String stampText;
-    boolean stampChecked; // Has the POI been checked to be stamped?
-    Stamp stamp;
+    @Exclude boolean stampChecked; // Has the POI been checked to be stamped?
+    @Exclude Stamp stamp;
 
     public POI(){}
 
@@ -108,7 +108,7 @@ public class POI  {
      *
      * @return boolean, true if stamp variable is of type Stamp
      */
-    public boolean isStamped(){
+    @Exclude public boolean isStamped(){
      return (stamp instanceof Stamp);
     }
 
@@ -132,7 +132,7 @@ public class POI  {
     public String getCollection() { return collection; }
     public int getCollectionPosition() { return collectionPosition; }
     public String getStampText() { return stampText; }
-    public Stamp getStamp() { return stamp; }
+    @Exclude public Stamp getStamp() { return stamp; }
     public String getCollectionColor() { return collectionColor; }
     @Exclude public String getIconName(){
         return "icon_" + collection.substring(0,3).toLowerCase();

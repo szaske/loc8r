@@ -63,18 +63,18 @@ public class CollectionListActivity extends AppCompatActivity implements
         mListState = mLayoutManager.onSaveInstanceState();
         state.putParcelable(LIST_STATE_KEY, mListState);
 
-//        mCollectionList = Parcels.wrap(mListOfPOIsInCollection);
-//        state.putParcelable(COLLECTION_ARRAYLIST_STATE_KEY,mCollectionList);
+        mCollectionList = Parcels.wrap(mListOfPOIsInCollection);
+        state.putParcelable(COLLECTION_ARRAYLIST_STATE_KEY,mCollectionList);
     }
 
     protected void onRestoreInstanceState(Bundle state) {
         super.onRestoreInstanceState(state);
 
         // Retrieve list state and list/item positions
-//        if(state != null) {
-//            mListState = state.getParcelable(LIST_STATE_KEY);
-//            //mListOfPOIsInCollection = Parcels.unwrap(state.getParcelable(COLLECTION_ARRAYLIST_STATE_KEY));
-//        }
+        if(state != null) {
+            mListState = state.getParcelable(LIST_STATE_KEY);
+            mListOfPOIsInCollection = Parcels.unwrap(state.getParcelable(COLLECTION_ARRAYLIST_STATE_KEY));
+        }
     }
 
     /**

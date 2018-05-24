@@ -22,7 +22,8 @@ public class Constants {
     public static final String PRETTY_COLLECTION_KEY = "PRETTY_COLLECTION_KEY";
 
     // This is the distance in meters that we scan on the map
-    public static final int DISTANCE_TO_SCAN_MARKERS = 2800;
+    // default is 800 meters
+    public static final int DISTANCE_TO_SCAN_MARKERS = 9800;
 
     public static final int DEFAULT_STAMP_BACKGROUND_COLOR = Color.WHITE;
     public static final int DEFAULT_STAMP_TEXT_COLOR = Color.parseColor("#F1F3F3");
