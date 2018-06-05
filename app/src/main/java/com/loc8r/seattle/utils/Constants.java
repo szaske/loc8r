@@ -20,6 +20,7 @@ public class Constants {
     public static final String PREFERENCES_PREVIOUS_USER_KEY = "previousUser";
     public static final String SELECTED_COLLECTION_KEY = "SELECTED_COLLECTION_KEY";
     public static final String PRETTY_COLLECTION_KEY = "PRETTY_COLLECTION_KEY";
+    public static final String TIME_SERVER = "time-a.nist.gov";
 
     // This is the distance in meters that we scan on the map
     // default is 800 meters

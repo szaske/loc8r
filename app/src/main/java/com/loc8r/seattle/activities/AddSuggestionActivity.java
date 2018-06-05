@@ -97,50 +97,21 @@ public class AddSuggestionActivity extends LocationBase_Activity {
         db = FirebaseFirestore.getInstance();
 
         // Not sure.  This enables us to get the data from the imageview so we can resize it to fill the view
-        mImageThumbnail.setDrawingCacheEnabled(true);
-        mImageThumbnail.buildDrawingCache();
+//        mImageThumbnail.setDrawingCacheEnabled(true);
+//        mImageThumbnail.buildDrawingCache();
 
+        // Moved to the onRestoreInstanceState method
         // If this is not the first time, grab state of the various views
-        if (savedInstanceState != null) {
-            //Reset spinner to previous location
-            //mCollectionsSpinner.setSelection(savedInstanceState.getInt("mCollectionsSpinner"));
-
-            // reset thumbnail
-            if(savedInstanceState.getString("mCurrentPhotoPath")!=null){
-                mCurrentPhotoPath = savedInstanceState.getString("mCurrentPhotoPath");
-                File imageFile = new File(mCurrentPhotoPath);
-                mImageThumbnail.setImageURI(Uri.fromFile(imageFile));
-            }
-        }
-    }
-
-//    public void GetAllCollections() throws IOException {
-//        Log.d("STZ", "GetAllCollections method started ");
-//        db.collection("collections")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            Log.d("STZ", "Getting Collections task completed successfully, now converting to POI class ");
-//                            ArrayList<Collection> results = new ArrayList<>();
-//                            for (DocumentSnapshot document : task.getResult()) {
-//                                Collection receivedCollection = document.toObject(Collection.class);
-//                                results.add(receivedCollection);
-//                                // Log.d(TAG, document.getId() + " => " + document.getData());
-//                            }
+//        if (savedInstanceState != null) {
 //
-//                            // Send results back to host activity
-//                            onCollectionsListReceived(results);
-//                            Log.d("STZ", "onComplete: All Collections received ");
-//                        } else {
-//                            Log.d(TAG, "Error getting POIs. ", task.getException());
-//                        }
-//                    }
-//                });
-//        // [END get_multiple_all]
-//    }
-
+//            // reset thumbnail
+//            if(savedInstanceState.getString("mCurrentPhotoPath")!=null){
+//                mCurrentPhotoPath = savedInstanceState.getString("mCurrentPhotoPath");
+//                File imageFile = new File(mCurrentPhotoPath);
+//                mImageThumbnail.setImageURI(Uri.fromFile(imageFile));
+//            }
+//        }
+    }
 
     /**
      *  Click Listeners
@@ -394,6 +365,7 @@ public class AddSuggestionActivity extends LocationBase_Activity {
         });
     }
 
+    // From: https://stackoverflow.com/questions/151777/saving-android-activity-state-using-save-instance-state?rq=1
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -406,6 +378,21 @@ public class AddSuggestionActivity extends LocationBase_Activity {
         if(mCurrentPhotoPath!=null){
             savedInstanceState.putString("mCurrentPhotoPath", mCurrentPhotoPath);
         }
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // Restore UI state from the savedInstanceState.
+        // This bundle has also been passed to onCreate.
+        if(savedInstanceState.getString("mCurrentPhotoPath")!=null){
+            mCurrentPhotoPath = savedInstanceState.getString("mCurrentPhotoPath");
+            File imageFile = new File(mCurrentPhotoPath);
+            mImageThumbnail.setImageURI(Uri.fromFile(imageFile));
+        }
+
+        // Example
+        // String myString = savedInstanceState.getString("MyString");
     }
 
 }

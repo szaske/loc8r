@@ -13,14 +13,14 @@
     <color name="TransparentColor">#00ffffff</color>
 
     <!--Sets color of menu icon (3 dots)-->
-    <color name="secondaryTextColor">#fed401</color>
+    <color name="secondaryTextColor">#1a1a1a</color>
     <color name="primary_material_dark">#546e7a</color>
     <color name="primary_dark_material_dark">#29434e</color>
     <color name="accent_material_dark">#ff5722</color>
     <color name="primary_text_default_material_dark">#ffffff</color>
     <color name="primary_text_material_dark">#ffffff</color>
 
-    <color name="titleTextColor">#ff5722</color>
+    <color name="mottoTextColor">#ffffff</color>
     <color name="darkBackground">#1c1c1c</color>
     <color name="texttest">#0cfb03</color>
 
@@ -42,6 +42,9 @@
     <color name="homepage_background">@color/black</color>
     <color name="md_grey_900">#212121</color>
     <color name="md_white_1000">#ffffff</color>
+
+
+    <color name="gem_color">#ff5722</color>
 
 
 </resources>

@@ -37,9 +37,10 @@
     <string name="i_have_an_account_already">I have an Account already</string>
 
     <!-- Main Menu Strings-->
-    <string name="app_title">Seattle\nPassport</string>
-    <string name="mainmenu_exploreMap_button_text">Explore Map</string>
+    <string name="app_motto">Find the things that make\nSeattle special</string>
+    <string name="mainmenu_exploreMap_button_text">Explore Nearby</string>
     <string name="mainmenu_my_passport_button_text">My Passport</string>
+    <string name="mainmenu_suggest_button_text">Suggestion a Gem</string>
 
     <!--Option Menu Strings-->
     <string name="map">Map</string>
@@ -59,15 +60,17 @@
     <string name="unable_to_get_results">Unable to get results. Please check your internet connection and try again later.</string>
     <string name="distance_miles">%1$s Miles</string>
 
+    <!--Map Activity Strings-->
+    <string name="title_activity_maps">Explorer Seattle</string>
+
     <!--POI Detail Activity Strings-->
     <string name="get_stamp_button">Get Stamp</string>
     <string name="stamp_error">Error getting Stamp</string>
-    <string name="title_activity_maps">Explorer STZ</string>
 
     <!--Passport Activity Strings-->
     <string name="title_activity_passport">Passport Collections</string>
     <string name="title_activity_management">Management Activities</string>
-    <string name="title_activity_suggest">Suggest A Place</string>
+    <string name="title_activity_suggest">Suggestion a Gem</string>
 
     <!--Details Activity Strings-->
     <string name="poi_description_placeholder_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>

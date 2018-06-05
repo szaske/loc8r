@@ -72,24 +72,27 @@
     <style name="MainMenu_Scrim">
     </style>
 
-    <style name="MainMenu_Title">
-        <item name="android:textSize">66sp</item>
+    <style name="MainMenu_motto">
+        <item name="android:textSize">18sp</item>
         <item name="android:layout_marginEnd">@dimen/title_margin</item>
         <item name="android:layout_marginStart">@dimen/title_margin</item>
         <item name="android:layout_marginTop">@dimen/title_margin_top</item>
         <item name="android:lineSpacingMultiplier">@dimen/title_ls_multiplier</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/titleTextColor</item>
-        <item name="titleTextColor">@color/titleTextColor</item>
+        <item name="android:textColor">@color/mottoTextColor</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1.5</item>
     </style>
 
     <style name="MainMenu_Button">
-        <item name="android:layout_width">280dp</item>
-        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_width">220dp</item>
+        <item name="android:layout_height">90dp</item>
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:background">@drawable/main_menu_button</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/primaryTextColor</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
@@ -178,5 +181,14 @@
         <item name="android:paddingRight">12dp</item>
         <item name="android:paddingTop">8dp</item>
     </style>
+
+    <!-- Suggest Gem Styles-->
+    <style name="SingleLine_editText">
+        <item name="android:imeOptions">flagNoExtractUi|actionDone</item>
+        <item name="android:ems">10</item>
+        <item name="android:inputType">textPersonName|textCapWords</item>
+        <item name="android:textColorHint">@color/white_50_alpha</item>
+    </style>
+
 
 </resources>

@@ -7,6 +7,7 @@ import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.models.User;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class StateManager {
@@ -17,6 +18,7 @@ public class StateManager {
     private ArrayList<POI> mPOIs;
     private HashMap<String, Collection> mCollections;
     private ArrayList<Stamp> mStamps;
+    private Date mDate;
     private Boolean gettingPOIs;
     private Boolean gettingStamps;
     private Boolean gettingCollections;
@@ -39,7 +41,8 @@ public class StateManager {
     public String getUser() {
         return mUser.getUserId();
     }
-    public Location getCurrentLocation() { return mUser.getCurrentLocation(); }
+    public Location getCurrentLocation() {
+        return mUser.getCurrentLocation(); }
     public ArrayList<POI> getPOIs() { return mPOIs;}
     public HashMap<String, Collection> getCollections() {
         return mCollections;
@@ -54,6 +57,7 @@ public class StateManager {
         return gettingStamps;
     }
     public Boolean isGettingCollections() { return gettingCollections; }
+    public Date getDate(){return mDate;}
 
     // Setters
     public void setUser(String userId) { mUser.setUserId(userId); }
@@ -70,6 +74,7 @@ public class StateManager {
         this.gettingStamps = gettingStamps;
     }
     public void setGettingCollections(Boolean gettingCollections ) { this.gettingCollections = gettingCollections; }
+    public void setDate(Date date){ this.mDate = date;}
 
     /**
      *  Method clears all State Manager info, including user.

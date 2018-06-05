@@ -1,153 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.loc8r.seattle.activities.AddSuggestionActivity"
     tools:showIn="@layout/activity_submit_suggestion">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="32dp" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline4Edits"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="111dp" />
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline4Edits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="100dp" />
 
-    <TextView
-        android:id="@+id/instructionsTV"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="Got a special location you think should be included in the Seattle Passport?  This form let's you suggestion a location to be included in the Seattle Passport"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/instructions1TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:text="gem"
+            android:textAlignment="center"
+            android:textColor="@color/gem_color"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/header_NameTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="What is it?"
-        android:textColor="@color/primaryTextColor"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4Edits"
-        app:layout_constraintTop_toTopOf="@+id/submit_nameET" />
+        <TextView
+            android:id="@+id/instructions2TV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="/jem/ noun."
+            app:layout_constraintBaseline_toBaselineOf="@+id/instructions1TV"
+            android:textColor="@color/primaryTextColor"
+            app:layout_constraintBottom_toBottomOf="@+id/instructions1TV"
+            app:layout_constraintStart_toEndOf="@+id/instructions1TV" />
 
-    <EditText
-        android:id="@+id/submit_nameET"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="Name"
-        android:imeOptions="actionDone"
-        android:inputType="textPersonName"
-        android:textColorHint="@color/white_50_alpha"
-        app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
-        app:layout_constraintTop_toBottomOf="@+id/instructionsTV" />
+        <TextView
+            android:id="@+id/instructions3TV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Something prized for it's beauty or perfection."
+            android:textColor="@color/primaryTextColor"
+            app:layout_constraintStart_toStartOf="@+id/instructions1TV"
+            app:layout_constraintTop_toBottomOf="@+id/instructions1TV" />
 
-
-    <TextView
-        android:id="@+id/header_whereTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="Where is it?"
-        android:textColor="@color/primaryTextColor"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4Edits"
-        app:layout_constraintTop_toTopOf="@+id/submit_WhereET" />
-
-    <EditText
-        android:id="@+id/submit_WhereET"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="location"
-        android:imeOptions="actionDone"
-        android:inputType="textPersonName"
-        android:textColorHint="@color/white_50_alpha"
-        app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
-        app:layout_constraintTop_toBottomOf="@+id/submit_nameET"
-        tools:text="47.1234, -122.45433" />
+        <TextView
+            android:id="@+id/instructions4TV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:text="Do you know of a Seattle gem?  This form let's you suggestion a gem to be included in the Seattle Passport"
+            android:textColor="@color/primaryTextColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/instructions3TV" />
 
 
-    <TextView
-        android:id="@+id/header_WhyTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="Why include it?"
-        android:textColor="@color/primaryTextColor"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4Edits"
-        app:layout_constraintTop_toTopOf="@+id/submit_descET" />
+        <TextView
+            android:id="@+id/header_NameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:text="What is it?"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4Edits"
+            app:layout_constraintTop_toTopOf="@+id/submit_nameET" />
+
+        <EditText
+            android:id="@+id/submit_nameET"
+            style="@style/SingleLine_editText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:hint="Name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
+            app:layout_constraintTop_toBottomOf="@+id/instructions4TV" />
 
 
-    <Button
-        android:id="@+id/submit_AttachPhotoBTN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Add Photo"
-        app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
-        app:layout_constraintTop_toBottomOf="@+id/submit_descET" />
+        <TextView
+            android:id="@+id/header_whereTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Where is it?"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4Edits"
+            app:layout_constraintTop_toTopOf="@+id/submit_WhereET" />
 
-    <ImageView
-        android:id="@+id/submit_camThumbnailIV"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintStart_toEndOf="@+id/submit_AttachPhotoBTN"
-        app:layout_constraintTop_toTopOf="@+id/submit_AttachPhotoBTN"
-        app:srcCompat="@drawable/bullseye" />
-
-    <Button
-        android:id="@+id/submit_SubmitSuggestionBTN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Submit Suggestion"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline4Edits" />
+        <EditText
+            android:id="@+id/submit_WhereET"
+            style="@style/SingleLine_editText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:hint="location"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
+            app:layout_constraintTop_toBottomOf="@+id/submit_nameET"
+            tools:text="47.1234, -122.45433" />
 
 
-    <EditText
-        android:id="@+id/submit_descET"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="#d3d7b6"
-        android:fontFamily="sans-serif-condensed"
-        android:hint="Multiline EditText by XML layout"
-        android:inputType="textMultiLine"
-        android:maxLines="3"
-        android:minLines="3"
-        android:padding="10dp"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
-        app:layout_constraintTop_toBottomOf="@+id/submit_WhereET" />
+        <TextView
+            android:id="@+id/header_WhyTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Why include it?"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4Edits"
+            app:layout_constraintTop_toTopOf="@+id/submit_descET" />
 
 
-</android.support.constraint.ConstraintLayout>
+        <Button
+            android:id="@+id/submit_AttachPhotoBTN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="Add Photo"
+            app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
+            app:layout_constraintTop_toBottomOf="@+id/submit_descET" />
+
+        <ImageView
+            android:id="@+id/submit_camThumbnailIV"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@+id/submit_AttachPhotoBTN"
+            app:layout_constraintTop_toTopOf="@+id/submit_AttachPhotoBTN"
+            app:srcCompat="@drawable/suggestion_photo_placeholder" />
+
+        <Button
+            android:id="@+id/submit_SubmitSuggestionBTN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Submit Suggestion"
+            app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
+            app:layout_constraintTop_toBottomOf="@+id/submit_camThumbnailIV" />
+
+
+        <EditText
+            android:id="@+id/submit_descET"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:background="#d3d7b6"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="top"
+            android:hint="Why should we include this in the Seattle Passport? What makes it special?"
+            android:inputType="textMultiLine"
+            android:maxLines="3"
+            android:minLines="3"
+            android:padding="4dp"
+            android:scrollbars="vertical"
+            android:textColor="@color/secondaryTextColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/guideline4Edits"
+            app:layout_constraintTop_toBottomOf="@+id/submit_WhereET" />
+
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v4.widget.NestedScrollView>

@@ -29,28 +29,52 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <TextView
-        android:id="@+id/tv_main_title"
+        android:id="@+id/tv_main_motto"
+        style="@style/MainMenu_motto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_title"
+        android:layout_marginTop="8dp"
+        android:text="@string/app_motto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        style="@style/MainMenu_Title"/>
+        app:layout_constraintTop_toBottomOf="@+id/iv_logo" />
 
     <Button
         android:id="@+id/explore_Button"
+        style="@style/MainMenu_Button"
+        android:layout_marginBottom="8dp"
         android:text="@string/mainmenu_exploreMap_button_text"
         app:layout_constraintBottom_toTopOf="@+id/my_passport_Button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        style="@style/MainMenu_Button"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/my_passport_Button"
+        style="@style/MainMenu_Button"
+        android:layout_marginBottom="8dp"
         android:text="@string/mainmenu_my_passport_button_text"
+        app:layout_constraintBottom_toTopOf="@+id/suggest_Button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/suggest_Button"
+        style="@style/MainMenu_Button"
+        android:layout_marginBottom="16dp"
+        android:text="@string/mainmenu_suggest_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/explore_Button"
-        style="@style/MainMenu_Button"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/scrimTop"
+        app:srcCompat="@drawable/seattle_passport_logo" />
+
 
 </android.support.constraint.ConstraintLayout>

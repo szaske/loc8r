@@ -19,7 +19,7 @@
     <!--Main List Dimensions-->
     <dimen name="title_margin">8dp</dimen>
     <dimen name="title_margin_top">32dp</dimen>
-    <dimen name="title_ls_multiplier">.8</dimen>
+    <dimen name="title_ls_multiplier">1.15</dimen>
 
     <!--POI Details Dimensions-->
     <dimen name="appbar_header_height">256dp</dimen>

@@ -4,9 +4,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,25 +18,32 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.loc8r.seattle.BuildConfig;
 import com.loc8r.seattle.R;
-import com.loc8r.seattle.activities.base.FirebaseBaseActivity;
 import com.loc8r.seattle.activities.base.LocationBase_Activity;
 import com.loc8r.seattle.utils.FocusedCropTransform;
 import com.loc8r.seattle.utils.ProgressIndicator;
+import com.loc8r.seattle.utils.StateManager;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import org.apache.commons.net.ntp.NTPUDPClient;
+import org.apache.commons.net.ntp.TimeInfo;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Date;
+
+import static com.loc8r.seattle.utils.Constants.TIME_SERVER;
 
 public class MainListActivity extends LocationBase_Activity
 {
 
     private static final String TAG = MainListActivity.class.getSimpleName();
-    private Button mExploreButton;
-    private Button mPassportButton;
+    private Button mExploreButton, mPassportButton, mSuggestButton;
     private TextView mTitle;
     private ImageView mBackgroundImage;
     private ProgressIndicator progressIndicator;
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +55,10 @@ public class MainListActivity extends LocationBase_Activity
 
         mBackgroundImage = findViewById(R.id.iv_background_image);
 
+        // Currently is diabled
         fetchImages();
 
+        // This section allows me to fit background image to properly fill the screen
         ViewTreeObserver vto = mBackgroundImage.getViewTreeObserver();
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
@@ -100,10 +110,32 @@ public class MainListActivity extends LocationBase_Activity
             }
         });
 
-        Typeface mainTypeface = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/norwester.otf");
-        mTitle = findViewById(R.id.tv_main_title);
+        mSuggestButton = findViewById(R.id.suggest_Button);
+        mSuggestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Suggestion button pressed ");
+                Intent intent = new Intent(MainListActivity.this, AddSuggestionActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+
+            }
+        });
+
+
+        Typeface mainTypeface = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Roboto-Regular.ttf");
+        mTitle = findViewById(R.id.tv_main_motto);
         mTitle.setTypeface(mainTypeface);
         mTitle.setShadowLayer(15, 0, 0, Color.BLACK );
+
+        //Create Handler object for getting user time
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override public void handleMessage(Message msg) {
+                // This is where I can respond to messages with this handler
+            }
+        };
+
+
     }
 
     private void fetchImages() {
@@ -147,7 +179,57 @@ public class MainListActivity extends LocationBase_Activity
     @Override
     protected void onStart() {
         super.onStart();
+
+        //Get the current network time
+        getTime();
     }
+
+
+
+    public static void getTime(){
+
+        Log.d(TAG, "getTime: Getting Network time");
+
+        Runnable timeRunnable = new Runnable() {
+            @Override public void run() {
+
+                // A UDP implementation of a client for the Network Time Protocol (NTP)
+                NTPUDPClient timeClient = new NTPUDPClient();
+                InetAddress inetAddress = null;
+                try {
+                    inetAddress = InetAddress.getByName(TIME_SERVER);
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+                TimeInfo timeInfo = null;
+                try {
+                    timeInfo = timeClient.getTime(inetAddress);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //long returnTime = timeInfo.getReturnTime();   //local device time
+                long returnTime = timeInfo.getMessage().getTransmitTimeStamp().getTime();   //server time
+
+                Date time = new Date(returnTime);
+
+                // Send time to StateManager object
+                StateManager.getInstance().setDate(time);
+                Log.i("Phone time", "Phone time: " + new Date(System.currentTimeMillis()));
+
+                Log.i("Network Time", "Time from " + TIME_SERVER + ": " + time);
+                Log.i("Network Time", "TimeInfo time: " + new Date(timeInfo.getReturnTime()));
+                Log.i("Network Time", "GetOriginateTimeStamp: " + new Date(timeInfo.getMessage().getOriginateTimeStamp().getTime()));
+                Log.i("Network Time", "Time info: " + new Date(timeInfo.getMessage().getReceiveTimeStamp().getTime()));
+                Log.i("Network Time", "GetTransmitTimeStamp: " + new Date(timeInfo.getMessage().getTransmitTimeStamp().getTime()));
+            }
+        };
+
+        Thread timeThread = new Thread(timeRunnable);
+        timeThread.start();
+
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
@@ -156,11 +238,6 @@ public class MainListActivity extends LocationBase_Activity
         {
             case R.id.menu_log_out:
                 signOutUser();
-                break;
-            case R.id.menu_suggest:
-                Log.d(TAG, "Suggest item selected");
-                Intent intent = new Intent(MainListActivity.this, AddSuggestionActivity.class);
-                startActivity(intent);
                 break;
             case R.id.menu_admin:
                 Log.d(TAG, "Admin item selected");
