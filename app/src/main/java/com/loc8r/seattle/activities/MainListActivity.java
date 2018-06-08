@@ -23,6 +23,7 @@ import com.loc8r.seattle.activities.base.LocationBase_Activity;
 import com.loc8r.seattle.utils.FocusedCropTransform;
 import com.loc8r.seattle.utils.ProgressIndicator;
 import com.loc8r.seattle.utils.StateManager;
+import com.loc8r.seattle.interfaces.IsAdminListener;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.net.ntp.NTPUDPClient;
@@ -35,7 +36,7 @@ import java.util.Date;
 
 import static com.loc8r.seattle.utils.Constants.TIME_SERVER;
 
-public class MainListActivity extends LocationBase_Activity
+public class MainListActivity extends LocationBase_Activity implements IsAdminListener
 {
 
     private static final String TAG = MainListActivity.class.getSimpleName();
@@ -173,6 +174,14 @@ public class MainListActivity extends LocationBase_Activity
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+
+        menu.getItem(1).setVisible(false); //set by default
+
+        if (StateManager.getInstance().userIsAdmin())
+        {
+            menu.getItem(1).setVisible(true);
+        }
+
         return true;
     }
 
@@ -230,7 +239,6 @@ public class MainListActivity extends LocationBase_Activity
 
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -247,6 +255,13 @@ public class MainListActivity extends LocationBase_Activity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override public void onAdminConfirmationReceived() {
+        Log.d(TAG, "onAdminConfirmationReceived: This is the MainList child, lets do some stuff");
+        StateManager.getInstance().setUserIsAdmin(true);
+        invalidateOptionsMenu();
+
     }
 
 

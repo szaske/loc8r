@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,12 +25,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.adapters.POIStamp_Adapter;
 import com.loc8r.seattle.interfaces.OnPOIClickListener;
+import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
 import com.loc8r.seattle.utils.Constants;
+import com.loc8r.seattle.utils.FocusedCropTransform;
 import com.loc8r.seattle.utils.StampListDecoration;
 import com.loc8r.seattle.utils.StampsRequester;
 import com.loc8r.seattle.utils.StateManager;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
@@ -35,16 +42,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class CollectionListActivity extends AppCompatActivity implements
         StampsRequester.FireBaseStampResponse,
         OnPOIClickListener {
     private static final String TAG = CollectionListActivity.class.getSimpleName();
-    private RecyclerView mRecyclerView;
+
+    @BindView(R.id.collectionsRV) RecyclerView mRecyclerView;
+    @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbar;
+    @BindView(R.id.collection_desc) TextView mCollectionDescriptionTV;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.collection_image_iv) ImageView mCollectionImageIV;
+
+    int bgResourceId; // used for collapsing toolbar
+    private Collection mSelectedCollection;
     private POIStamp_Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private ArrayList<POI> mListOfPOIsInCollection;
-    private String mSelectedCollectionId, mSelectedCollectionName;
+    //private String mSelectedCollectionId, mSelectedCollectionName;
 
     FirebaseFirestore db;
     FirebaseUser user;
@@ -86,28 +104,61 @@ public class CollectionListActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection_list);
+        ButterKnife.bind(this);
 
         // Create the Firebase items
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Create and contfigure the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // Create and configure the toolbar
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Get the name of the collection we're looking at
+        // Get the collection we're looking at
         try {
-            mSelectedCollectionId = getIntent().getExtras().getString(Constants.SELECTED_COLLECTION_KEY);
-            mSelectedCollectionName = getIntent().getExtras().getString(Constants.PRETTY_COLLECTION_KEY);
+            mSelectedCollection = Parcels.unwrap(getIntent().getParcelableExtra(Constants.SELECTED_COLLECTION));
+
+            //            mSelectedCollectionId = getIntent().getExtras().getString(Constants.SELECTED_COLLECTION_KEY);
+//            mSelectedCollectionName = getIntent().getExtras().getString(Constants.PRETTY_COLLECTION_KEY);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        getSupportActionBar().setTitle(mSelectedCollectionName + " Collection");
+        // Configure the Collapsing toolbar
+        // Get the Id for the background image resource
+        bgResourceId = getResources().getIdentifier("backg_" + mSelectedCollection.getId(), "drawable", getPackageName());
+
+        if(bgResourceId==0){
+            bgResourceId = (int) R.drawable.main_menu_bg;
+        }
+
+        // see https://stackoverflow.com/questions/18081001/android-get-width-of-layout-programatically-having-fill-parent-in-its-xml
+        ViewTreeObserver vto = mCollectionImageIV.getViewTreeObserver();
+        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            public boolean onPreDraw() {
+                mCollectionImageIV.getViewTreeObserver().removeOnPreDrawListener(this);
+                int rootWidth = mCollectionImageIV.getMeasuredWidth();
+                int rootHeight = mCollectionImageIV.getMeasuredHeight();
+                Picasso.get()
+                        .load(bgResourceId)
+                        .transform(new FocusedCropTransform(rootWidth,rootHeight, mCollectionImageIV.getId(), .5,.5))
+                        .into(mCollectionImageIV);
+
+                // Log.d("tester-", "STZ _ onPreDraw: Width is " + rootView.getMeasuredWidth() + " - Height:"+ rootView.getMeasuredHeight());
+                return true;
+            }
+        });
+
+        getSupportActionBar().setTitle(mSelectedCollection.getName() + " Collection");
+        //collapsingToolbar.setTitle(mSelectedCollectionName + " Collection");
+
+        if (mSelectedCollection.getDescription()!=null){
+            mCollectionDescriptionTV.setText(mSelectedCollection.getDescription());
+        }
+
 
         // Configure the RecyclerView
-        mRecyclerView = (RecyclerView) findViewById(R.id.collectionsRV);
+        //mRecyclerView = (RecyclerView) findViewById(R.id.collectionsRV);
 
         /** use this setting to improve performance if you know that changes
         in content do not change the layout size of the RecyclerView
@@ -130,7 +181,7 @@ public class CollectionListActivity extends AppCompatActivity implements
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ArrayList<POI> newPOIs = getPOIsByCollectionIdFromStateManager(mSelectedCollectionId);
+                ArrayList<POI> newPOIs = getPOIsByCollectionIdFromStateManager(mSelectedCollection.getId());
 
                 // Sort the POIs
                 // See https://stackoverflow.com/questions/4066538/sort-an-arraylist-based-on-an-object-field
@@ -156,7 +207,7 @@ public class CollectionListActivity extends AppCompatActivity implements
 
                 // Now get Stamps for this collection
                 try {
-                    GetUserStampsByCollection(mSelectedCollectionId);
+                    GetUserStampsByCollection(mSelectedCollection.getId());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -230,14 +281,16 @@ public class CollectionListActivity extends AppCompatActivity implements
     public void OnPOIClick (POI poi) {
         Log.d(TAG, "OnCollectionClick: Clicked on " + poi.getName());
 
-        //let's go to the Details activity
-        Intent i = new Intent(this, POIDetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("poi", Parcels.wrap(poi));
-        i.putExtras(bundle);
-        startActivity(i); // POI is now passed to the new Activity
+        if(poi.isStamped() || StateManager.getInstance().userIsAdmin()){
+            //let's go to the Details activity
+            Intent i = new Intent(this, POIDetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(Constants.SELECTED_POI, Parcels.wrap(poi));
+            i.putExtras(bundle);
+            startActivity(i); // POI is now passed to the new Activity
 
-        overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+            overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+        }
     }
 
     @Override
@@ -247,7 +300,7 @@ public class CollectionListActivity extends AppCompatActivity implements
         if (item.getItemId() == android.R.id.home) {
             finish();
             // First passed parameter is the animation to be used for the incoming activity
-            // the second parameter is the animatoin to be used by the exiting activity
+            // the second parameter is the animation to be used by the exiting activity
             overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
             return true;
         }

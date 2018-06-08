@@ -9,7 +9,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -27,6 +30,8 @@ import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.utils.CollectionsRequester;
 import com.loc8r.seattle.utils.Constants;
+
+import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,6 +69,11 @@ public class PassportActivity extends LocationBase_Activity implements Collectio
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+//        SnapHelper snapHelper = new LinearSnapHelper();
+//        snapHelper.
+//        snapHelper.attachToRecyclerView(mRecyclerView);
+
 
         mListOfCollections = new ArrayList<>(); // Create an empty list for the recyclerView
 
@@ -129,8 +139,11 @@ public class PassportActivity extends LocationBase_Activity implements Collectio
         Log.d(TAG, "OnCollectionClick: Clicked on " + collection.getName());
         // Go to the selected Collections page
         Intent intent = new Intent(this, CollectionListActivity.class);
-        intent.putExtra(Constants.SELECTED_COLLECTION_KEY, collection.getId());
-        intent.putExtra(Constants.PRETTY_COLLECTION_KEY, collection.getName());
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.SELECTED_COLLECTION, Parcels.wrap(collection));
+        intent.putExtras(bundle);
+//        intent.putExtra(Constants.SELECTED_COLLECTION_KEY, collection.getId());
+//        intent.putExtra(Constants.PRETTY_COLLECTION_KEY, collection.getName());
 
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);

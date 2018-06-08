@@ -164,7 +164,7 @@ public class MapActivity extends LocationBase_Activity implements
                 //let's go to the Details activity
                 Intent i = new Intent(MapActivity.this, POIDetailActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putParcelable("poi", Parcels.wrap(mSelectedPOI));
+                bundle.putParcelable(Constants.SELECTED_POI, Parcels.wrap(mSelectedPOI));
                 i.putExtras(bundle);
                 startActivity(i); // POI is now passed to the new Activity
             }
