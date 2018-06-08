@@ -190,5 +190,13 @@
         <item name="android:textColorHint">@color/white_50_alpha</item>
     </style>
 
+    <!-- Collection List Styles-->
+    <style name="collection_description_style">
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">2</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
 
 </resources>

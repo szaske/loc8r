@@ -43,6 +43,7 @@ import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
 // import com.loc8r.seattle.mongodb.MongoDBManager;
 import com.loc8r.seattle.models.User;
+import com.loc8r.seattle.utils.Constants;
 import com.loc8r.seattle.utils.FocusedCropTransform;
 import com.loc8r.seattle.utils.ProgressDialog;
 import com.loc8r.seattle.utils.StampView;
@@ -97,7 +98,7 @@ public class POIDetailActivity extends LocationBase_Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poi_detail);
         ButterKnife.bind(this);
-        detailedPoi = Parcels.unwrap(getIntent().getParcelableExtra("poi"));
+        detailedPoi = Parcels.unwrap(getIntent().getParcelableExtra(Constants.SELECTED_POI));
 
         // Cancel location updates if we already have the stamp and hide Distance UI
         if (detailedPoi.isStamped()){ // POI is stamped
@@ -227,9 +228,25 @@ public class POIDetailActivity extends LocationBase_Activity {
             mStampView.setOnClickListener(new StampPlaceholderClicked());
 
             // By default the listener is set, but disabled and only available
-            // mStampView.setClickable(false);
+            stampButtonEnabled(false);
+
         }
 
+    }
+
+    private void stampButtonEnabled(boolean b) {
+
+        // toggle StampView Placeholder text
+
+        // If trying to set to true
+        if(b && !mStampView.placeholderText().equals(Constants.STAMP_ENABLED_TEXT)) {
+            mStampView.setPlaceholderText(Constants.STAMP_ENABLED_TEXT);
+            mStampView.invalidate();
+        } else if(!b && !mStampView.placeholderText().equals(Constants.STAMP_DISABLED_TEXT)) {
+            mStampView.setPlaceholderText(Constants.STAMP_DISABLED_TEXT);
+            mStampView.invalidate();
+        }
+        mStampView.setClickable(b);
     }
 
     // TODO Determine if I need to cancel location update onPause or onStop.
@@ -244,8 +261,16 @@ public class POIDetailActivity extends LocationBase_Activity {
             @Override
             public void onLocationReceived(Location location)
             {
-                StateManager.getInstance().setCurrentLocation(location);
-                Log.d(TAG, "UI update initiated .............");
+
+                StateManager.getInstance().setCurrentLocation(location); // Store current location in SM
+
+                if (userCanGetStamp()){
+                    stampButtonEnabled(true);
+                } else {
+                    stampButtonEnabled(false);
+                }
+
+                Log.d(TAG, "GPS location received .............");
                 if (null != StateManager.getInstance().getCurrentLocation()) {
                     mTV_PoiDistance.setText(String.valueOf(detailedPoi.distanceToUser())+"m");
                 } else {
@@ -253,6 +278,17 @@ public class POIDetailActivity extends LocationBase_Activity {
                 }
             }
         });
+    }
+
+    private boolean userCanGetStamp() {
+        boolean userApproved = false;
+        if(detailedPoi.distanceToUser() <= Constants.DISTANCE_TO_GET_STAMP){
+            userApproved = true;
+        }
+        if(StateManager.getInstance().userIsAdmin()){
+            userApproved = true;
+        }
+        return userApproved;
     }
 
     private Stamp CreateStamp(){
@@ -298,38 +334,41 @@ public class POIDetailActivity extends LocationBase_Activity {
     class StampPlaceholderClicked implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
 
-                    final Stamp newStamp = CreateStamp(); // Create a new stamp
+            //if(detailedPoi.distanceToUser()<=Constants.DISTANCE_TO_GET_STAMP || StateManager.getInstance().userIsAdmin()){
 
-                    // See what happens with animation in separate thread.
-                    animateGettingStamp();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Stamp newStamp = CreateStamp(); // Create a new stamp
 
-                    //Create a doc reference to this specific stamp
-                    DocumentReference stampDocRef = db
-                            .collection("users")
-                            .document(user.getUid())
-                            .collection("stamps")
-                            .document(detailedPoi.getId());
+                        // Animation
+                        animateGettingStamp();
 
-                    //Attempt to get the document/object...if it does not exist then get the stamp
-                    stampDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            //City city = documentSnapshot.toObject(City.class);
-                            if(documentSnapshot.exists()){
-                                Log.d(TAG, "the stamp already EXISTS, aborting save");
-                            } else {
-                                Log.d(TAG, "onSuccess: NO Stamp found, lets make one");
+                        //Create a doc reference to this specific stamp
+                        DocumentReference stampDocRef = db
+                                .collection("users")
+                                .document(user.getUid())
+                                .collection("stamps")
+                                .document(detailedPoi.getId());
 
-                                AddStampToDB(newStamp);
+                        //Attempt to get the document/object...if it does not exist then get the stamp
+                        stampDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                //City city = documentSnapshot.toObject(City.class);
+                                if(documentSnapshot.exists()){
+                                    Log.d(TAG, "the stamp already EXISTS, aborting save");
+                                } else {
+                                    Log.d(TAG, "onSuccess: NO Stamp found, lets make one");
+
+                                    AddStampToDB(newStamp);
+                                }
                             }
-                        }
-                    });
-                }
-            });
+                        });
+                    } // end of RUN
+                }); // End of RUNNABLE
+            // } // end of IF
         }
     }
 

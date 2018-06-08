@@ -38,8 +38,8 @@ public class StateManager {
     }
 
     // Getters
-    public String getUser() {
-        return mUser.getUserId();
+    public boolean userIsAdmin() {
+        return mUser.isAdmin();
     }
     public Location getCurrentLocation() {
         return mUser.getCurrentLocation(); }
@@ -61,6 +61,7 @@ public class StateManager {
 
     // Setters
     public void setUser(String userId) { mUser.setUserId(userId); }
+    public void setUserIsAdmin(boolean bool) { mUser.setisAdmin(bool); }
     public void setCurrentLocation(Location currentLocation) { mUser.setCurrentLocation(currentLocation); }
     public void setPOIs(ArrayList<POI> pois){ this.mPOIs = pois; }
     public void setCollections(HashMap<String, Collection> mCollections) { this.mCollections = mCollections; }

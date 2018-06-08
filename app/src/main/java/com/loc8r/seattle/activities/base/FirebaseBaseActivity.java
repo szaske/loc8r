@@ -9,15 +9,19 @@ import android.util.Log;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.loc8r.seattle.interfaces.IsAdminListener;
 import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
+import com.loc8r.seattle.models.User;
 import com.loc8r.seattle.utils.StateManager;
 
 import java.io.IOException;
@@ -26,13 +30,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class FirebaseBaseActivity extends AppCompatActivity {
+public class FirebaseBaseActivity extends AppCompatActivity implements IsAdminListener {
 
     private static final String TAG = FirebaseBaseActivity.class.getSimpleName();
 
     // An arbitrary request code value
     // see https://github.com/firebase/FirebaseUI-Android/issues/434
     private static final int RC_SIGN_IN = 1221;
+
     FirebaseFirestore db;
     FirebaseUser user;
     FirebaseAuth mAuth;
@@ -57,7 +62,8 @@ public class FirebaseBaseActivity extends AppCompatActivity {
                 // if the user IS logged in, then get new data
                 // This is where we initially get our data, once the user is logged in and authenticated
                 if (firebaseAuth.getCurrentUser() != null && stateManagerIsEmpty()) {
-                    getInitialDataCacheFromDB();
+                    StateManager.getInstance().setUser(firebaseAuth.getCurrentUser().getUid()); // Store user id to SM
+                    getInitialDataCacheFromDB(); // and get data
                 }
             }
         });
@@ -81,6 +87,7 @@ public class FirebaseBaseActivity extends AppCompatActivity {
     private void getInitialDataCacheFromDB(){
         // If this is the first time, grab the list of POIs and save them to the StateManager
         if (stateManagerIsEmpty()) {
+            checkIfUserIsAdmin(); // Get user info from Firestore
             fetchAllToStateManager();
         }
         // Get extra information about the user, separate from FirebaseUser
@@ -121,6 +128,13 @@ public class FirebaseBaseActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *  Event listener for initial user sign-in only
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -130,9 +144,8 @@ public class FirebaseBaseActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                // Better get some content if we don't have it
-                getInitialDataCacheFromDB();
                 user = FirebaseAuth.getInstance().getCurrentUser();
+                getInitialDataCacheFromDB(); // And get some content if we don't have it
                 // ...
             } else {
                 // Sign in failed, check response for error code
@@ -219,7 +232,7 @@ public class FirebaseBaseActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            Log.d("STZ", "Getting POIs task completed successfully, now converting to POI class ");
+                            Log.d("STZ", "Getting POIs task completed successfully, now getting stamps");
                             ArrayList<Stamp> results = new ArrayList<>();
                             for (DocumentSnapshot document : task.getResult()) {
                                 Stamp sentStamp = document.toObject(Stamp.class);
@@ -229,10 +242,10 @@ public class FirebaseBaseActivity extends AppCompatActivity {
 
                             // Send results back to host activity
                             onStampsReceived(results);
-                            Log.d("STZ", "onComplete: ");
+                            Log.d("STZ", "Got stamps ");
 
                         } else {
-                            Log.d(TAG, "Error getting POIs. ", task.getException());
+                            Log.d(TAG, "Error getting stamps ", task.getException());
                         }
                     }
                 });
@@ -308,33 +321,44 @@ public class FirebaseBaseActivity extends AppCompatActivity {
         });
     }
 
-    public void GetUserRoles() throws IOException {
-        Log.d("STZ", "GetAll method started ");
-        db.collection("users")
-                .document(user.getUid())
-                .collection("stamps")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("STZ", "Getting POIs task completed successfully, now converting to POI class ");
-                            ArrayList<Stamp> results = new ArrayList<>();
-                            for (DocumentSnapshot document : task.getResult()) {
-                                Stamp sentStamp = document.toObject(Stamp.class);
-                                results.add(sentStamp);
-                                // Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
+    public void checkIfUserIsAdmin() {
+        Log.d("STZ", "Checking if user is an Admin");
 
-                            // Send results back to host activity
-                            onStampsReceived(results);
-                            Log.d("STZ", "onComplete: ");
-
-                        } else {
-                            Log.d(TAG, "Error getting POIs. ", task.getException());
-                        }
+        DocumentReference docRef = db.collection("admins").document(user.getUid());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot exists data: " + document.getData());
+                        onAdminConfirmationReceived();
+                    } else {
+                        Log.d(TAG, "No such document");
                     }
-                });
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
+//        DocumentReference docRef = db.collection("admins").document(user.getUid());
+//        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                User spUser = documentSnapshot.toObject(User.class);
+//                Log.d(TAG, "onSuccess: we got user:" + spUser.getUserId());
+//            }
+//        });
+
+    }
+
+    /**
+     * Callback for when a user is a determined to be an admin
+     * 
+     */
+    @Override public void onAdminConfirmationReceived() {
+        Log.d(TAG, "onAdminConfirmationReceived: this is the super method, nothing to do");
     }
 
 

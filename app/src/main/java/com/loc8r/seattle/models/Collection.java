@@ -15,6 +15,7 @@ public class Collection {
     String date;
     String color;
     String textColor;
+    String description;
 
     public Collection(){}
 
@@ -31,6 +32,8 @@ public class Collection {
     public String getDate() { return date; }
     public String getColor() { return "#" + color; }
     public String getTextColor() { return textColor; }
+    public String getDescription() { return description; }
+
     @Exclude public String getId(){
         String results = name + date;
         return results.replaceAll("[^a-zA-Z0-9]+","")
@@ -49,4 +52,5 @@ public class Collection {
     }
     public void setColor(String color) { this.color = color; }
     public void setTextColor(String textColor) { this.textColor = textColor; }
+    public void setDescription(String desc) { this.description = desc; }
 }

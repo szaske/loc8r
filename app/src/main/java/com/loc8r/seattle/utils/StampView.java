@@ -41,8 +41,7 @@ import java.util.Random;
 
 public class StampView extends View {
 
-    // private static final int DEFAULT_COLOR = ;
-    private static final Float STROKEWIDTH_PERCENTAGE = .12f;
+    private static final Float STROKEWIDTH_PERCENTAGE = .13f;
     private static final Double OUTSIDE_PERCENTAGE = .06;
 
     // View State items
@@ -446,6 +445,8 @@ public class StampView extends View {
         }
     }
 
+
+
     /**
      *  Public Stamp title setter
      *
@@ -473,7 +474,7 @@ public class StampView extends View {
         }
 
         //Convert to a new nice looking format
-        return newFormat.format(date);
+        return newFormat.format(date).toUpperCase();
 
     }
 
@@ -494,6 +495,10 @@ public class StampView extends View {
 
     private void setStampBackgroundColor(int color){
         this.stampBackgroundColor = color;
+    }
+
+    public String placeholderText() {
+        return this.placeholderText;
     }
 
     public void setStamped(boolean bool) {
