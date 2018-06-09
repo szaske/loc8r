@@ -24,11 +24,13 @@ public class Constants {
     public static final String PRETTY_COLLECTION_KEY = "PRETTY_COLLECTION_KEY";
     public static final String TIME_SERVER = "time-a.nist.gov";
 
+    /** Map Constants **/
     // This is the distance in meters that we scan on the map
     // default is 800 meters
-    public static final int DISTANCE_TO_SCAN_MARKERS = 9800;
-
+    public static final int DISTANCE_TO_SCAN_MARKERS = 800;
     public static final int DISTANCE_TO_GET_STAMP = 50;
+    public static final int DEFAULT_ZOOM_LEVEL = 16;
+
     public static final String STAMP_ENABLED_TEXT = "PRESS FOR STAMP";
     public static final String STAMP_DISABLED_TEXT = "GET CLOSER";
 

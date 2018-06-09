@@ -19,7 +19,6 @@ import android.view.Gravity;
 import android.view.TouchDelegate;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -53,10 +52,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.loc8r.seattle.utils.Constants.MARKER;
-
 public class MapActivity extends LocationBase_Activity implements
         GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnCameraMoveStartedListener,
         OnMapReadyCallback {
 
     private static final String TAG = MapActivity.class.getSimpleName();
@@ -76,7 +74,7 @@ public class MapActivity extends LocationBase_Activity implements
     private List<Integer> mExistingPoiMarkers;
     private ConstraintLayout mDraggableDrawer;
 
-    private Boolean haveNotDoneInitialZoomIn;
+    private Boolean cameraTrackingUsersPhone;
     SupportMapFragment mMapFragment;
 
     @BindView(R.id.bt_map_back_arrow) ImageButton mBackArrow;
@@ -229,7 +227,6 @@ public class MapActivity extends LocationBase_Activity implements
             boolean success = mMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
                             this, R.raw.map_style));
-
             if (!success) {
                 Log.e(TAG, "Style parsing failed.");
             }
@@ -242,10 +239,30 @@ public class MapActivity extends LocationBase_Activity implements
 
         // Set listeners for marker events.  See the bottom of this class for their behavior.
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnCameraMoveStartedListener(this);
 
-        // Have we zoomed in on the initial load? no.
-        haveNotDoneInitialZoomIn = true;
+        // The camera will stay focused on the users phone
+        cameraTrackingUsersPhone = true;
+    }
 
+    /**
+     *  Event listener for Google Maps, for when a camera move starts
+     *
+     * @param reason An Integer that explains what caused the camera move
+     */
+    @Override
+    public void onCameraMoveStarted(int reason) {
+        if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+            // user gestured on the map, so we assume they no longer want the camera to follow
+            cameraTrackingUsersPhone = false;
+        } else if (reason == GoogleMap.OnCameraMoveStartedListener
+                .REASON_API_ANIMATION) {
+            // User tapped on the map, let's stop tracking the phone
+            cameraTrackingUsersPhone = false;
+        } else if (reason == GoogleMap.OnCameraMoveStartedListener
+                .REASON_DEVELOPER_ANIMATION) {
+            // The app itself moved the camera
+        }
     }
 
     // Create a location given a Lat & Long
@@ -364,31 +381,30 @@ public class MapActivity extends LocationBase_Activity implements
             @Override
             public void onLocationReceived(final Location location)
             {
-
                 // Spawn a new thread to redraw nearby markers
                 MapActivity.this.runOnUiThread(new Runnable() {
 
                     @Override
                     public void run() {
 
-
                         // Store returned location in the state Manager and member variable
                         StateManager.getInstance().setCurrentLocation(location);
 
-                        // Check if this is the first time location was retrieved
-                        // if so, zoom into our location
-                        if(haveNotDoneInitialZoomIn){
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationToLatLong(location), 18));
-                            haveNotDoneInitialZoomIn=false;
+                        // Are we tracking the user?
+                        // if so, when our location changes the camera will follow
+                        //
+                        // See: https://stackoverflow.com/questions/14864664/animating-markers-on-google-maps-v2/14883628#14883628
+                        // to find a more attractive way to animate the blue dot.
+
+                        if(cameraTrackingUsersPhone){
+//                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationToLatLong(location), Constants.DEFAULT_ZOOM_LEVEL));
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locationToLatLong(location), Constants.DEFAULT_ZOOM_LEVEL),1000,null);
                         }
-
-//                      // Draw Markers
+                        // Draw Markers
                         DrawNearbyMarkers();
-
                     }
 
                 });
-
             }
         });
     }
