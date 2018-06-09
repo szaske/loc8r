@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -163,6 +164,7 @@ public class AddSuggestionActivity extends LocationBase_Activity {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                        Toast.makeText(getApplicationContext(), R.string.suggestion_thanks, Toast.LENGTH_LONG).show();
 
                         //no let's return to the main menu
                         Intent intent = new Intent(AddSuggestionActivity.this, MainListActivity.class);

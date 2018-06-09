@@ -63,9 +63,14 @@
     <!--Map Activity Strings-->
     <string name="title_activity_maps">Explorer Seattle</string>
 
+    <!--Suggest Gem Strings-->
+    <string name="suggestion_thanks">You submission was accepted, thanks</string>
+
     <!--POI Detail Activity Strings-->
     <string name="get_stamp_button">Get Stamp</string>
     <string name="stamp_error">Error getting Stamp</string>
+    <string name="stamp_gotten">Stamp Received</string>
+
 
     <!--Passport Activity Strings-->
     <string name="title_activity_passport">Passport Collections</string>

@@ -113,21 +113,8 @@ public class StampView extends View {
         // configure the lower arc
         mLowerArc = new Path();
 
-        // Configuration dealing with the drop shadow
-//        BlurMaskFilter blurFilter = new BlurMaskFilter(13, BlurMaskFilter.Blur.OUTER);
-//        mShadowPaint = new Paint();
-//        mShadowPaint.setMaskFilter(blurFilter);
-//        mShadowOffsetXY = new int[14];
-
         //Configure the placeholder
         stampPlaceholder = getResources().getDrawable(R.drawable.stamp_placeholder);
-
-        // init background
-//        stampBackgroundColor = Color.parseColor("#00ff00");
-//        GradientDrawable mBackground = (GradientDrawable) getResources().getDrawable(R.drawable.stamp_background_circle);
-//        setBackground(mBackground);
-//        mBackground.setColor(stampBackgroundColor);
-
         mPlaceholderTextPaint = new TextPaint();
         mPlaceholderTextPaint.setAntiAlias(true);
         float textSize = 14 * getResources().getDisplayMetrics().density;
@@ -506,6 +493,10 @@ public class StampView extends View {
         // this.invalidate();
     }
 
+    public void setPlaceholderTextColor(int colorAsInt){
+        mPlaceholderTextPaint.setColor(colorAsInt);
+    }
+
     public static Bitmap drawableToBitmap (Drawable drawable) {
 
         if (drawable instanceof BitmapDrawable) {
@@ -520,10 +511,6 @@ public class StampView extends View {
         return bitmap;
     }
 
-
-
-//    public static final int COLOR_MIN = 0x00;
-//    public static final int COLOR_MAX = 0xFF;
     public static final int COLOR_MIN = 10;
     public static final int COLOR_MAX = 80;
     public static final int COLOR_MID = 255;

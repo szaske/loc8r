@@ -1,9 +1,9 @@
 package com.loc8r.seattle.activities;
 
+import android.animation.ArgbEvaluator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Rect;
 import android.location.Location;
 import android.media.AudioAttributes;
@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.Log;
 import android.view.TouchDelegate;
@@ -52,7 +53,6 @@ import com.loc8r.seattle.utils.StateManager;
 import org.parceler.Parcels;
 import com.squareup.picasso.*;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -63,7 +63,7 @@ import butterknife.OnClick;
 public class POIDetailActivity extends LocationBase_Activity {
 
     // Variables
-    private static final String TAG = LocationBase_Activity.class.getSimpleName();
+    private static final String TAG = POIDetailActivity.class.getSimpleName();
     @BindView(R.id.iv_poiImage) ImageView mIV_PoiImage;
     @BindView(R.id.tv_poi_name) TextView mTV_PoiName;
     @BindView(R.id.tv_poi_description) TextView mTV_PoiDescription;
@@ -81,6 +81,7 @@ public class POIDetailActivity extends LocationBase_Activity {
 
     private SoundPool soundpool;
     private int tadaSound;
+    ValueAnimator placeholderTextAnimation;
 
     // TODO Should I move currentLocation to the State Manager?
     // private Location mCurrentLocation;
@@ -88,10 +89,6 @@ public class POIDetailActivity extends LocationBase_Activity {
     private FirebaseFirestore db;
     private FirebaseUser user;
 
-    // New Toolbar layout items
-//    private CollapsingToolbarLayout collapsingToolbar;
-//    private AppBarLayout appBarLayout;
-//    private boolean appBarExpanded = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,13 +125,6 @@ public class POIDetailActivity extends LocationBase_Activity {
         //testing enlarged touch delegate
         changeTouchableAreaOfView(mBackArrow,220);
         changeTouchableAreaOfView(mToggleOff,220);
-
-//        setSupportActionBar(mToolbar);
-//        if (getSupportActionBar() != null)
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//
-//        mCollapsingToolbar.setTitle(detailedPoi.getName());
-
 
         /** addOnPreDrawListener is required so we can measure the size of the image on this
          *  specific phone.  Without the listener code we might not fill the
@@ -196,6 +186,9 @@ public class POIDetailActivity extends LocationBase_Activity {
         //Get the Firebase user
         user = FirebaseAuth.getInstance().getCurrentUser();
 
+        //Animation init
+        placeholderTextAnimationInit();
+
     }
 
     @Override protected void onDestroy() {
@@ -229,24 +222,28 @@ public class POIDetailActivity extends LocationBase_Activity {
 
             // By default the listener is set, but disabled and only available
             stampButtonEnabled(false);
-
         }
-
     }
 
     private void stampButtonEnabled(boolean b) {
-
-        // toggle StampView Placeholder text
-
-        // If trying to set to true
         if(b && !mStampView.placeholderText().equals(Constants.STAMP_ENABLED_TEXT)) {
+            // Toggle ON.  Text says to "get closer" but we've gotten within range
             mStampView.setPlaceholderText(Constants.STAMP_ENABLED_TEXT);
+            placeholderTextAnimation.start();
             mStampView.invalidate();
+            mStampView.setClickable(b); // change the clickable state
+
         } else if(!b && !mStampView.placeholderText().equals(Constants.STAMP_DISABLED_TEXT)) {
+            // Toggle OFF.  We were close, but moved too far away
+            placeholderTextAnimation.end();
+
+            // must get context to retrieve color from R.color
+            mStampView.setPlaceholderTextColor(ContextCompat.getColor(getApplicationContext(), R.color.placeholderColorAnimationStart));
             mStampView.setPlaceholderText(Constants.STAMP_DISABLED_TEXT);
+            mStampView.setClickable(b); // change the clickable state
+
             mStampView.invalidate();
         }
-        mStampView.setClickable(b);
     }
 
     // TODO Determine if I need to cancel location update onPause or onStop.
@@ -317,6 +314,7 @@ public class POIDetailActivity extends LocationBase_Activity {
             {
                 progressDialog.dismiss();
                 // Do something after we get the stamp
+                Toast.makeText(getApplicationContext(), R.string.stamp_gotten, Toast.LENGTH_LONG).show();
                 cancelContinousLocationUpdates();
                 Log.e(TAG, "onSuccess: We got ourselves a STAMP here!");
             }
@@ -362,7 +360,7 @@ public class POIDetailActivity extends LocationBase_Activity {
                                 } else {
                                     Log.d(TAG, "onSuccess: NO Stamp found, lets make one");
 
-                                    AddStampToDB(newStamp);
+                                    addStampToDB(newStamp);
                                 }
                             }
                         });
@@ -370,14 +368,6 @@ public class POIDetailActivity extends LocationBase_Activity {
                 }); // End of RUNNABLE
             // } // end of IF
         }
-    }
-
-
-    // @OnClick(R.id.bt_getStamp)
-    public void onStampButtonClick() {
-
-        //TODO Add a check to determine if we're within a constant amount of meters from the POI.  If close enough then enable the button
-
     }
 
     /**
@@ -476,7 +466,7 @@ public class POIDetailActivity extends LocationBase_Activity {
             }
         });
 
-        //Create a time inter
+        //Create a time Interpolator
         Interpolator customInterpolator = PathInterpolatorCompat.create(0.790f, 0.000f, 1.000f, 1.000f);
 
         //Start the animation
@@ -486,7 +476,27 @@ public class POIDetailActivity extends LocationBase_Activity {
 
     }
 
-    private void AddStampToDB(final Stamp newStamp){
+    private void placeholderTextAnimationInit(){
+
+        // Create animation value holders
+        Integer colorStart = getResources().getColor(R.color.placeholderColorAnimationStart);
+        Integer colorEnd = getResources().getColor(R.color.placeholderColorAnimationEnd);
+        placeholderTextAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorStart, colorEnd);
+        placeholderTextAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                mStampView.setPlaceholderTextColor((Integer)animator.getAnimatedValue());
+                mStampView.invalidate();
+            }
+        });
+        placeholderTextAnimation.setRepeatCount(ValueAnimator.INFINITE);
+        placeholderTextAnimation.setRepeatMode(ValueAnimator.REVERSE);
+        placeholderTextAnimation.setDuration(500);
+    }
+
+
+
+    private void addStampToDB(final Stamp newStamp){
         Log.d(TAG, "onClick: fired");
         String uid = user.getUid();
         User ESUser = new User();
@@ -512,7 +522,7 @@ public class POIDetailActivity extends LocationBase_Activity {
                     }
                 });
 
-        Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Stamp saved", Toast.LENGTH_SHORT).show();
     }
 
     /**

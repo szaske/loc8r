@@ -9,8 +9,9 @@
     <color name="secondaryColor">#ff5722</color>
     <color name="secondaryLightColor">#ff8a50</color>
     <color name="secondaryDarkColor">#c41c00</color>
-    <color name="primaryTextColor">#ffffff</color>
+
     <color name="TransparentColor">#00ffffff</color>
+
 
     <!--Sets color of menu icon (3 dots)-->
     <color name="secondaryTextColor">#1a1a1a</color>
@@ -22,7 +23,6 @@
 
     <color name="mottoTextColor">#ffffff</color>
     <color name="darkBackground">#1c1c1c</color>
-    <color name="texttest">#0cfb03</color>
 
     <color name="infoBox_Background">#aa000000</color>
 
@@ -43,8 +43,11 @@
     <color name="md_grey_900">#212121</color>
     <color name="md_white_1000">#ffffff</color>
 
-
+    <!--Seattle Passport Colors-->
+    <color name="primaryTextColor">#ffffff</color>
     <color name="gem_color">#ff5722</color>
-
+    <color name="highlightGreen">#5AE323</color>
+    <color name="placeholderColorAnimationStart">@color/primaryTextColor</color>
+    <color name="placeholderColorAnimationEnd">@color/highlightGreen</color>
 
 </resources>

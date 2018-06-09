@@ -324,7 +324,7 @@ public class FirebaseBaseActivity extends AppCompatActivity implements IsAdminLi
     public void checkIfUserIsAdmin() {
         Log.d("STZ", "Checking if user is an Admin");
 
-        DocumentReference docRef = db.collection("admins").document(user.getUid());
+        DocumentReference docRef = db.collection("admins").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -332,9 +332,10 @@ public class FirebaseBaseActivity extends AppCompatActivity implements IsAdminLi
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot exists data: " + document.getData());
-                        onAdminConfirmationReceived();
+                        onAdminConfirmationReceived(true);
                     } else {
                         Log.d(TAG, "No such document");
+                        onAdminConfirmationReceived(false);
                     }
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
@@ -357,7 +358,7 @@ public class FirebaseBaseActivity extends AppCompatActivity implements IsAdminLi
      * Callback for when a user is a determined to be an admin
      * 
      */
-    @Override public void onAdminConfirmationReceived() {
+    @Override public void onAdminConfirmationReceived(boolean b) {
         Log.d(TAG, "onAdminConfirmationReceived: this is the super method, nothing to do");
     }
 

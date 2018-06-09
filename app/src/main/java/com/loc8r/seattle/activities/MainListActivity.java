@@ -257,9 +257,9 @@ public class MainListActivity extends LocationBase_Activity implements IsAdminLi
         return super.onOptionsItemSelected(item);
     }
 
-    @Override public void onAdminConfirmationReceived() {
+    @Override public void onAdminConfirmationReceived(boolean b) {
         Log.d(TAG, "onAdminConfirmationReceived: This is the MainList child, lets do some stuff");
-        StateManager.getInstance().setUserIsAdmin(true);
+        StateManager.getInstance().setUserIsAdmin(b);
         invalidateOptionsMenu();
 
     }
