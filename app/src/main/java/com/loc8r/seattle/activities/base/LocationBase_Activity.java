@@ -14,6 +14,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -40,6 +41,7 @@ public class LocationBase_Activity extends FirebaseBaseActivity implements
     private static final String TAG = LocationBase_Activity.class.getSimpleName();
 
     private boolean locationNeeded = true;
+    AlertDialog.Builder locationPermissionsDialog;
 
     private CollectionsRequester mCollectionRequester;
     private GoogleApiClient mGoogleApiClient;
@@ -78,9 +80,8 @@ public class LocationBase_Activity extends FirebaseBaseActivity implements
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         initGoogleLocationServices();
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -117,7 +118,7 @@ public class LocationBase_Activity extends FirebaseBaseActivity implements
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -150,53 +151,6 @@ public class LocationBase_Activity extends FirebaseBaseActivity implements
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mPoiLocationListener);
     }
 
-//    protected void getLastLocation(@NonNull LocationListener listener)
-//    {
-//        Location location = null;
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-//        {
-//            location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-//        }
-//
-//        if (location == null)
-//        {
-//            startLocationUpdates(listener);
-//        }
-//        else
-//        {
-//            listener.onLocationReceived(location);
-//        }
-//    }
-
-//    protected void startLocationUpdates(@NonNull final LocationListener listener)
-//    {
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-//        {
-//
-//            if (!mGoogleApiClient.isConnected())
-//            {
-//                mGoogleApiClient.connect();
-//                return;
-//            }
-//
-//            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, new LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-//                    , new LocationCallback()
-//                    {
-//                        @Override
-//                        public void onLocationResult(LocationResult locationResult)
-//                        {
-//                            super.onLocationResult(locationResult);
-//                            Location lastLocation = locationResult.getLastLocation();
-//                            if (lastLocation != null)
-//                            {
-//                                // LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-//                                listener.onLocationReceived(lastLocation);
-//                            }
-//                            Log.d(TAG, "onLocationResult: You're location is" + String.valueOf(locationResult));
-//                        }
-//                    }, getMainLooper());
-//        }
-//    }
 
 
     @Override
@@ -223,39 +177,44 @@ public class LocationBase_Activity extends FirebaseBaseActivity implements
 
     private void showLocationPermissionDialog()
     {
-        Log.d(TAG, "showLocationPermissionDialog: ");
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
-        builder.setTitle(R.string.location_permission_dialog_title)
-                .setMessage(R.string.location_permission_dialog_msg)
-                .setCancelable(false)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
+        // ensures we only get one dialog at a time
+        if(locationPermissionsDialog==null){
+            Log.d(TAG, "showLocationPermissionDialog: ");
+            locationPermissionsDialog = new AlertDialog.Builder(this, R.style.DialogTheme);
+            locationPermissionsDialog.setTitle(R.string.location_permission_dialog_title)
+                    .setMessage(R.string.location_permission_dialog_msg)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
                     {
-                        dialog.dismiss();
-                        ActivityCompat.requestPermissions(LocationBase_Activity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_CODE);
-                    }
-                })
-                .setNegativeButton(R.string.exit, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+
+                            dialog.dismiss();
+                            ActivityCompat.requestPermissions(LocationBase_Activity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+                        }
+                    })
+                    .setNegativeButton(R.string.exit, new DialogInterface.OnClickListener()
                     {
-                        dialog.dismiss();
-                        finish();
-                    }
-                })
-                .setNeutralButton(R.string.location_permission_settings, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    })
+                    .setNeutralButton(R.string.location_permission_settings, new DialogInterface.OnClickListener()
                     {
-                        dialog.dismiss();
-                        openAppPermissionsSettings();
-                    }
-                })
-                .show();
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.dismiss();
+                            openAppPermissionsSettings();
+                        }
+                    })
+                    .show();
+        }
+
     }
 
     public void showLocationEnabledDialog()
@@ -347,8 +306,17 @@ public class LocationBase_Activity extends FirebaseBaseActivity implements
 
     private void checkLocationPermission()
     {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
+
+        // Check for location permissions
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+//        {
+//            showLocationPermissionDialog();
+//        }
+
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
             showLocationPermissionDialog();
         }
         else

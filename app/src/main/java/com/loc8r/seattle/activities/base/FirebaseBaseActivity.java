@@ -148,6 +148,7 @@ public class FirebaseBaseActivity extends AppCompatActivity implements IsAdminLi
                 getInitialDataCacheFromDB(); // And get some content if we don't have it
                 // ...
             } else {
+                Log.d(TAG, "onActivityResult: An error occurred, login result was not OK");
                 // Sign in failed, check response for error code
                 // ...
             }
