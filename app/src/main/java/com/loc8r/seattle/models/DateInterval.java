@@ -1,8 +1,11 @@
 package com.loc8r.seattle.models;
 
 
+import android.support.annotation.Keep;
+
 import java.util.Date;
 
+@Keep
 public class DateInterval {
     private Date beginning;
     private Date ending;

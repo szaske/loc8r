@@ -1,8 +1,11 @@
 package com.loc8r.seattle.models;
 
+import android.support.annotation.Keep;
+
 /**
  * A POJO Class for the main List items
  */
+@Keep
 public class ListItem {
     String title;
     int imageId;

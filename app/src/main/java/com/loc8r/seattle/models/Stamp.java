@@ -1,5 +1,7 @@
 package com.loc8r.seattle.models;
 
+import android.support.annotation.Keep;
+
 import com.loc8r.seattle.utils.StateManager;
 
 import org.parceler.Parcel;
@@ -7,7 +9,7 @@ import org.parceler.Parcel;
 /**
  * A POJO Class for a Stamp
  */
-
+@Keep
 @Parcel
 public class Stamp {
     String collection;

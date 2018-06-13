@@ -24,3 +24,15 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -dontwarn okhttp3.internal.platform.*
+
+# Parceler library
+-keep interface org.parceler.Parcel
+-keep @org.parceler.Parcel class * { *; }
+-keep class **$$Parcelable { *; }
+
+# see https://stackoverflow.com/questions/6280188/prevent-proguard-to-remove-specific-drawables
+-keepclassmembers class **.R$* {
+    public static <fields>;
+}
+
+-keep class **.R$*

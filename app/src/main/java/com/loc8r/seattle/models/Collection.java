@@ -1,5 +1,7 @@
 package com.loc8r.seattle.models;
 
+import android.support.annotation.Keep;
+
 import com.google.firebase.firestore.Exclude;
 
 import org.parceler.Parcel;
@@ -8,6 +10,7 @@ import org.parceler.Parcel;
  * A POJO Class for a Collection Item
  */
 
+@Keep
 @Parcel
 public class Collection {
     //String id;

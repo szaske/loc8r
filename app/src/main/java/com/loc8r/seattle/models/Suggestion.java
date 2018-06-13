@@ -1,11 +1,14 @@
 package com.loc8r.seattle.models;
 
+import android.support.annotation.Keep;
+
 import org.parceler.Parcel;
 
 
 /**
  * A POJO Class for a POI (Point Of Interest)
  */
+@Keep
 @Parcel
 public class Suggestion {
     String id;

@@ -15,6 +15,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "415883341181-ad071io5bqjto0d0ovd1dik73qudn26c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.loc8r.seattle",
+            "certificate_hash": "5efc86d06f422d2afb5fa3b296d121991a08e386"
+          }
+        },
+        {
+          "client_id": "415883341181-kha13jotr07sjlfau3sctm68riu1vs0t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.loc8r.seattle",
+            "certificate_hash": "254e73d1725021fca8ce2969180b49745ca2a2af"
+          }
+        },
+        {
+          "client_id": "415883341181-udnjq4quob1kkn7c2niesgo4kb3sna31.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.loc8r.seattle",
+            "certificate_hash": "58ffda576a3d03b5701514092ed3432381338b26"
+          }
+        },
+        {
           "client_id": "415883341181-kksua622maq94r217i7je4oav0o15hkc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
