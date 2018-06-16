@@ -404,12 +404,12 @@ public class StampView extends View {
                     .getInstance()
                     .getCollections()
                     .get(poi.getCollectionId());
-            if(stampCollection.getColor()!=null){
-                backgroundPaint.setColor(Color.parseColor(stampCollection.getColor()));
-            }
-            if(stampCollection.getTextColor()!=null){
-                mTextPaint.setColor(Color.parseColor(stampCollection.getTextColor()));
-            }
+
+            // no null check needed, it's checked in the model
+            backgroundPaint.setColor(Color.parseColor(stampCollection.getColor()));
+
+            // no null check needed, it's checked in the model
+            mTextPaint.setColor(Color.parseColor(stampCollection.getTextColor()));
         }
 
         // Need to put a check in here

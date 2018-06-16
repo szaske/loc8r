@@ -24,12 +24,7 @@ import java.util.Map;
 public class ManagementActivity extends AppCompatActivity {
 
     private static final String TAG = "ManagementActivity";
-    private FirebaseFirestore mFirestore;
-    private Button mAddPOIsButton;
-    private Button mAddSinglePOI;
     private Button mPOIPlaceholder;
-    private Button mAdminButton;
-    private Map<String, Integer> mCollectionCounterMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,28 +32,6 @@ public class ManagementActivity extends AppCompatActivity {
         setContentView(R.layout.activity_management);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        // Firestore
-        mFirestore = FirebaseFirestore.getInstance();
-
-        mAddPOIsButton = findViewById(R.id.addPoisBTN);
-        mAddPOIsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Add set of fake POIs button pressed ");
-                CreateFakePOIs(1);
-            }
-        });
-
-        mAddSinglePOI = findViewById(R.id.addSinglePOIBTN);
-        mAddSinglePOI.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Add Single POI button pressed ");
-                Intent intent = new Intent(ManagementActivity.this, AddSuggestionActivity.class);
-                startActivity(intent);
-            }
-        });
 
         mPOIPlaceholder = findViewById(R.id.bn_POIPlaceholder);
         mPOIPlaceholder.setOnClickListener(new View.OnClickListener() {
@@ -70,59 +43,6 @@ public class ManagementActivity extends AppCompatActivity {
             }
         });
 
-        mAdminButton = findViewById(R.id.bn_MakeAdmin);
-        mAdminButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Make me an Admin button pressed ");
-
-            }
-        });
-
-        mCollectionCounterMap = new HashMap<String, Integer>();
     }
-
-    private void CreateFakePOIs(int start) {
-        // Add a bunch of random restaurants
-        WriteBatch batch = mFirestore.batch();
-
-        for (int i = start; i < start+30; i++) {
-
-            // Create random POI
-            POI randomPOI = TestPOIMakerUtil.getRandom();
-            randomPOI.setCollectionPosition(NextCollectionCount(randomPOI));
-            randomPOI.setId(randomPOI.getCollection().substring(0,3).toUpperCase()+String.format("%03d", randomPOI.getCollectionPosition()));
-
-            DocumentReference restRef = mFirestore.collection("pois").document(randomPOI.getId());
-
-            // Add POI to batch
-            batch.set(restRef, randomPOI);
-
-        }
-
-        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "Write batch succeeded.");
-                } else {
-                    Log.w(TAG, "write batch failed.", task.getException());
-                }
-            }
-        });
-    }
-
-    private int NextCollectionCount(POI poi){
-        Integer count = mCollectionCounterMap.get(poi.getCollection());
-        if(count == null) {
-            mCollectionCounterMap.put(poi.getCollection(), 1);
-        }
-        else {
-            mCollectionCounterMap.put(poi.getCollection(), count + 1);
-        }
-
-        return mCollectionCounterMap.get(poi.getCollection());
-    }
-
 
 }

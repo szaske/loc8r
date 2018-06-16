@@ -26,7 +26,6 @@ public class POI  {
     String img_url;
     Double imgFocalpointX, imgFocalpointY;
     String collection;
-    String collectionColor;
     int collectionPosition;
     String stampText;
     @Exclude boolean stampChecked; // Has the POI been checked to be stamped?
@@ -57,7 +56,6 @@ public class POI  {
         this.description = description;
         this.img_url = img_url;
         this.collection = collection;
-        this.collectionColor = "#819ca9";
         this.collectionPosition = collectionPosition;
         this.stampText = stampText;
         this.imgFocalpointX = imgFocalpointX;
@@ -135,7 +133,6 @@ public class POI  {
     public int getCollectionPosition() { return collectionPosition; }
     public String getStampText() { return stampText; }
     @Exclude public Stamp getStamp() { return stamp; }
-    public String getCollectionColor() { return collectionColor; }
     @Exclude public String getIconName(){
         return "icon_" + collection.substring(0,3).toLowerCase();
     }
@@ -171,6 +168,5 @@ public class POI  {
     public void setCollectionPosition(int collectionPosition) { this.collectionPosition = collectionPosition; }
     public void setStampText(String stampText) { this.stampText = stampText; }
     public void setStamp(Stamp stamp){ this.stamp = stamp; }
-    public void setCollectionColor(String collectionColor) { this.collectionColor = collectionColor; }
 
 }

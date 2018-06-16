@@ -64,13 +64,13 @@ public class CreatePOIPlaceholderActivity extends AppCompatActivity {
     }
 
     /**
-     *  Creates and Saves a POI from UI to Firestore
+     *  Creates a POI placeholder in the Firestore DB
      */
     private void CreateNewPoi() {
         newPOI.setName(et_Name.getText().toString());
         newPOI.setRelease(999999); // Releases 999999 are beta POIs that are not yet live on the service
-        newPOI.setLatitude(45.5555555);
-        newPOI.setLongitude(-122.55555);
+        newPOI.setLatitude(47.66);
+        newPOI.setLongitude(-122.333);
         newPOI.setDescription("Lorem ipsum");
         newPOI.setImg_url("www.loc8r.com");
         newPOI.setImgFocalpointX(0D);

@@ -22,19 +22,19 @@ public class Collection {
 
     public Collection(){}
 
-    public Collection(String name,
-                      String color){
-        this.name = name;
-        this.color = color;
-        this.textColor = "#ffffff"; // default to white text
-    }
+//    public Collection(String name,
+//                      String color){
+//        this.name = name;
+//        this.color = color;
+//        // this.textColor = "#ffffff"; // default to white text
+//    }
 
     // Getters
     // @Exclude public String getId() { return id; }
     public String getName() { return name; }
     public String getDate() { return date; }
-    public String getColor() { return "#" + color; }
-    public String getTextColor() { return textColor; }
+    public String getColor() { return (color!=null) ? "#" + color : "#7f7f7f"; } // Handles null so not code tests are needed
+    public String getTextColor() { return (textColor!=null) ? "#" + textColor : "#DDDDDD"; }
     public String getDescription() { return description; }
 
     @Exclude public String getId(){
