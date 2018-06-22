@@ -9,10 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
-import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -36,7 +33,6 @@ import org.parceler.Parcels;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.VERTICAL;
 
 public class PassportActivity extends LocationBase_Activity implements CollectionsRequester.FireBaseCollectionsResponse, OnCollectionClickListener{

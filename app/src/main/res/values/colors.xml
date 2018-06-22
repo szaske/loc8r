@@ -44,6 +44,7 @@
     <color name="md_white_1000">#ffffff</color>
 
     <!--Seattle Passport Colors-->
+    <color name="activity_background">#000000</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="gem_color">#ff5722</color>
     <color name="highlightGreen">#5AE323</color>

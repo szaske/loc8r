@@ -1,19 +1,15 @@
 package com.loc8r.seattle.utils;
 
 import android.app.Activity;
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.loc8r.seattle.models.Collection;
-import com.loc8r.seattle.models.POI;
 
 import java.io.IOException;
 import java.util.ArrayList;

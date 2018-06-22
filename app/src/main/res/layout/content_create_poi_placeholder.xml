@@ -12,16 +12,18 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create a new generic POI in the database"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="8dp" />
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/create_poi_instructions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_Index_Header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="UNIQUE INDEX:"
+        android:text="@string/create_poi_unique_index"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -31,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:ems="10"
-        android:hint="POI Index Name"
+        android:hint="@string/create_poi_poi_index_name"
         android:inputType="textPersonName"
         app:layout_constraintStart_toEndOf="@+id/tv_Index_Header"
         app:layout_constraintTop_toTopOf="@+id/tv_Index_Header" />
@@ -41,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Create POI"
+        android:text="@string/create_poi_button_text"
         app:layout_constraintStart_toStartOf="@+id/et_AddPOI_Name"
         app:layout_constraintTop_toBottomOf="@+id/et_AddPOI_Name" />
 
@@ -50,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="NAME:"
+        android:text="@string/create_poi_name_header"
         app:layout_constraintEnd_toStartOf="@+id/et_AddPOI_Name"
         app:layout_constraintTop_toTopOf="@+id/et_AddPOI_Name" />
 
@@ -61,7 +63,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
+        android:text="@string/create_poi_name_hint"
         app:layout_constraintStart_toStartOf="@+id/et_AddPOI_Index"
         app:layout_constraintTop_toBottomOf="@+id/et_AddPOI_Index" />
 </android.support.constraint.ConstraintLayout>

@@ -5,8 +5,6 @@ import android.support.annotation.Keep;
 
 import com.google.firebase.firestore.Exclude;
 
-import java.util.ArrayList;
-
 /**
  * Created by steve on 1/30/2018.
  */

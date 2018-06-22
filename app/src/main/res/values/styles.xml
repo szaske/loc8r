@@ -50,6 +50,7 @@
     <style name="Theme.SeattlePassport" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:textColorPrimary">@color/primaryTextColor</item>
         <item name="android:textColorSecondary">@color/secondaryTextColor</item>
+        <item name="android:windowBackground">@color/activity_background</item>
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
@@ -198,5 +199,19 @@
         <item name="android:shadowDy">2</item>
         <item name="android:shadowRadius">2</item>
     </style>
+
+    <!-- Passport Styles-->
+    <style name="Passport_scrollview_style">
+        <item name="android:background">@color/darkBackground</item>
+    </style>
+
+    <style name="Passport_recyclerView_style">
+        <item name="android:background">@color/darkBackground</item>
+    </style>
+
+
+    <!-- Passport Styles-->
+
+
 
 </resources>

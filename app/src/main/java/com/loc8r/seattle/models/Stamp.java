@@ -2,8 +2,6 @@ package com.loc8r.seattle.models;
 
 import android.support.annotation.Keep;
 
-import com.loc8r.seattle.utils.StateManager;
-
 import org.parceler.Parcel;
 
 /**

@@ -84,4 +84,12 @@
     <string name="title_activity_add_poito_database">AddPOIToDatabaseActivity</string>
     <string name="exit_full_screen_icon_description">exit full screen</string>
 
+    <!--ADMIN create POI Strings-->
+    <string name="create_poi_instructions">Create a new generic POI in the database</string>
+    <string name="create_poi_unique_index">UNIQUE INDEX:</string>
+    <string name="create_poi_poi_index_name">POI Index Name</string>
+    <string name="create_poi_button_text">Create POI</string>
+    <string name="create_poi_name_header">NAME:</string>
+    <string name="create_poi_name_hint">Name</string>
+
 </resources>

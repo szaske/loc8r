@@ -1,20 +1,8 @@
 package com.loc8r.seattle.activities
 
-import android.content.Context
 import android.support.test.espresso.ViewInteraction
 import com.loc8r.seattle.R
 import com.loc8r.utils.TestUtils
-import android.widget.TextView
-import android.support.test.espresso.matcher.BoundedMatcher
-import android.support.annotation.NonNull
-import android.support.test.espresso.ViewAssertion
-import android.support.test.espresso.assertion.ViewAssertions
-import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.view.View
-import com.loc8r.seattle.R.string.missing_email_validation_message
-import org.hamcrest.Description
-import org.hamcrest.Matcher
-import org.hamcrest.Matchers
 
 
 /**

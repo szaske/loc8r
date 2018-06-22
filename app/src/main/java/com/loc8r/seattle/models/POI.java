@@ -3,7 +3,6 @@ package com.loc8r.seattle.models;
 
 import android.location.Location;
 import android.support.annotation.Keep;
-import android.widget.SimpleCursorTreeAdapter;
 
 import com.google.firebase.firestore.Exclude;
 import com.loc8r.seattle.utils.StateManager;

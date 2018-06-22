@@ -13,41 +13,28 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.loc8r.seattle.R;
 import com.loc8r.seattle.activities.base.LocationBase_Activity;
 import com.loc8r.seattle.interfaces.LocationListener;
-import com.loc8r.seattle.models.Collection;
-import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Suggestion;
-import com.loc8r.seattle.utils.StateManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -254,7 +241,7 @@ public class AddSuggestionActivity extends LocationBase_Activity {
         }
 
         // Create an image file name
-        String imageFileName = "";
+        String imageFileName;
 
         // Give it a name
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());

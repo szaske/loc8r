@@ -47,6 +47,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,7 +75,7 @@ public class MapActivity extends LocationBase_Activity implements
     private List<Integer> mExistingPoiMarkers;
     private ConstraintLayout mDraggableDrawer;
 
-    private Boolean cameraTrackingUsersPhone;
+    private Boolean cameraTrackingUsersPhone = false;
     SupportMapFragment mMapFragment;
 
     @BindView(R.id.bt_map_back_arrow) ImageButton mBackArrow;
@@ -241,9 +242,24 @@ public class MapActivity extends LocationBase_Activity implements
         mMap.setOnMarkerClickListener(this);
         mMap.setOnCameraMoveStartedListener(this);
 
-        // The camera will stay focused on the users phone
-        cameraTrackingUsersPhone = true;
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                // The camera will stay focused on the users phone
+                // Placed in OnMapLoaded so that we zoom in only after the map is first loaded
+                // so that we can see Seattle
+                cameraTrackingUsersPhone = true;
+
+                // Zoom in immediately, so we don't have to wait for the next location get
+                if(StateManager.getInstance().getCurrentLocation()!=null){
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locationToLatLong(StateManager.getInstance().getCurrentLocation()), Constants.DEFAULT_ZOOM_LEVEL),2000,null);
+                }
+            }
+        });
+
+
     }
+
 
     /**
      *  Event listener for Google Maps, for when a camera move starts
@@ -352,7 +368,7 @@ public class MapActivity extends LocationBase_Activity implements
                     context.getPackageName());
         } else {
             //The icon didn't exists we'll return a default icon
-            if(iconType=="marker"){
+            if(Objects.equals(iconType, "marker")){
                 return R.drawable.marker_default;
             }
             return R.drawable.icon_placeholder;
@@ -397,7 +413,6 @@ public class MapActivity extends LocationBase_Activity implements
                         // to find a more attractive way to animate the blue dot.
 
                         if(cameraTrackingUsersPhone){
-//                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationToLatLong(location), Constants.DEFAULT_ZOOM_LEVEL));
                             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locationToLatLong(location), Constants.DEFAULT_ZOOM_LEVEL),1000,null);
                         }
                         // Draw Markers

@@ -56,9 +56,7 @@ import com.squareup.picasso.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import butterknife.BindView;
 import butterknife.*;
-import butterknife.OnClick;
 
 public class POIDetailActivity extends LocationBase_Activity {
 

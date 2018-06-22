@@ -122,7 +122,7 @@ public class POIStamp_Adapter extends RecyclerView.Adapter<POIStamp_Adapter.POI_
             // Check if the poi is a spacer.  This handles the rare case where the list ends
             // in an odd number.  To solve this problem we add a new item to the list when it's past
             // to the collection activity
-            if(poi.getName()=="blank"){
+            if(poi.getName().equals("blank")){
                 contentLayout.setVisibility(View.INVISIBLE);
             } else {
 

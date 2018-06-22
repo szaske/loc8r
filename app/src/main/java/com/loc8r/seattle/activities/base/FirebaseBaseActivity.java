@@ -9,7 +9,6 @@ import android.util.Log;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,7 +20,6 @@ import com.loc8r.seattle.interfaces.IsAdminListener;
 import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.models.POI;
 import com.loc8r.seattle.models.Stamp;
-import com.loc8r.seattle.models.User;
 import com.loc8r.seattle.utils.StateManager;
 
 import java.io.IOException;

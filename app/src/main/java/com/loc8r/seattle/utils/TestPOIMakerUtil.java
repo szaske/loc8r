@@ -1,13 +1,9 @@
 package com.loc8r.seattle.utils;
 
-import android.content.Context;
-
 import com.loc8r.seattle.models.POI;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Random;
 
 /**

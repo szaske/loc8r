@@ -1,11 +1,9 @@
 package com.loc8r.seattle.activities
 
-import android.content.Context
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.loc8r.seattle.R
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

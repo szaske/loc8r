@@ -1,13 +1,10 @@
 package com.loc8r.seattle.utils;
 
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.IntDef;
 import android.support.annotation.StringDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
 
 /**
  *

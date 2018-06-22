@@ -160,9 +160,9 @@ public class CollectionListActivity extends AppCompatActivity implements
         // Configure the RecyclerView
         //mRecyclerView = (RecyclerView) findViewById(R.id.collectionsRV);
 
-        /** use this setting to improve performance if you know that changes
+        /* use this setting to improve performance if you know that changes
         in content do not change the layout size of the RecyclerView
-         **/
+         */
         //mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);

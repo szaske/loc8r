@@ -1,7 +1,6 @@
 package com.loc8r.seattle.utils;
 
 import android.app.Activity;
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -14,14 +13,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.loc8r.seattle.models.POI;
-import com.loc8r.seattle.models.Stamp;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * Created by steve on 1/30/2018.

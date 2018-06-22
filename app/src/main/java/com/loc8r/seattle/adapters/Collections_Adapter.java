@@ -3,15 +3,12 @@ package com.loc8r.seattle.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loc8r.seattle.R;
@@ -19,7 +16,6 @@ import com.loc8r.seattle.interfaces.OnCollectionClickListener;
 import com.loc8r.seattle.models.Collection;
 import com.loc8r.seattle.utils.CollectionLayout;
 import com.loc8r.seattle.utils.FocusedCropTransform;
-import com.loc8r.seattle.utils.StampView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

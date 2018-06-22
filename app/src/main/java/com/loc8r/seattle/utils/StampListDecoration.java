@@ -5,8 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.View;
 
 import com.loc8r.seattle.R;
@@ -51,8 +49,8 @@ public class StampListDecoration extends RecyclerView.ItemDecoration {
             int listPosition = parent.getChildAdapterPosition(child);
 
             // Initialize Bounds for the decorations
-            int decoratorLeft = 0;
-            int decoratorRight = 0;
+            int decoratorLeft;
+            int decoratorRight;
             int decoratorTop = child.getTop();
             int decoratorBottom = child.getBottom();
 
@@ -110,9 +108,9 @@ public class StampListDecoration extends RecyclerView.ItemDecoration {
         super.getItemOffsets(outRect, view, parent, state);
         // good example here: https://stackoverflow.com/questions/29666598/android-recyclerview-finding-out-first-and-last-view-on-itemdecoration/30404499#30404499
 
-        /**
-         *  Special case.  Te first right side item in the list should have an extra 50% top
-         *  offset so that these equal sized views are perfectly staggered.
+        /*
+           Special case.  Te first right side item in the list should have an extra 50% top
+           offset so that these equal sized views are perfectly staggered.
          */
 //        if (parent.getChildAdapterPosition(view) == 1) {
 //
